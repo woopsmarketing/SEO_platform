@@ -1,0 +1,6 @@
+{
+  "name": "@seoworld/auth",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Supabase Auth 유틸리티"
+}

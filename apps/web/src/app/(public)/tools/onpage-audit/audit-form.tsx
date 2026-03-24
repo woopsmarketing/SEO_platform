@@ -1,0 +1,258 @@
+"use client";
+
+import { useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+
+interface ParsedSeo {
+  url: string;
+  statusCode: number;
+  loadTimeMs: number;
+  title: string | null;
+  titleLength: number;
+  metaDescription: string | null;
+  metaDescriptionLength: number;
+  canonical: string | null;
+  h1: string[];
+  h2: string[];
+  h3Count: number;
+  imgTotal: number;
+  imgWithoutAlt: number;
+  internalLinks: number;
+  externalLinks: number;
+  hasViewport: boolean;
+  hasCharset: boolean;
+  hasOgTitle: boolean;
+  hasOgDescription: boolean;
+  hasOgImage: boolean;
+  hasTwitterCard: boolean;
+  hasRobotsMeta: string | null;
+  hasHreflang: boolean;
+  hasStructuredData: boolean;
+  wordCount: number;
+  htmlSize: number;
+}
+
+interface AuditResult {
+  parsed: ParsedSeo;
+  analysis: string | null;
+  error?: string;
+}
+
+export function AuditForm() {
+  const [url, setUrl] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState<AuditResult | null>(null);
+  const [error, setError] = useState("");
+
+  async function handleAudit() {
+    if (!url) return;
+    setLoading(true);
+    setError("");
+    setResult(null);
+
+    try {
+      const res = await fetch("/api/audit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error || "분석에 실패했습니다.");
+      } else {
+        setResult(data);
+      }
+    } catch {
+      setError("네트워크 오류가 발생했습니다.");
+    }
+    setLoading(false);
+  }
+
+  return (
+    <div className="space-y-8">
+      {/* URL 입력 */}
+      <Card>
+        <CardContent className="pt-6">
+          <div className="flex gap-3">
+            <Input
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+              placeholder="https://example.com"
+              onKeyDown={(e) => e.key === "Enter" && handleAudit()}
+              className="flex-1"
+            />
+            <Button onClick={handleAudit} disabled={loading || !url}>
+              {loading ? "분석 중..." : "SEO 분석"}
+            </Button>
+          </div>
+          {error && (
+            <p className="mt-3 text-sm text-destructive">{error}</p>
+          )}
+          {loading && (
+            <p className="mt-3 text-sm text-muted-foreground">
+              페이지를 가져오고 AI가 분석하고 있습니다... (최대 30초)
+            </p>
+          )}
+        </CardContent>
+      </Card>
+
+      {result && (
+        <div className="grid gap-6 lg:grid-cols-2">
+          {/* 파싱 결과 — 왼쪽 */}
+          <div className="space-y-6">
+            <ParsedDataCards parsed={result.parsed} />
+          </div>
+
+          {/* AI 분석 — 오른쪽 */}
+          <div>
+            <Card>
+              <CardHeader>
+                <CardTitle>AI SEO 분석</CardTitle>
+                <CardDescription>Claude가 분석한 SEO 진단 결과입니다.</CardDescription>
+              </CardHeader>
+              <CardContent>
+                {result.analysis ? (
+                  <div className="prose prose-sm max-w-none prose-headings:text-base prose-headings:font-semibold">
+                    <MarkdownRenderer text={result.analysis} />
+                  </div>
+                ) : result.error ? (
+                  <p className="text-sm text-muted-foreground">{result.error}</p>
+                ) : (
+                  <p className="text-sm text-muted-foreground">AI 분석 결과가 없습니다.</p>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function ParsedDataCards({ parsed }: { parsed: ParsedSeo }) {
+  return (
+    <>
+      {/* 기본 정보 */}
+      <Card>
+        <CardHeader><CardTitle className="text-base">기본 정보</CardTitle></CardHeader>
+        <CardContent className="space-y-2 text-sm">
+          <Row label="URL" value={parsed.url} />
+          <Row label="상태 코드" value={String(parsed.statusCode)} ok={parsed.statusCode === 200} />
+          <Row label="로딩 시간" value={`${parsed.loadTimeMs}ms`} ok={parsed.loadTimeMs < 3000} />
+          <Row label="HTML 크기" value={`${(parsed.htmlSize / 1024).toFixed(1)} KB`} />
+          <Row label="단어 수" value={String(parsed.wordCount)} ok={parsed.wordCount >= 300} />
+        </CardContent>
+      </Card>
+
+      {/* 메타 태그 */}
+      <Card>
+        <CardHeader><CardTitle className="text-base">메타 태그</CardTitle></CardHeader>
+        <CardContent className="space-y-2 text-sm">
+          <Row
+            label="Title"
+            value={parsed.title ? `${parsed.title} (${parsed.titleLength}자)` : "없음"}
+            ok={!!parsed.title && parsed.titleLength >= 10 && parsed.titleLength <= 60}
+          />
+          <Row
+            label="Description"
+            value={parsed.metaDescription ? `${parsed.metaDescription.slice(0, 80)}... (${parsed.metaDescriptionLength}자)` : "없음"}
+            ok={!!parsed.metaDescription && parsed.metaDescriptionLength >= 50 && parsed.metaDescriptionLength <= 160}
+          />
+          <Row label="Canonical" value={parsed.canonical || "없음"} ok={!!parsed.canonical} />
+          <Row label="Robots" value={parsed.hasRobotsMeta || "없음"} />
+        </CardContent>
+      </Card>
+
+      {/* 제목 구조 */}
+      <Card>
+        <CardHeader><CardTitle className="text-base">제목 구조</CardTitle></CardHeader>
+        <CardContent className="space-y-2 text-sm">
+          <Row label="H1" value={`${parsed.h1.length}개${parsed.h1.length > 0 ? ` — "${parsed.h1[0]}"` : ""}`} ok={parsed.h1.length === 1} />
+          <Row label="H2" value={`${parsed.h2.length}개`} ok={parsed.h2.length > 0} />
+          <Row label="H3" value={`${parsed.h3Count}개`} />
+        </CardContent>
+      </Card>
+
+      {/* 이미지 & 링크 */}
+      <Card>
+        <CardHeader><CardTitle className="text-base">이미지 & 링크</CardTitle></CardHeader>
+        <CardContent className="space-y-2 text-sm">
+          <Row label="이미지" value={`${parsed.imgTotal}개`} />
+          <Row label="Alt 미설정" value={`${parsed.imgWithoutAlt}개`} ok={parsed.imgWithoutAlt === 0} />
+          <Row label="내부 링크" value={`${parsed.internalLinks}개`} ok={parsed.internalLinks > 0} />
+          <Row label="외부 링크" value={`${parsed.externalLinks}개`} />
+        </CardContent>
+      </Card>
+
+      {/* 기술 & 소셜 */}
+      <Card>
+        <CardHeader><CardTitle className="text-base">기술 & 소셜</CardTitle></CardHeader>
+        <CardContent className="space-y-2 text-sm">
+          <Row label="Viewport" value={parsed.hasViewport ? "설정됨" : "없음"} ok={parsed.hasViewport} />
+          <Row label="Charset" value={parsed.hasCharset ? "설정됨" : "없음"} ok={parsed.hasCharset} />
+          <Row label="Structured Data" value={parsed.hasStructuredData ? "있음" : "없음"} ok={parsed.hasStructuredData} />
+          <Row label="Hreflang" value={parsed.hasHreflang ? "있음" : "없음"} />
+          <Row label="OG Tags" value={[parsed.hasOgTitle && "title", parsed.hasOgDescription && "desc", parsed.hasOgImage && "image"].filter(Boolean).join(", ") || "없음"} ok={parsed.hasOgTitle && parsed.hasOgDescription} />
+          <Row label="Twitter Card" value={parsed.hasTwitterCard ? "있음" : "없음"} ok={parsed.hasTwitterCard} />
+        </CardContent>
+      </Card>
+    </>
+  );
+}
+
+function Row({ label, value, ok }: { label: string; value: string; ok?: boolean }) {
+  return (
+    <div className="flex items-start justify-between gap-4">
+      <span className="shrink-0 font-medium text-muted-foreground">{label}</span>
+      <span className={`text-right ${ok === true ? "text-green-700" : ok === false ? "text-red-600" : ""}`}>
+        {ok === true && "✓ "}{ok === false && "✗ "}{value}
+      </span>
+    </div>
+  );
+}
+
+function MarkdownRenderer({ text }: { text: string }) {
+  // 간단한 마크다운 → HTML 변환
+  const lines = text.split("\n");
+  const elements: JSX.Element[] = [];
+  let i = 0;
+
+  for (const line of lines) {
+    i++;
+    const trimmed = line.trimEnd();
+
+    if (trimmed.startsWith("## ")) {
+      elements.push(<h2 key={i} className="mt-4 mb-2 text-lg font-bold">{trimmed.slice(3)}</h2>);
+    } else if (trimmed.startsWith("### ")) {
+      elements.push(<h3 key={i} className="mt-3 mb-1 font-semibold">{trimmed.slice(4)}</h3>);
+    } else if (trimmed.match(/^\d+\. /)) {
+      elements.push(<p key={i} className="ml-4 my-0.5">{trimmed}</p>);
+    } else if (trimmed.startsWith("- ")) {
+      elements.push(
+        <p key={i} className="ml-4 my-0.5">
+          <span className="text-muted-foreground mr-1">•</span>
+          {formatBold(trimmed.slice(2))}
+        </p>
+      );
+    } else if (trimmed === "") {
+      elements.push(<div key={i} className="h-2" />);
+    } else {
+      elements.push(<p key={i} className="my-0.5">{formatBold(trimmed)}</p>);
+    }
+  }
+
+  return <>{elements}</>;
+}
+
+function formatBold(text: string): React.ReactNode {
+  const parts = text.split(/(\*\*[^*]+\*\*)/g);
+  return parts.map((part, i) => {
+    if (part.startsWith("**") && part.endsWith("**")) {
+      return <strong key={i}>{part.slice(2, -2)}</strong>;
+    }
+    return part;
+  });
+}

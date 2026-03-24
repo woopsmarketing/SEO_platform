@@ -1,0 +1,6 @@
+{
+  "name": "@seoworld/worker",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Background job runner (placeholder — cron + route 기반 배치 작업)"
+}
