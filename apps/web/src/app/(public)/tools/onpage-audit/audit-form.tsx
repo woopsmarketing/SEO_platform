@@ -111,7 +111,7 @@ export function AuditForm() {
             <Card>
               <CardHeader>
                 <CardTitle>AI SEO 분석</CardTitle>
-                <CardDescription>Claude가 분석한 SEO 진단 결과입니다.</CardDescription>
+                <CardDescription>AI가 분석한 SEO 진단 결과입니다.</CardDescription>
               </CardHeader>
               <CardContent>
                 {result.analysis ? (

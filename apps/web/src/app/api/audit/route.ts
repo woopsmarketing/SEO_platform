@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import Anthropic from "@anthropic-ai/sdk";
 
 export const maxDuration = 30;
 
@@ -36,14 +35,13 @@ export async function POST(request: Request) {
     const parsed = parseHtml(html, url, statusCode, loadTime, headers);
 
     // 3. LLM 분석
-    const apiKey = process.env.ANTHROPIC_API_KEY;
+    const apiKey = process.env.OPENAI_API_KEY;
     if (!apiKey) {
       // API 키 없으면 파싱 결과만 반환
       return NextResponse.json({ parsed, analysis: null, error: "LLM 분석 키가 설정되지 않았습니다." });
     }
 
-    const anthropic = new Anthropic({ apiKey });
-    const analysis = await analyzeSeo(anthropic, parsed, url);
+    const analysis = await analyzeSeo(apiKey, parsed, url);
 
     // 툴 사용 로그
     const { createAdminClient } = await import("@/lib/supabase/admin");
@@ -170,7 +168,6 @@ function extractMetaAttr(html: string, name: string): string | null {
   const regex = new RegExp(`<meta[^>]*name=["']${name}["'][^>]*content=["']([^"']+)["']`, "i");
   const match = html.match(regex);
   if (match) return match[1].trim();
-  // content가 name보다 앞에 올 수도 있음
   const regex2 = new RegExp(`<meta[^>]*content=["']([^"']+)["'][^>]*name=["']${name}["']`, "i");
   const match2 = html.match(regex2);
   return match2 ? match2[1].trim() : null;
@@ -192,7 +189,7 @@ function extractAll(html: string, regex: RegExp): string[] {
   return results;
 }
 
-async function analyzeSeo(anthropic: Anthropic, parsed: ParsedSeo, url: string): Promise<string> {
+async function analyzeSeo(apiKey: string, parsed: ParsedSeo, url: string): Promise<string> {
   const prompt = `You are an SEO expert auditor. Analyze this webpage's SEO and provide actionable recommendations.
 
 **URL:** ${url}
@@ -247,12 +244,23 @@ Please respond in Korean. Use this exact format:
 
 Keep it concise and practical. Focus on the most impactful issues.`;
 
-  const message = await anthropic.messages.create({
-    model: "claude-sonnet-4-20250514",
-    max_tokens: 1500,
-    messages: [{ role: "user", content: prompt }],
+  const response = await fetch("https://api.openai.com/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${apiKey}`,
+    },
+    body: JSON.stringify({
+      model: "gpt-4o-mini",
+      max_tokens: 1500,
+      messages: [{ role: "user", content: prompt }],
+    }),
   });
 
-  const textBlock = message.content.find((b) => b.type === "text");
-  return textBlock?.text || "분석 결과를 생성하지 못했습니다.";
+  if (!response.ok) {
+    throw new Error(`OpenAI API error: ${response.status}`);
+  }
+
+  const data = await response.json();
+  return data.choices?.[0]?.message?.content || "분석 결과를 생성하지 못했습니다.";
 }
