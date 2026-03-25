@@ -61,7 +61,7 @@ async function findSitemapInRobots(origin: string): Promise<string | null> {
   try {
     const res = await fetch(`${origin}/robots.txt`, {
       signal: AbortSignal.timeout(5000),
-      headers: { "User-Agent": "SEOWorld-Crawler/1.0" },
+      headers: { "User-Agent": "Mozilla/5.0 (compatible; SEOWorldBot/1.0; +https://seoworld.co.kr)" },
     });
     if (!res.ok) return null;
     const text = await res.text();
@@ -77,7 +77,7 @@ async function parseSitemap(sitemapUrl: string): Promise<{ loc: string; lastmod?
   try {
     const res = await fetch(sitemapUrl, {
       signal: AbortSignal.timeout(10000),
-      headers: { "User-Agent": "SEOWorld-Crawler/1.0" },
+      headers: { "User-Agent": "Mozilla/5.0 (compatible; SEOWorldBot/1.0; +https://seoworld.co.kr)" },
     });
     if (!res.ok) return [];
 
@@ -151,7 +151,7 @@ async function crawlSite(origin: string, startUrl: string, maxPages: number): Pr
     try {
       const res = await fetch(current, {
         signal: AbortSignal.timeout(5000),
-        headers: { "User-Agent": "SEOWorld-Crawler/1.0", Accept: "text/html" },
+        headers: { "User-Agent": "Mozilla/5.0 (compatible; SEOWorldBot/1.0; +https://seoworld.co.kr)", Accept: "text/html" },
         redirect: "follow",
       });
 

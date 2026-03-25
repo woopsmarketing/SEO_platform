@@ -25,7 +25,7 @@ export async function POST(request: Request) {
       const start = Date.now();
       const res = await fetch(url, {
         signal: AbortSignal.timeout(10000),
-        headers: { "User-Agent": "SEOWorld-AuditBot/1.0", Accept: "text/html" },
+        headers: { "User-Agent": "Mozilla/5.0 (compatible; SEOWorldBot/1.0; +https://seoworld.co.kr)", Accept: "text/html" },
         redirect: "follow",
       });
       loadTime = Date.now() - start;

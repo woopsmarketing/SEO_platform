@@ -66,7 +66,7 @@ export async function POST(request: Request) {
     try {
       const res = await fetch(url, {
         signal: AbortSignal.timeout(10000),
-        headers: { "User-Agent": "SEOWorld-MetaBot/1.0", Accept: "text/html" },
+        headers: { "User-Agent": "Mozilla/5.0 (compatible; SEOWorldBot/1.0; +https://seoworld.co.kr)", Accept: "text/html" },
         redirect: "follow",
       });
       statusCode = res.status;
