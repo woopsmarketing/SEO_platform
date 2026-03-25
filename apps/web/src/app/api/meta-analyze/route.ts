@@ -194,22 +194,41 @@ function extractTag(html: string, regex: RegExp): string | null {
   return match ? match[1].trim() : null;
 }
 
+// 모든 <meta> 태그에서 속성을 파싱하는 범용 함수
+function getAttr(tag: string, attr: string): string | null {
+  // 따옴표 있는 경우: attr="value" 또는 attr='value'
+  const r1 = new RegExp(`${attr}\\s*=\\s*"([^"]*)"`, "i");
+  const m1 = tag.match(r1);
+  if (m1) return m1[1];
+  const r2 = new RegExp(`${attr}\\s*=\\s*'([^']*)'`, "i");
+  const m2 = tag.match(r2);
+  if (m2) return m2[1];
+  return null;
+}
+
 function extractMetaContent(html: string, name: string): string | null {
-  const r1 = new RegExp(`<meta[^>]*name=["']${name}["'][^>]*content=["']([^"']*)["']`, "i");
-  const m1 = html.match(r1);
-  if (m1) return m1[1].trim() || null;
-  const r2 = new RegExp(`<meta[^>]*content=["']([^"']*)["'][^>]*name=["']${name}["']`, "i");
-  const m2 = html.match(r2);
-  return m2 ? m2[1].trim() || null : null;
+  // 모든 <meta ...> 태그를 순회하며 name 속성이 일치하는 것을 찾음
+  const metaTags = html.match(/<meta[^>]*>/gi) || [];
+  for (const tag of metaTags) {
+    const nameVal = getAttr(tag, "name");
+    if (nameVal && nameVal.toLowerCase() === name.toLowerCase()) {
+      const content = getAttr(tag, "content");
+      return content?.trim() || null;
+    }
+  }
+  return null;
 }
 
 function extractProperty(html: string, prop: string): string | null {
-  const r1 = new RegExp(`<meta[^>]*property=["']${prop}["'][^>]*content=["']([^"']*)["']`, "i");
-  const m1 = html.match(r1);
-  if (m1) return m1[1].trim() || null;
-  const r2 = new RegExp(`<meta[^>]*content=["']([^"']*)["'][^>]*property=["']${prop}["']`, "i");
-  const m2 = html.match(r2);
-  return m2 ? m2[1].trim() || null : null;
+  const metaTags = html.match(/<meta[^>]*>/gi) || [];
+  for (const tag of metaTags) {
+    const propVal = getAttr(tag, "property");
+    if (propVal && propVal.toLowerCase() === prop.toLowerCase()) {
+      const content = getAttr(tag, "content");
+      return content?.trim() || null;
+    }
+  }
+  return null;
 }
 
 function extractLinkHref(html: string, rel: string): string | null {

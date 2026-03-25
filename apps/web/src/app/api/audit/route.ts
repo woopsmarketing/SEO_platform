@@ -164,13 +164,26 @@ function extractMeta(html: string, regex: RegExp): string | null {
   return match ? match[1].trim() : null;
 }
 
+function getAttr(tag: string, attr: string): string | null {
+  const r1 = new RegExp(`${attr}\\s*=\\s*"([^"]*)"`, "i");
+  const m1 = tag.match(r1);
+  if (m1) return m1[1];
+  const r2 = new RegExp(`${attr}\\s*=\\s*'([^']*)'`, "i");
+  const m2 = tag.match(r2);
+  if (m2) return m2[1];
+  return null;
+}
+
 function extractMetaAttr(html: string, name: string): string | null {
-  const regex = new RegExp(`<meta[^>]*name=["']${name}["'][^>]*content=["']([^"']+)["']`, "i");
-  const match = html.match(regex);
-  if (match) return match[1].trim();
-  const regex2 = new RegExp(`<meta[^>]*content=["']([^"']+)["'][^>]*name=["']${name}["']`, "i");
-  const match2 = html.match(regex2);
-  return match2 ? match2[1].trim() : null;
+  const metaTags = html.match(/<meta[^>]*>/gi) || [];
+  for (const tag of metaTags) {
+    const nameVal = getAttr(tag, "name");
+    if (nameVal && nameVal.toLowerCase() === name.toLowerCase()) {
+      const content = getAttr(tag, "content");
+      return content?.trim() || null;
+    }
+  }
+  return null;
 }
 
 function extractMetaLink(html: string, rel: string): string | null {
