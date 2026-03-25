@@ -54,6 +54,118 @@ interface AnalyzeResult {
   recommendation: MetaRecommendation | null;
 }
 
+interface DiagnosticItem {
+  type: "error" | "warning" | "success";
+  category: string;
+  message: string;
+}
+
+function generateDiagnostics(p: ParsedMeta): DiagnosticItem[] {
+  const items: DiagnosticItem[] = [];
+
+  // Title
+  if (!p.title) {
+    items.push({ type: "error", category: "Title", message: "페이지 제목(<title>)이 없습니다. 검색 결과에 표시되지 않습니다." });
+  } else if (p.titleLength > 60) {
+    items.push({ type: "warning", category: "Title", message: `제목이 ${p.titleLength}자로 너무 깁니다. 60자 이내로 줄이면 검색 결과에서 잘리지 않습니다.` });
+  } else if (p.titleLength < 10) {
+    items.push({ type: "warning", category: "Title", message: `제목이 ${p.titleLength}자로 너무 짧습니다. 핵심 키워드를 포함하여 30~60자로 작성하세요.` });
+  } else {
+    items.push({ type: "success", category: "Title", message: `제목 길이 ${p.titleLength}자 — 적절합니다.` });
+  }
+
+  // Description
+  if (!p.metaDescription) {
+    items.push({ type: "error", category: "Description", message: "메타 설명이 없습니다. 검색 결과 클릭률(CTR)이 낮아집니다." });
+  } else if (p.metaDescriptionLength > 160) {
+    items.push({ type: "warning", category: "Description", message: `메타 설명이 ${p.metaDescriptionLength}자로 너무 깁니다. 150자 이내로 줄이세요.` });
+  } else if (p.metaDescriptionLength < 50) {
+    items.push({ type: "warning", category: "Description", message: `메타 설명이 ${p.metaDescriptionLength}자로 너무 짧습니다. 80~155자가 이상적입니다.` });
+  } else {
+    items.push({ type: "success", category: "Description", message: `메타 설명 ${p.metaDescriptionLength}자 — 적절합니다.` });
+  }
+
+  // Canonical
+  if (!p.canonical) {
+    items.push({ type: "warning", category: "Canonical", message: "canonical 태그가 없습니다. 중복 콘텐츠 문제가 발생할 수 있습니다." });
+  } else {
+    items.push({ type: "success", category: "Canonical", message: "canonical URL이 설정되어 있습니다." });
+  }
+
+  // Viewport
+  if (!p.viewport) {
+    items.push({ type: "error", category: "Viewport", message: "viewport 메타태그가 없습니다. 모바일에서 레이아웃이 깨질 수 있습니다." });
+  }
+
+  // Lang
+  if (!p.lang) {
+    items.push({ type: "warning", category: "Lang", message: "HTML lang 속성이 없습니다. 검색엔진이 페이지 언어를 판단하기 어렵습니다." });
+  }
+
+  // Favicon
+  if (!p.favicon) {
+    items.push({ type: "warning", category: "Favicon", message: "파비콘이 없습니다. 브라우저 탭과 검색결과에 브랜드 아이콘이 표시되지 않습니다." });
+  }
+
+  // Keywords
+  if (!p.metaKeywords) {
+    items.push({ type: "warning", category: "Keywords", message: "메타 키워드가 없습니다. 직접적인 랭킹 영향은 적지만, 일부 검색엔진(Naver 등)에서 참고합니다." });
+  }
+
+  // Open Graph
+  if (!p.ogTitle || !p.ogDescription || !p.ogImage) {
+    const missing: string[] = [];
+    if (!p.ogTitle) missing.push("og:title");
+    if (!p.ogDescription) missing.push("og:description");
+    if (!p.ogImage) missing.push("og:image");
+    items.push({ type: "error", category: "Open Graph", message: `${missing.join(", ")}가 없습니다. SNS 공유 시 미리보기가 제대로 표시되지 않습니다.` });
+  } else {
+    items.push({ type: "success", category: "Open Graph", message: "OG 태그가 모두 설정되어 있습니다." });
+  }
+
+  if (!p.ogLocale) {
+    items.push({ type: "warning", category: "Open Graph", message: "og:locale이 없습니다. 한국어 사이트라면 ko_KR을 추가하세요." });
+  }
+
+  if (!p.ogSiteName) {
+    items.push({ type: "warning", category: "Open Graph", message: "og:site_name이 없습니다. 브랜드명을 추가하면 SNS 공유 시 출처가 명확해집니다." });
+  }
+
+  // Twitter Card
+  if (!p.twitterCard) {
+    items.push({ type: "warning", category: "Twitter", message: "twitter:card가 없습니다. X(Twitter) 공유 시 미리보기가 기본값으로 표시됩니다." });
+  } else {
+    items.push({ type: "success", category: "Twitter", message: "Twitter Card가 설정되어 있습니다." });
+  }
+
+  // Structured Data
+  if (!p.hasStructuredData) {
+    items.push({
+      type: "warning",
+      category: "구조화 데이터",
+      message: "JSON-LD 구조화 데이터가 없습니다. Organization, WebSite, BreadcrumbList 등을 추가하면 리치 스니펫으로 검색 결과에 노출될 수 있습니다.",
+    });
+  } else {
+    items.push({ type: "success", category: "구조화 데이터", message: `JSON-LD 감지: ${p.structuredDataTypes.join(", ")}` });
+  }
+
+  // Hreflang
+  if (p.alternateLinks.length === 0) {
+    items.push({
+      type: "warning",
+      category: "Hreflang",
+      message: "hreflang 태그가 없습니다. 다국어 사이트라면 추가하여 언어별 검색 결과를 최적화하세요. 단일 언어 사이트라면 무시해도 됩니다.",
+    });
+  }
+
+  // Robots
+  if (p.robots && (p.robots.includes("noindex") || p.robots.includes("nofollow"))) {
+    items.push({ type: "error", category: "Robots", message: `robots 값이 "${p.robots}"입니다. 검색엔진에 인덱싱되지 않을 수 있습니다.` });
+  }
+
+  return items;
+}
+
 export function MetaGeneratorForm() {
   const [url, setUrl] = useState("");
   const [loading, setLoading] = useState(false);
@@ -93,6 +205,10 @@ export function MetaGeneratorForm() {
 
   const p = result?.parsed;
   const rec = result?.recommendation;
+  const diagnostics = p ? generateDiagnostics(p) : [];
+  const errors = diagnostics.filter((d) => d.type === "error");
+  const warnings = diagnostics.filter((d) => d.type === "warning");
+  const successes = diagnostics.filter((d) => d.type === "success");
 
   return (
     <div className="space-y-8">
@@ -122,42 +238,86 @@ export function MetaGeneratorForm() {
 
       {p && (
         <>
-          {/* 진단 요약 */}
-          {rec && (rec.issues.length > 0 || rec.improvements.length > 0) && (
-            <Card className="border-amber-200 bg-amber-50/50">
-              <CardHeader>
-                <CardTitle className="text-base">진단 결과</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {rec.issues.length > 0 && (
-                  <div>
-                    <p className="text-sm font-medium text-red-700 mb-1">문제점</p>
-                    <ul className="space-y-1">
-                      {rec.issues.map((issue, i) => (
-                        <li key={i} className="text-sm text-red-600 flex gap-2">
-                          <span className="shrink-0">&#10005;</span>
-                          <span>{issue}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-                {rec.improvements.length > 0 && (
-                  <div>
-                    <p className="text-sm font-medium text-green-700 mb-1">개선 제안</p>
-                    <ul className="space-y-1">
-                      {rec.improvements.map((imp, i) => (
-                        <li key={i} className="text-sm text-green-700 flex gap-2">
-                          <span className="shrink-0">&#10003;</span>
-                          <span>{imp}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          )}
+          {/* 종합 진단 결과 */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">종합 진단 결과</CardTitle>
+              <CardDescription>
+                총 {diagnostics.length}개 항목 검사 — 문제 {errors.length}개, 주의 {warnings.length}개, 양호 {successes.length}개
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-5">
+              {errors.length > 0 && (
+                <div>
+                  <p className="text-sm font-semibold text-red-700 mb-2">문제점 ({errors.length})</p>
+                  <ul className="space-y-2">
+                    {errors.map((item, i) => (
+                      <li key={i} className="flex gap-2 text-sm">
+                        <span className="shrink-0 text-red-500 mt-0.5">&#x2718;</span>
+                        <div>
+                          <span className="font-medium text-red-700">[{item.category}]</span>{" "}
+                          <span className="text-red-600">{item.message}</span>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {warnings.length > 0 && (
+                <div>
+                  <p className="text-sm font-semibold text-amber-700 mb-2">주의 ({warnings.length})</p>
+                  <ul className="space-y-2">
+                    {warnings.map((item, i) => (
+                      <li key={i} className="flex gap-2 text-sm">
+                        <span className="shrink-0 text-amber-500 mt-0.5">&#x26A0;</span>
+                        <div>
+                          <span className="font-medium text-amber-700">[{item.category}]</span>{" "}
+                          <span className="text-amber-600">{item.message}</span>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {successes.length > 0 && (
+                <div>
+                  <p className="text-sm font-semibold text-green-700 mb-2">양호 ({successes.length})</p>
+                  <ul className="space-y-2">
+                    {successes.map((item, i) => (
+                      <li key={i} className="flex gap-2 text-sm">
+                        <span className="shrink-0 text-green-500 mt-0.5">&#x2714;</span>
+                        <div>
+                          <span className="font-medium text-green-700">[{item.category}]</span>{" "}
+                          <span className="text-green-600">{item.message}</span>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {/* AI 추가 분석 */}
+              {rec && (rec.issues.length > 0 || rec.improvements.length > 0) && (
+                <div className="border-t pt-4">
+                  <p className="text-sm font-semibold text-blue-700 mb-2">AI 추가 분석</p>
+                  <ul className="space-y-2">
+                    {rec.issues.map((issue, i) => (
+                      <li key={`ai-issue-${i}`} className="flex gap-2 text-sm">
+                        <span className="shrink-0 text-blue-500 mt-0.5">&#x2192;</span>
+                        <span className="text-blue-600">{issue}</span>
+                      </li>
+                    ))}
+                    {rec.improvements.map((imp, i) => (
+                      <li key={`ai-imp-${i}`} className="flex gap-2 text-sm">
+                        <span className="shrink-0 text-blue-500 mt-0.5">&#x2192;</span>
+                        <span className="text-blue-600">{imp}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </CardContent>
+          </Card>
 
           {/* Google 검색 미리보기: 현재 vs 추천 */}
           <div className="grid gap-6 lg:grid-cols-2">
@@ -219,7 +379,7 @@ export function MetaGeneratorForm() {
                   <MetaRow label="Author" value={p.author} />
                   <MetaRow label="Lang" value={p.lang} ok={!!p.lang} />
                   <MetaRow label="Charset" value={p.charset} ok={!!p.charset} />
-                  <MetaRow label="Viewport" value={p.viewport} ok={!!p.viewport} />
+                  <MetaRow label="Viewport" value={p.viewport ? "설정됨" : null} ok={!!p.viewport} />
                   <MetaRow label="Favicon" value={p.favicon ? "있음" : null} ok={!!p.favicon} />
                 </CardContent>
               </Card>
@@ -259,7 +419,6 @@ export function MetaGeneratorForm() {
                   <MetaRow
                     label="Hreflang"
                     value={p.alternateLinks.length > 0 ? `${p.alternateLinks.length}개 언어` : null}
-                    ok={p.alternateLinks.length > 0}
                   />
                 </CardContent>
               </Card>
@@ -381,7 +540,7 @@ export function MetaGeneratorForm() {
                   <CardContent className="pt-6">
                     <p className="text-sm text-muted-foreground">
                       AI 추천을 사용하려면 OPENAI_API_KEY 환경변수를 설정하세요.
-                      왼쪽의 현재 메타태그 분석 결과를 참고하여 직접 최적화할 수 있습니다.
+                      왼쪽의 현재 메타태그 분석 결과와 상단 진단을 참고하여 직접 최적화할 수 있습니다.
                     </p>
                   </CardContent>
                 </Card>
@@ -453,8 +612,8 @@ function MetaRow({
             ok === true ? "text-green-700" : ok === false ? "text-red-600" : ""
           }`}
         >
-          {ok === true && "&#10003; "}
-          {ok === false && "&#10005; "}
+          {ok === true && "\u2714 "}
+          {ok === false && "\u2718 "}
           {isLong ? display.slice(0, 60) + "..." : display}
         </span>
         {sub && <span className="text-xs text-muted-foreground ml-1">({sub})</span>}
