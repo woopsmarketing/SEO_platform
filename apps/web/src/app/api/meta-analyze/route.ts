@@ -250,13 +250,46 @@ function resolveUrl(href: string, base: string): string {
   }
 }
 
+// 한글 비율 감지 — 한글이 30% 이상이면 한글 기준 적용
+function detectKoreanRatio(text: string): number {
+  if (!text) return 0;
+  const korean = text.match(/[\uac00-\ud7af]/g) || [];
+  return korean.length / text.length;
+}
+
 async function getRecommendation(apiKey: string, p: ParsedMeta): Promise<MetaRecommendation | null> {
-  const prompt = `You are an SEO expert. Analyze the current meta tags of this webpage and provide optimized recommendations.
+  const isKorean = detectKoreanRatio(p.title || p.metaDescription || "") > 0.3;
+  const titleRange = isKorean ? "20~35자 (한글 기준)" : "50~60자 (영문 기준)";
+  const descRange = isKorean ? "45~75자 (한글 기준)" : "120~155자 (영문 기준)";
+
+  const prompt = `당신은 SEO 전문가입니다. 아래 웹페이지의 메타태그를 분석하고 최적화 추천을 해주세요.
+
+## Google 공식 가이드 기반 기준
+
+### Title (제목 링크)
+- Google은 검색결과에서 title을 약 600px 너비로 표시합니다.
+- 한글은 글자당 약 16~18px, 영문은 약 8~10px를 차지합니다.
+- 따라서 한글 제목은 약 30~35자, 영문은 약 55~60자가 적절합니다.
+- 핵심 키워드를 제목 앞부분에 배치하세요.
+- 브랜드명은 끝에 "| 브랜드" 형태로 추가하세요.
+
+### Description (메타 설명)
+- Google은 검색결과에서 description을 약 920px 너비(데스크톱 기준)로 표시합니다.
+- 한글 기준 약 70~80자, 영문 기준 약 150~160자까지 표시됩니다.
+- CTA(행동 유도 문구)를 포함하면 클릭률이 올라갑니다.
+- 핵심 키워드를 자연스럽게 포함하되 키워드 남용은 피하세요.
+
+### Keywords
+- Google은 meta keywords를 랭킹에 사용하지 않습니다.
+- 하지만 Naver, Daum 등 국내 검색엔진에서는 참고합니다.
+- 5~10개가 적절하며, 페이지 내용과 직접 관련된 키워드만 넣으세요.
+
+## 현재 메타태그 분석 대상
 
 **URL:** ${p.url}
-**Current Title:** ${p.title || "(없음)"} (${p.titleLength}자)
-**Current Description:** ${p.metaDescription || "(없음)"} (${p.metaDescriptionLength}자)
-**Current Keywords:** ${p.metaKeywords || "(없음)"}
+**현재 Title:** ${p.title || "(없음)"} (${p.titleLength}자)
+**현재 Description:** ${p.metaDescription || "(없음)"} (${p.metaDescriptionLength}자)
+**현재 Keywords:** ${p.metaKeywords || "(없음)"}
 **Canonical:** ${p.canonical || "(없음)"}
 **Lang:** ${p.lang || "(없음)"}
 **OG Title:** ${p.ogTitle || "(없음)"}
@@ -266,18 +299,28 @@ async function getRecommendation(apiKey: string, p: ParsedMeta): Promise<MetaRec
 **Twitter Card:** ${p.twitterCard || "(없음)"}
 **Structured Data:** ${p.structuredDataTypes.join(", ") || "(없음)"}
 **Robots:** ${p.robots || "(없음)"}
+**한글 사이트 여부:** ${isKorean ? "예 (한글 기준 적용)" : "아니오 (영문 기준 적용)"}
 
-Respond in Korean with this exact JSON format (no markdown, just raw JSON):
+## 응답 규칙
+
+1. issues와 improvements에는 반드시 **구체적인 수치와 근거**를 포함하세요.
+   - 나쁜 예: "메타 설명이 너무 짧음"
+   - 좋은 예: "메타 설명이 ${p.metaDescriptionLength}자로 권장 범위(${descRange})보다 짧습니다. 클릭을 유도하는 CTA를 추가하세요."
+2. 추천 title은 ${titleRange} 범위로 작성하세요.
+3. 추천 description은 ${descRange} 범위로 작성하세요.
+4. keywords는 5~7개로 제한하세요.
+
+한국어로 응답하세요. 아래 JSON 형식으로만 응답하세요 (마크다운 코드블록 없이 순수 JSON만):
 {
-  "title": "최적화된 제목 (50-60자, 핵심 키워드 포함)",
-  "description": "최적화된 설명 (120-155자, CTA 포함)",
-  "keywords": "추천 키워드1, 키워드2, 키워드3, 키워드4, 키워드5",
-  "ogTitle": "OG용 제목 (현재와 다르면 변경, 같으면 그대로)",
+  "title": "최적화된 제목",
+  "description": "최적화된 설명",
+  "keywords": "키워드1, 키워드2, 키워드3, 키워드4, 키워드5",
+  "ogTitle": "OG용 제목",
   "ogDescription": "OG용 설명",
-  "ogType": "website 또는 article 등 적절한 타입",
+  "ogType": "website 또는 article",
   "twitterCard": "summary_large_image 또는 summary",
-  "issues": ["발견된 문제 1", "발견된 문제 2"],
-  "improvements": ["개선 제안 1", "개선 제안 2"]
+  "issues": ["구체적 수치 포함 문제점"],
+  "improvements": ["구체적 수치 포함 개선 제안"]
 }`;
 
   try {

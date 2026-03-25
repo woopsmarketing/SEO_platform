@@ -60,10 +60,27 @@ interface DiagnosticItem {
   message: string;
 }
 
+// 한글 비율 감지
+function isKoreanText(text: string | null): boolean {
+  if (!text) return false;
+  const korean = text.match(/[\uac00-\ud7af]/g) || [];
+  return korean.length / text.length > 0.3;
+}
+
 function generateDiagnostics(p: ParsedMeta): DiagnosticItem[] {
   const items: DiagnosticItem[] = [];
+  const isKr = isKoreanText(p.title) || isKoreanText(p.metaDescription);
 
-  // JS 렌더링 의존 감지: title은 있는데 description, OG 등이 모두 없으면 SPA 가능성
+  // 한글/영문에 따른 기준 (Google 검색결과 픽셀 기반)
+  // Title: ~600px → 한글 약 30~35자, 영문 약 55~60자
+  // Description: ~920px → 한글 약 70~80자, 영문 약 150~160자
+  const titleMin = isKr ? 15 : 30;
+  const titleMax = isKr ? 40 : 60;
+  const descMin = isKr ? 40 : 80;
+  const descMax = isKr ? 80 : 160;
+  const langLabel = isKr ? "한글" : "영문";
+
+  // JS 렌더링 의존 감지
   const hasSomeBasic = !!p.title;
   const missingAll = !p.metaDescription && !p.ogTitle && !p.ogDescription && !p.twitterCard;
   if (hasSomeBasic && missingAll) {
@@ -77,23 +94,23 @@ function generateDiagnostics(p: ParsedMeta): DiagnosticItem[] {
   // Title
   if (!p.title) {
     items.push({ type: "error", category: "Title", message: "페이지 제목(<title>)이 없습니다. 검색 결과에 표시되지 않습니다." });
-  } else if (p.titleLength > 60) {
-    items.push({ type: "warning", category: "Title", message: `제목이 ${p.titleLength}자로 너무 깁니다. 60자 이내로 줄이면 검색 결과에서 잘리지 않습니다.` });
-  } else if (p.titleLength < 10) {
-    items.push({ type: "warning", category: "Title", message: `제목이 ${p.titleLength}자로 너무 짧습니다. 핵심 키워드를 포함하여 30~60자로 작성하세요.` });
+  } else if (p.titleLength > titleMax) {
+    items.push({ type: "warning", category: "Title", message: `제목이 ${p.titleLength}자입니다. ${langLabel} 기준 ${titleMax}자를 초과하면 Google 검색결과에서 잘립니다. (권장: ${titleMin}~${titleMax}자)` });
+  } else if (p.titleLength < titleMin) {
+    items.push({ type: "warning", category: "Title", message: `제목이 ${p.titleLength}자로 짧습니다. 핵심 키워드를 포함하여 ${titleMin}~${titleMax}자로 작성하세요. (${langLabel} 기준)` });
   } else {
-    items.push({ type: "success", category: "Title", message: `제목 길이 ${p.titleLength}자 — 적절합니다.` });
+    items.push({ type: "success", category: "Title", message: `제목 ${p.titleLength}자 — ${langLabel} 기준 적절합니다. (권장: ${titleMin}~${titleMax}자)` });
   }
 
   // Description
   if (!p.metaDescription) {
     items.push({ type: "error", category: "Description", message: "메타 설명이 없습니다. 검색 결과 클릭률(CTR)이 낮아집니다." });
-  } else if (p.metaDescriptionLength > 160) {
-    items.push({ type: "warning", category: "Description", message: `메타 설명이 ${p.metaDescriptionLength}자로 너무 깁니다. 150자 이내로 줄이세요.` });
-  } else if (p.metaDescriptionLength < 50) {
-    items.push({ type: "warning", category: "Description", message: `메타 설명이 ${p.metaDescriptionLength}자로 너무 짧습니다. 80~155자가 이상적입니다.` });
+  } else if (p.metaDescriptionLength > descMax) {
+    items.push({ type: "warning", category: "Description", message: `메타 설명이 ${p.metaDescriptionLength}자입니다. ${langLabel} 기준 ${descMax}자를 초과하면 Google 검색결과에서 잘립니다. (권장: ${descMin}~${descMax}자)` });
+  } else if (p.metaDescriptionLength < descMin) {
+    items.push({ type: "warning", category: "Description", message: `메타 설명이 ${p.metaDescriptionLength}자로 짧습니다. ${descMin}~${descMax}자 범위로 작성하면 검색결과에 충분히 표시됩니다. (${langLabel} 기준)` });
   } else {
-    items.push({ type: "success", category: "Description", message: `메타 설명 ${p.metaDescriptionLength}자 — 적절합니다.` });
+    items.push({ type: "success", category: "Description", message: `메타 설명 ${p.metaDescriptionLength}자 — ${langLabel} 기준 적절합니다. (권장: ${descMin}~${descMax}자)` });
   }
 
   // Canonical
