@@ -63,6 +63,17 @@ interface DiagnosticItem {
 function generateDiagnostics(p: ParsedMeta): DiagnosticItem[] {
   const items: DiagnosticItem[] = [];
 
+  // JS 렌더링 의존 감지: title은 있는데 description, OG 등이 모두 없으면 SPA 가능성
+  const hasSomeBasic = !!p.title;
+  const missingAll = !p.metaDescription && !p.ogTitle && !p.ogDescription && !p.twitterCard;
+  if (hasSomeBasic && missingAll) {
+    items.push({
+      type: "warning",
+      category: "SSR/CSR",
+      message: "제목은 감지되었으나 description, OG 태그 등이 모두 없습니다. JavaScript로 동적 삽입하는 SPA(Nuxt, React 등)일 수 있습니다. 검색엔진 크롤러도 JS 실행 전 HTML만 읽으므로, 서버사이드 렌더링(SSR)으로 메타태그를 출력하는 것이 SEO에 중요합니다.",
+    });
+  }
+
   // Title
   if (!p.title) {
     items.push({ type: "error", category: "Title", message: "페이지 제목(<title>)이 없습니다. 검색 결과에 표시되지 않습니다." });
