@@ -2,10 +2,15 @@ import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   try {
-    const { url, maxPages = 30 } = await request.json();
+    let { url, maxPages = 30 } = await request.json();
 
-    if (!url || (!url.startsWith("http://") && !url.startsWith("https://"))) {
+    if (!url || typeof url !== "string") {
       return NextResponse.json({ error: "올바른 URL을 입력해주세요." }, { status: 400 });
+    }
+
+    url = url.trim();
+    if (!url.startsWith("http://") && !url.startsWith("https://")) {
+      url = "https://" + url;
     }
 
     const baseUrl = new URL(url);

@@ -4,10 +4,15 @@ export const maxDuration = 30;
 
 export async function POST(request: Request) {
   try {
-    const { url } = await request.json();
+    let { url } = await request.json();
 
-    if (!url || (!url.startsWith("http://") && !url.startsWith("https://"))) {
+    if (!url || typeof url !== "string") {
       return NextResponse.json({ error: "올바른 URL을 입력해주세요." }, { status: 400 });
+    }
+
+    url = url.trim();
+    if (!url.startsWith("http://") && !url.startsWith("https://")) {
+      url = "https://" + url;
     }
 
     // 1. 페이지 가져오기
