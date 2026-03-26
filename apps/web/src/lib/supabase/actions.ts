@@ -49,3 +49,28 @@ export async function signOut() {
   await supabase.auth.signOut();
   return redirect("/");
 }
+
+export async function signInWithGoogle() {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: "google",
+    options: {
+      redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
+      queryParams: {
+        access_type: "offline",
+        prompt: "consent",
+      },
+    },
+  });
+
+  if (error) {
+    return redirect(`/login?error=${encodeURIComponent(error.message)}`);
+  }
+
+  if (data.url) {
+    return redirect(data.url);
+  }
+
+  return redirect("/login?error=Google 로그인에 실패했습니다.");
+}
