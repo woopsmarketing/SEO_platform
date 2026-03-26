@@ -12,14 +12,15 @@ export const metadata: Metadata = {
   alternates: { canonical: "/login" },
 };
 
-export default function LoginPage({
+export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  const error = typeof searchParams.error === "string" ? searchParams.error : undefined;
-  const message = typeof searchParams.message === "string" ? searchParams.message : undefined;
-  const redirectTo = typeof searchParams.redirect === "string" ? searchParams.redirect : "/dashboard";
+  const params = await searchParams;
+  const error = typeof params.error === "string" ? params.error : undefined;
+  const message = typeof params.message === "string" ? params.message : undefined;
+  const redirectTo = typeof params.redirect === "string" ? params.redirect : "/dashboard";
 
   return (
     <div className="flex min-h-[60vh] items-center justify-center px-4">

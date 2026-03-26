@@ -12,12 +12,13 @@ export const metadata: Metadata = {
   alternates: { canonical: "/signup" },
 };
 
-export default function SignupPage({
+export default async function SignupPage({
   searchParams,
 }: {
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  const error = typeof searchParams.error === "string" ? searchParams.error : undefined;
+  const params = await searchParams;
+  const error = typeof params.error === "string" ? params.error : undefined;
 
   return (
     <div className="flex min-h-[60vh] items-center justify-center px-4">
