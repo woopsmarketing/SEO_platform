@@ -32,7 +32,14 @@ export function Footer() {
             </ul>
           </div>
           <div>
-            <h3 className="font-semibold">SEO월드</h3>
+            <h3 className="flex items-center gap-1.5 font-semibold">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="text-blue-600">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.8" />
+                <ellipse cx="12" cy="12" rx="4.5" ry="10" stroke="currentColor" strokeWidth="1.5" />
+                <line x1="2" y1="12" x2="22" y2="12" stroke="currentColor" strokeWidth="1.5" />
+              </svg>
+              SEO월드
+            </h3>
             <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
               <li><Link href="/blog" className="hover:text-foreground">블로그</Link></li>
               <li><Link href="/guides" className="hover:text-foreground">가이드</Link></li>

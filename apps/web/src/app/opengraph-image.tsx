@@ -9,7 +9,7 @@ export default function OGImage() {
     (
       <div
         style={{
-          background: "linear-gradient(135deg, #4F46E5 0%, #7C3AED 50%, #9333EA 100%)",
+          background: "linear-gradient(135deg, #1E3A5F 0%, #2563EB 50%, #0EA5E9 100%)",
           width: "100%",
           height: "100%",
           display: "flex",
@@ -21,44 +21,48 @@ export default function OGImage() {
           padding: "60px",
         }}
       >
-        {/* 로고 */}
+        {/* 로고 + 브랜드명 */}
         <div
           style={{
             display: "flex",
             alignItems: "center",
-            gap: "16px",
+            gap: "20px",
             marginBottom: "40px",
           }}
         >
           <div
             style={{
-              width: "72px",
-              height: "72px",
-              background: "rgba(255,255,255,0.2)",
-              borderRadius: "16px",
+              width: "80px",
+              height: "80px",
+              background: "rgba(255,255,255,0.15)",
+              borderRadius: "20px",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              fontSize: "42px",
-              fontWeight: 800,
             }}
           >
-            S
+            <svg width="50" height="50" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="10" stroke="white" strokeWidth="1.5" />
+              <ellipse cx="12" cy="12" rx="4.5" ry="10" stroke="white" strokeWidth="1.2" />
+              <line x1="2" y1="12" x2="22" y2="12" stroke="white" strokeWidth="1.2" />
+              <line x1="4" y1="7" x2="20" y2="7" stroke="white" strokeWidth="0.8" opacity="0.7" />
+              <line x1="4" y1="17" x2="20" y2="17" stroke="white" strokeWidth="0.8" opacity="0.7" />
+            </svg>
           </div>
-          <span style={{ fontSize: "48px", fontWeight: 800 }}>SEO월드</span>
+          <span style={{ fontSize: "52px", fontWeight: 800 }}>SEO월드</span>
         </div>
 
         {/* 설명 */}
         <div
           style={{
-            fontSize: "28px",
-            fontWeight: 500,
-            opacity: 0.9,
+            fontSize: "26px",
+            fontWeight: 400,
+            opacity: 0.85,
             textAlign: "center",
-            lineHeight: 1.5,
+            lineHeight: 1.6,
           }}
         >
-          무료 SEO 분석 도구 | 메타태그 분석 | 온페이지 SEO 진단
+          무료 SEO 분석 도구 | 메타태그 분석 | 온페이지 SEO 진단 | 사이트맵 생성
         </div>
 
         {/* 하단 URL */}
@@ -67,7 +71,7 @@ export default function OGImage() {
             position: "absolute",
             bottom: "40px",
             fontSize: "20px",
-            opacity: 0.6,
+            opacity: 0.5,
           }}
         >
           seoworld.co.kr

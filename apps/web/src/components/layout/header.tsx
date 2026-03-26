@@ -13,7 +13,14 @@ export async function Header() {
   return (
     <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4">
-        <Link href="/" className="text-xl font-bold text-primary">
+        <Link href="/" className="flex items-center gap-2 text-xl font-bold text-primary">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" className="text-blue-600">
+            <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.8" />
+            <ellipse cx="12" cy="12" rx="4.5" ry="10" stroke="currentColor" strokeWidth="1.5" />
+            <line x1="2" y1="12" x2="22" y2="12" stroke="currentColor" strokeWidth="1.5" />
+            <line x1="4" y1="7" x2="20" y2="7" stroke="currentColor" strokeWidth="1" opacity="0.5" />
+            <line x1="4" y1="17" x2="20" y2="17" stroke="currentColor" strokeWidth="1" opacity="0.5" />
+          </svg>
           SEO월드
         </Link>
 
