@@ -38,6 +38,7 @@ export default async function AnalysesPage() {
                   <p className="text-sm font-medium truncate">{a.input_summary || "(제목 없음)"}</p>
                   <p className="text-xs text-muted-foreground">
                     {a.tool_type === "onpage-audit" ? "온페이지 SEO 분석" :
+                     a.tool_type === "meta-analyzer" ? "메타태그 분석" :
                      a.tool_type === "meta-generator" ? "메타태그 분석" : a.tool_type}
                     {" "}&middot;{" "}
                     {new Date(a.created_at).toLocaleDateString("ko-KR", { year: "numeric", month: "long", day: "numeric" })}

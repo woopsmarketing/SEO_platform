@@ -87,11 +87,30 @@ export async function POST(request: Request) {
 
     // 툴 사용 로그
     const { createAdminClient } = await import("@/lib/supabase/admin");
-    const supabase = createAdminClient();
-    await supabase.from("tool_usage_logs").insert({
-      tool_type: "meta-generator",
+    const adminSupabase = createAdminClient();
+    await adminSupabase.from("tool_usage_logs").insert({
+      tool_type: "meta-analyzer",
       input_summary: url,
     });
+
+    // 로그인 사용자면 analyses 테이블에도 저장
+    try {
+      const { createClient } = await import("@/lib/supabase/server");
+      const userSupabase = await createClient();
+      const { data: { user } } = await userSupabase.auth.getUser();
+      if (user) {
+        await adminSupabase.from("analyses").insert({
+          user_id: user.id,
+          tool_type: "meta-analyzer",
+          input_summary: url,
+          score: null,
+          input: { url },
+          result: { parsed, recommendation },
+        });
+      }
+    } catch {
+      // 세션 확인 실패 시 무시 (비로그인 사용자)
+    }
 
     return NextResponse.json({ parsed, recommendation });
   } catch {

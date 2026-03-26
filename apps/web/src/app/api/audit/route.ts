@@ -51,11 +51,36 @@ export async function POST(request: Request) {
 
     // 툴 사용 로그
     const { createAdminClient } = await import("@/lib/supabase/admin");
-    const supabase = createAdminClient();
-    await supabase.from("tool_usage_logs").insert({
+    const adminSupabase = createAdminClient();
+    await adminSupabase.from("tool_usage_logs").insert({
       tool_type: "onpage-audit",
       input_summary: url,
     });
+
+    // 로그인 사용자면 analyses 테이블에도 저장
+    try {
+      const { createClient } = await import("@/lib/supabase/server");
+      const userSupabase = await createClient();
+      const { data: { user } } = await userSupabase.auth.getUser();
+      if (user) {
+        // 점수 추출: "SEO 점수: XX점" 또는 "## SEO 점수: XX" 패턴
+        let score: number | null = null;
+        if (analysis) {
+          const scoreMatch = analysis.match(/SEO\s*점수[:\s]*([\d]+)/);
+          if (scoreMatch) score = parseInt(scoreMatch[1], 10);
+        }
+        await adminSupabase.from("analyses").insert({
+          user_id: user.id,
+          tool_type: "onpage-audit",
+          input_summary: url,
+          score,
+          input: { url },
+          result: { parsed, analysis },
+        });
+      }
+    } catch {
+      // 세션 확인 실패 시 무시 (비로그인 사용자)
+    }
 
     return NextResponse.json({ parsed, analysis });
   } catch {

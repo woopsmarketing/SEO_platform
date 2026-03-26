@@ -17,7 +17,7 @@ const SERVICE_LABELS: Record<string, string> = {
 const STATUS_LABELS: Record<string, { label: string; color: string }> = {
   pending: { label: "대기", color: "bg-gray-100 text-gray-600" },
   in_progress: { label: "처리중", color: "bg-blue-100 text-blue-700" },
-  done: { label: "완료", color: "bg-green-100 text-green-700" },
+  resolved: { label: "완료", color: "bg-green-100 text-green-700" },
   closed: { label: "닫힘", color: "bg-red-100 text-red-600" },
 };
 

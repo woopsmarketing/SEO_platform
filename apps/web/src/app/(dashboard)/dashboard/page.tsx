@@ -21,6 +21,12 @@ export default async function DashboardPage() {
     .select("*", { count: "exact", head: true })
     .eq("email", user?.email ?? "");
 
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("plan, balance")
+    .eq("id", userId)
+    .single();
+
   const { data: recentAnalyses } = await supabase
     .from("analyses")
     .select("id, tool_type, input_summary, created_at")
@@ -66,21 +72,26 @@ export default async function DashboardPage() {
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>계정</CardDescription>
-            <CardTitle className="text-sm truncate">{user?.email}</CardTitle>
+            <CardDescription>구독 플랜</CardDescription>
+            <CardTitle className="text-3xl">
+              <span className={`inline-block rounded-full px-3 py-0.5 text-sm font-bold ${
+                profile?.plan === "pro" ? "bg-primary text-primary-foreground" : "bg-gray-100 text-gray-600"
+              }`}>
+                {profile?.plan === "pro" ? "Pro" : "Free"}
+              </span>
+            </CardTitle>
           </CardHeader>
           <CardContent>
-            <Link href="/dashboard/settings" className="text-xs text-primary hover:underline">프로필 설정</Link>
+            <Link href="/dashboard/settings" className="text-xs text-primary hover:underline">플랜 관리</Link>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardDescription>빠른 시작</CardDescription>
+            <CardDescription>잔액</CardDescription>
+            <CardTitle className="text-3xl">{`₩${(profile?.balance ?? 0).toLocaleString()}`}</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-2">
-            <Link href="/tools/onpage-audit">
-              <Button size="sm" className="w-full">SEO 분석하기</Button>
-            </Link>
+          <CardContent>
+            <Link href="/tools/onpage-audit" className="text-xs text-primary hover:underline">SEO 분석하기</Link>
           </CardContent>
         </Card>
       </div>
@@ -137,11 +148,11 @@ export default async function DashboardPage() {
                       </p>
                     </div>
                     <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${
-                      inq.status === "done" ? "bg-green-100 text-green-700" :
+                      inq.status === "resolved" ? "bg-green-100 text-green-700" :
                       inq.status === "in_progress" ? "bg-blue-100 text-blue-700" :
                       "bg-gray-100 text-gray-600"
                     }`}>
-                      {inq.status === "done" ? "완료" : inq.status === "in_progress" ? "처리중" : "대기"}
+                      {inq.status === "resolved" ? "완료" : inq.status === "in_progress" ? "처리중" : "대기"}
                     </span>
                   </div>
                 ))}
