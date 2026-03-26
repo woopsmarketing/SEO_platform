@@ -352,8 +352,8 @@ async function getRecommendation(apiKey: string, p: ParsedMeta): Promise<MetaRec
         Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: "gpt-5-nano-2025-08-07",
-        max_completion_tokens: 8000,
+        model: "gpt-4o-mini",
+        max_tokens: 2000,
         temperature: 0.3,
         messages: [{ role: "user", content: prompt }],
       }),

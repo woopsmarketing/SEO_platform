@@ -429,8 +429,8 @@ ${p.headings || "(없음)"}
       Authorization: `Bearer ${apiKey}`,
     },
     body: JSON.stringify({
-      model: "gpt-5-nano-2025-08-07",
-      max_completion_tokens: 16000,
+      model: "gpt-4o-mini",
+      max_tokens: 4000,
       messages: [{ role: "user", content: prompt }],
     }),
   });
