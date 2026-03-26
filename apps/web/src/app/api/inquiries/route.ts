@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { sendInquiryNotification } from "@/lib/email";
 
 const ALLOWED_SERVICE_TYPES = [
   "backlinks",
@@ -22,7 +23,6 @@ export async function POST(request: Request) {
       );
     }
 
-    // name length validation
     if (typeof name !== "string" || name.length > 100) {
       return NextResponse.json(
         { error: "이름은 100자 이내로 입력해주세요." },
@@ -30,7 +30,6 @@ export async function POST(request: Request) {
       );
     }
 
-    // email format validation
     if (typeof email !== "string" || !email.includes("@") || email.length > 320) {
       return NextResponse.json(
         { error: "올바른 이메일 형식을 입력해주세요." },
@@ -38,7 +37,6 @@ export async function POST(request: Request) {
       );
     }
 
-    // message length validation
     if (typeof message !== "string" || message.length > 5000) {
       return NextResponse.json(
         { error: "문의 내용은 5000자 이내로 입력해주세요." },
@@ -46,7 +44,6 @@ export async function POST(request: Request) {
       );
     }
 
-    // service_type whitelist validation
     if (!ALLOWED_SERVICE_TYPES.includes(service_type)) {
       return NextResponse.json(
         { error: "유효하지 않은 서비스 유형입니다." },
@@ -65,16 +62,18 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    // 이메일 알림 (비동기, 실패해도 문의 접수는 성공)
-    import("@/lib/email").then(({ sendInquiryNotification }) => {
-      sendInquiryNotification({
+    // 이메일 알림 (await하되, 실패해도 문의 접수 응답은 성공)
+    try {
+      await sendInquiryNotification({
         name,
         email,
         company,
         serviceType: service_type,
         message,
-      }).catch(console.error);
-    });
+      });
+    } catch (emailError) {
+      console.error("Email notification failed:", emailError);
+    }
 
     return NextResponse.json({ success: true, id: data.id }, { status: 201 });
   } catch {

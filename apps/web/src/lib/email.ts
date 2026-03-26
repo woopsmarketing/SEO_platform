@@ -14,8 +14,8 @@ export async function sendEmail({ to, subject, htmlContent, textContent }: SendE
     return null;
   }
 
-  const senderEmail = process.env.BREVO_SENDER_EMAIL || "noreply@seoworld.co.kr";
-  const senderName = process.env.BREVO_SENDER_NAME || "SEO월드";
+  const senderEmail = "admin@seoworld.co.kr";
+  const senderName = "SEO월드";
 
   const response = await fetch(BREVO_API_URL, {
     method: "POST",
@@ -56,7 +56,7 @@ export async function sendInquiryNotification({
   serviceType: string;
   message: string;
 }) {
-  const adminEmail = process.env.ADMIN_NOTIFICATION_EMAIL || "vnfm0580@gmail.com";
+  const adminEmail = "vnfm0580@gmail.com";
 
   // 관리자에게 알림
   await sendEmail({
