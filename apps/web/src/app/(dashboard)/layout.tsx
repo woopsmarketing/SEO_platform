@@ -9,8 +9,12 @@ export const metadata: Metadata = {
 const dashboardLinks = [
   { href: "/dashboard", label: "대시보드" },
   { href: "/dashboard/analyses", label: "분석 이력" },
-  { href: "/dashboard/downloads", label: "다운로드" },
-  { href: "/dashboard/settings", label: "설정" },
+  { href: "/dashboard/inquiries", label: "내 문의" },
+  { href: "/dashboard/favorites", label: "즐겨찾기 도메인" },
+  { href: "/dashboard/competitors", label: "경쟁사 비교" },
+  { href: "/dashboard/weekly-report", label: "주간 SEO 리포트" },
+  { href: "/dashboard/downloads", label: "다운로드 센터" },
+  { href: "/dashboard/settings", label: "프로필 설정" },
 ];
 
 /**
