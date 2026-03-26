@@ -65,6 +65,17 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
+    // 이메일 알림 (비동기, 실패해도 문의 접수는 성공)
+    import("@/lib/email").then(({ sendInquiryNotification }) => {
+      sendInquiryNotification({
+        name,
+        email,
+        company,
+        serviceType: service_type,
+        message,
+      }).catch(console.error);
+    });
+
     return NextResponse.json({ success: true, id: data.id }, { status: 201 });
   } catch {
     return NextResponse.json({ error: "서버 오류가 발생했습니다." }, { status: 500 });
