@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { saveDownload } from "@/lib/download-store";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -151,6 +152,7 @@ export function RobotsGeneratorForm() {
     a.download = "robots.txt";
     a.click();
     URL.revokeObjectURL(url);
+    saveDownload({ type: "robots.txt", filename: "robots.txt", content: output });
   }
 
   return (

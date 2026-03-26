@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { saveDownload } from "@/lib/download-store";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -537,7 +538,7 @@ export function MetaGeneratorForm() {
                         <Button
                           size="sm"
                           className="absolute right-2 top-2"
-                          onClick={() => copyText(generateRecommendedCode(p, rec), "code")}
+                          onClick={() => { const code = generateRecommendedCode(p, rec); copyText(code, "code"); saveDownload({ type: "meta-tags", filename: "meta-tags.html", content: code, url: p.url }); }}
                         >
                           {copiedSection === "code" ? "복사됨!" : "전체 복사"}
                         </Button>

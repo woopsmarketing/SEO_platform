@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { saveDownload } from "@/lib/download-store";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -160,6 +161,7 @@ export function SitemapGeneratorForm() {
     a.download = "sitemap.xml";
     a.click();
     URL.revokeObjectURL(url);
+    saveDownload({ type: "sitemap.xml", filename: "sitemap.xml", content: output });
   }
 
   return (
