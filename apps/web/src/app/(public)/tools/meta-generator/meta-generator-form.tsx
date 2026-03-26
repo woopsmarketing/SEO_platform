@@ -661,8 +661,8 @@ function MetaRow({
             ok === true ? "text-green-700" : ok === false ? "text-red-600" : ""
           }`}
         >
-          {ok === true && "\u2714 "}
-          {ok === false && "\u2718 "}
+          {ok === true && "✔ "}
+          {ok === false && "✘ "}
           {isLong ? display.slice(0, 60) + "..." : display}
         </span>
         {sub && <span className="text-xs text-muted-foreground ml-1">({sub})</span>}

@@ -279,7 +279,7 @@ function Row({ label, value, ok }: { label: string; value: string; ok?: boolean 
     <div className="flex items-start justify-between gap-4">
       <span className="shrink-0 font-medium text-muted-foreground">{label}</span>
       <span className={`text-right ${ok === true ? "text-green-700" : ok === false ? "text-red-600" : ""}`}>
-        {ok === true && "\u2714 "}{ok === false && "\u2718 "}{value}
+        {ok === true && "✔ "}{ok === false && "✘ "}{value}
       </span>
     </div>
   );

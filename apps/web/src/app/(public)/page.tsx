@@ -182,7 +182,7 @@ export default function HomePage() {
                   "페이지 로딩 속도", "HTTPS 보안 인증", "구조화 데이터 (JSON-LD)", "Open Graph 태그",
                   "Gzip/Brotli 압축", "모바일 반응형 뷰포트"].map((item) => (
                   <div key={item} className="flex items-center gap-2 rounded-lg bg-green-50 border border-green-100 px-3 py-2.5 text-sm">
-                    <span className="text-green-600 shrink-0">\u2714</span>
+                    <span className="text-green-600 shrink-0">✔</span>
                     <span>{item}</span>
                   </div>
                 ))}

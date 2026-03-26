@@ -79,10 +79,10 @@ export default function ToolsPage() {
               문제점을 진단하여 구글 상위노출에 최적화된 추천안을 제시합니다.
             </p>
             <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
-              <li className="flex gap-2"><span className="text-green-600 shrink-0">\u2714</span>Title, Description, OG, Twitter Card 등 30+ 항목 분석</li>
-              <li className="flex gap-2"><span className="text-green-600 shrink-0">\u2714</span>현재 vs 추천 구글 검색 미리보기 비교</li>
-              <li className="flex gap-2"><span className="text-green-600 shrink-0">\u2714</span>한글/영문 사이트 자동 감지 및 기준 전환</li>
-              <li className="flex gap-2"><span className="text-green-600 shrink-0">\u2714</span>최적화된 메타태그 코드 복사 기능</li>
+              <li className="flex gap-2"><span className="text-green-600 shrink-0">✔</span>Title, Description, OG, Twitter Card 등 30+ 항목 분석</li>
+              <li className="flex gap-2"><span className="text-green-600 shrink-0">✔</span>현재 vs 추천 구글 검색 미리보기 비교</li>
+              <li className="flex gap-2"><span className="text-green-600 shrink-0">✔</span>한글/영문 사이트 자동 감지 및 기준 전환</li>
+              <li className="flex gap-2"><span className="text-green-600 shrink-0">✔</span>최적화된 메타태그 코드 복사 기능</li>
             </ul>
             <div className="mt-5">
               <Link href="/tools/meta-generator"><Button size="sm">메타태그 분석하기</Button></Link>
@@ -98,10 +98,10 @@ export default function ToolsPage() {
               점수와 함께 코드 예시가 포함된 구체적인 개선 방안을 제시합니다.
             </p>
             <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
-              <li className="flex gap-2"><span className="text-green-600 shrink-0">\u2714</span>35개 SEO 항목 자동 검사 및 점수 산출</li>
-              <li className="flex gap-2"><span className="text-green-600 shrink-0">\u2714</span>코드 예시가 포함된 구체적 개선안</li>
-              <li className="flex gap-2"><span className="text-green-600 shrink-0">\u2714</span>Next.js, Nuxt.js 등 프레임워크 특성 반영</li>
-              <li className="flex gap-2"><span className="text-green-600 shrink-0">\u2714</span>SPA/CSR 사이트 감지 및 SSR 권장 안내</li>
+              <li className="flex gap-2"><span className="text-green-600 shrink-0">✔</span>35개 SEO 항목 자동 검사 및 점수 산출</li>
+              <li className="flex gap-2"><span className="text-green-600 shrink-0">✔</span>코드 예시가 포함된 구체적 개선안</li>
+              <li className="flex gap-2"><span className="text-green-600 shrink-0">✔</span>Next.js, Nuxt.js 등 프레임워크 특성 반영</li>
+              <li className="flex gap-2"><span className="text-green-600 shrink-0">✔</span>SPA/CSR 사이트 감지 및 SSR 권장 안내</li>
             </ul>
             <div className="mt-5">
               <Link href="/tools/onpage-audit"><Button size="sm">온페이지 SEO 분석하기</Button></Link>
