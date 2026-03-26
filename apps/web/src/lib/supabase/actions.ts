@@ -15,14 +15,15 @@ export async function signUp(formData: FormData) {
     password,
     options: {
       data: { display_name: displayName || email.split("@")[0] },
+      emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
     },
   });
 
   if (error) {
-    return redirect(`/signup?error=${encodeURIComponent(error.message)}`);
+    redirect(`/signup?error=${encodeURIComponent(error.message)}`);
   }
 
-  return redirect("/login?message=가입이 완료되었습니다. 이메일을 확인해주세요.");
+  redirect("/login?message=가입이 완료되었습니다. 이메일을 확인해주세요.");
 }
 
 export async function signIn(formData: FormData) {
@@ -38,16 +39,16 @@ export async function signIn(formData: FormData) {
   });
 
   if (error) {
-    return redirect(`/login?error=${encodeURIComponent(error.message)}`);
+    redirect(`/login?error=${encodeURIComponent(error.message)}`);
   }
 
-  return redirect(redirectTo);
+  redirect(redirectTo);
 }
 
 export async function signOut() {
   const supabase = await createClient();
   await supabase.auth.signOut();
-  return redirect("/");
+  redirect("/");
 }
 
 export async function signInWithGoogle() {
@@ -65,12 +66,12 @@ export async function signInWithGoogle() {
   });
 
   if (error) {
-    return redirect(`/login?error=${encodeURIComponent(error.message)}`);
+    redirect(`/login?error=${encodeURIComponent(error.message)}`);
   }
 
   if (data.url) {
-    return redirect(data.url);
+    redirect(data.url);
   }
 
-  return redirect("/login?error=Google 로그인에 실패했습니다.");
+  redirect("/login?error=Google 로그인에 실패했습니다.");
 }
