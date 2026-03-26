@@ -228,14 +228,14 @@ function parseHtml(html: string, requestUrl: string, finalUrl: string, statusCod
   // OG image URL
   const ogImageUrl = extractProperty(html, "og:image");
 
-  // 구조화 데이터 타입
+  // 구조화 데이터 타입 — @graph 배열 및 중첩 구조 대응
   const ldJsonMatches = html.match(/<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi) || [];
   const structuredDataTypes: string[] = [];
   for (const match of ldJsonMatches) {
     try {
       const json = match.replace(/<script[^>]*>|<\/script>/gi, "");
       const data = JSON.parse(json);
-      if (data["@type"]) structuredDataTypes.push(data["@type"]);
+      extractLdTypes(data, structuredDataTypes);
     } catch {}
   }
 
@@ -291,6 +291,21 @@ function parseHtml(html: string, requestUrl: string, finalUrl: string, statusCod
     duplicateDescription,
     ogImageUrl,
   };
+}
+
+function extractLdTypes(data: Record<string, unknown>, types: string[]) {
+  if (!data || typeof data !== "object") return;
+  if (data["@type"]) {
+    const t = data["@type"];
+    if (Array.isArray(t)) t.forEach((v: string) => { if (!types.includes(v)) types.push(v); });
+    else if (typeof t === "string" && !types.includes(t)) types.push(t);
+  }
+  if (Array.isArray(data["@graph"])) {
+    for (const item of data["@graph"]) extractLdTypes(item, types);
+  }
+  if (Array.isArray(data)) {
+    for (const item of data) extractLdTypes(item, types);
+  }
 }
 
 function extractMeta(html: string, regex: RegExp): string | null {

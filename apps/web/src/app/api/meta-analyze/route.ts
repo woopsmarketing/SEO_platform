@@ -141,14 +141,15 @@ function parseHead(html: string, url: string, statusCode: number): ParsedMeta {
   const twitterImage = extractMetaContent(head, "twitter:image") || extractProperty(head, "twitter:image");
   const twitterSite = extractMetaContent(head, "twitter:site") || extractProperty(head, "twitter:site");
 
-  // Structured Data
-  const ldJsonMatches = head.match(/<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi) || [];
+  // Structured Data — head뿐 아니라 전체 HTML에서 검색 + @graph 배열 대응
+  const fullHtml = headMatch ? headMatch[0] + (html.match(/<body[\s\S]*<\/body>/i)?.[0] || "") : html;
+  const ldJsonMatches = fullHtml.match(/<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi) || [];
   const structuredDataTypes: string[] = [];
   for (const match of ldJsonMatches) {
     try {
       const json = match.replace(/<script[^>]*>|<\/script>/gi, "");
       const data = JSON.parse(json);
-      if (data["@type"]) structuredDataTypes.push(data["@type"]);
+      extractLdTypes(data, structuredDataTypes);
     } catch {}
   }
 
@@ -192,6 +193,21 @@ function parseHead(html: string, url: string, statusCode: number): ParsedMeta {
     alternateLinks,
     headRaw: head.slice(0, 5000),
   };
+}
+
+function extractLdTypes(data: Record<string, unknown>, types: string[]) {
+  if (!data || typeof data !== "object") return;
+  if (data["@type"]) {
+    const t = data["@type"];
+    if (Array.isArray(t)) t.forEach((v: string) => { if (!types.includes(v)) types.push(v); });
+    else if (typeof t === "string" && !types.includes(t)) types.push(t);
+  }
+  if (Array.isArray(data["@graph"])) {
+    for (const item of data["@graph"]) extractLdTypes(item, types);
+  }
+  if (Array.isArray(data)) {
+    for (const item of data) extractLdTypes(item, types);
+  }
 }
 
 function extractTag(html: string, regex: RegExp): string | null {
