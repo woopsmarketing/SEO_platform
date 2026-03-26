@@ -39,45 +39,40 @@ export default function HomePage() {
       />
 
       {/* ====== 1. Hero ====== */}
-      <section className="relative overflow-hidden bg-gray-950 py-24 md:py-32">
+      <section className="relative overflow-hidden bg-white py-24 md:py-32">
         <Image
-          src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1920&q=80&auto=format"
-          alt="구글 SEO 분석 대시보드"
+          src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1920&q=80&auto=format"
+          alt="구글 SEO 분석 데이터 차트"
           fill
-          className="object-cover opacity-20"
+          className="object-cover opacity-[0.06]"
           priority
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-gray-950/60 to-gray-950/90" />
-        <div className="relative mx-auto max-w-7xl px-4">
-          <div className="max-w-3xl">
-            <div className="mb-4 inline-block rounded-full bg-blue-600/20 px-4 py-1.5 text-sm font-medium text-blue-400 border border-blue-500/30">
-              무료 SEO 분석 도구
-            </div>
-            <h1 className="text-4xl font-bold tracking-tight text-white md:text-5xl lg:text-6xl leading-tight">
-              구글 상위노출을 위한<br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">
-                SEO 분석과 백링크
-              </span>
-            </h1>
-            <p className="mt-5 max-w-2xl text-lg text-gray-300 leading-relaxed md:text-xl">
-              URL만 입력하면 35개 SEO 항목을 자동 진단합니다.
-              구글 SEO에 필요한 메타태그 분석, 온페이지 최적화, 사이트맵 생성까지 모두 무료로 제공합니다.
-              백링크 서비스와 웹 디자인으로 구글 상위노출을 달성하세요.
-            </p>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:gap-4">
-              <Link href="/tools">
-                <Button size="lg" className="w-full bg-blue-600 hover:bg-blue-700 text-white text-base px-8 sm:w-auto">
-                  무료 SEO 분석 시작하기
-                </Button>
-              </Link>
-              <Link href="/services/backlinks">
-                <Button size="lg" variant="outline" className="w-full border-gray-500 text-gray-200 hover:bg-gray-800 text-base px-8 sm:w-auto">
-                  백링크 서비스 보기
-                </Button>
-              </Link>
-            </div>
-            <p className="mt-4 text-sm text-gray-500">회원가입 없이 바로 사용 가능 &middot; 완전 무료</p>
+        <div className="relative mx-auto max-w-7xl px-4 text-center">
+          <div className="mb-4 inline-block rounded-full bg-blue-50 px-4 py-1.5 text-sm font-medium text-blue-600 border border-blue-200">
+            무료 SEO 분석 도구
           </div>
+          <h1 className="text-4xl font-bold tracking-tight text-gray-900 md:text-5xl lg:text-6xl leading-tight">
+            구글 상위노출을 위한<br />
+            <span className="text-blue-600">SEO 분석과 백링크</span>
+          </h1>
+          <p className="mx-auto mt-5 max-w-2xl text-lg text-gray-600 leading-relaxed md:text-xl">
+            URL만 입력하면 35개 SEO 항목을 자동 진단합니다.
+            구글 SEO에 필요한 메타태그 분석, 온페이지 최적화, 사이트맵 생성까지 모두 무료로 제공합니다.
+            백링크 서비스와 웹 디자인으로 구글 상위노출을 달성하세요.
+          </p>
+          <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row sm:gap-4">
+            <Link href="/tools">
+              <Button size="lg" className="w-full bg-blue-600 hover:bg-blue-700 text-white text-base px-8 sm:w-auto">
+                무료 SEO 분석 시작하기
+              </Button>
+            </Link>
+            <Link href="/services/backlinks">
+              <Button size="lg" variant="outline" className="w-full text-base px-8 sm:w-auto">
+                백링크 서비스 보기
+              </Button>
+            </Link>
+          </div>
+          <p className="mt-4 text-sm text-gray-400">회원가입 없이 바로 사용 가능 &middot; 완전 무료</p>
         </div>
       </section>
 
@@ -497,17 +492,10 @@ export default function HomePage() {
       </section>
 
       {/* ====== 12. CTA ====== */}
-      <section className="relative overflow-hidden bg-gray-950 py-20">
-        <Image
-          src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1920&q=80&auto=format"
-          alt="SEO 분석 데이터 차트"
-          fill
-          className="object-cover opacity-15"
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-gray-950/80 to-gray-950/60" />
-        <div className="relative mx-auto max-w-3xl px-4 text-center">
-          <h2 className="text-3xl font-bold text-white">구글 상위노출, 지금 시작하세요</h2>
-          <p className="mt-4 text-gray-300 leading-relaxed">
+      <section className="bg-blue-50 py-20">
+        <div className="mx-auto max-w-3xl px-4 text-center">
+          <h2 className="text-3xl font-bold text-gray-900">구글 상위노출, 지금 시작하세요</h2>
+          <p className="mt-4 text-gray-600 leading-relaxed">
             무료 SEO 분석 도구로 현재 상태를 파악하고,
             전문 백링크 서비스로 검색 순위를 높이세요.
           </p>
@@ -518,7 +506,7 @@ export default function HomePage() {
               </Button>
             </Link>
             <Link href="/services/backlinks">
-              <Button size="lg" variant="outline" className="w-full border-gray-500 text-gray-200 hover:bg-gray-800 text-base px-8 sm:w-auto">
+              <Button size="lg" variant="outline" className="w-full text-base px-8 sm:w-auto">
                 백링크 서비스 문의
               </Button>
             </Link>
