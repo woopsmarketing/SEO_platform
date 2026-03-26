@@ -50,6 +50,7 @@ interface ParsedSeo {
   hasCacheControl: string | null;
   hasHsts: boolean;
   redirectCount: number;
+  redirectIsWww: boolean;
   duplicateH1: boolean;
   duplicateDescription: boolean;
   ogImageUrl: string | null;
@@ -160,10 +161,18 @@ function ParsedDataCards({ parsed }: { parsed: ParsedSeo }) {
           <Row label="로딩 시간" value={`${parsed.loadTimeMs}ms`} ok={parsed.loadTimeMs < 3000} />
           <Row label="HTML 크기" value={`${(parsed.htmlSize / 1024).toFixed(1)} KB`} />
           <Row label="단어 수" value={String(parsed.wordCount)} ok={parsed.wordCount >= 300} />
-          <Row label="텍스트/HTML 비율" value={`${parsed.textToHtmlRatio}%`} ok={parsed.textToHtmlRatio >= 10} />
+          <Row
+            label="텍스트/HTML 비율"
+            value={parsed.textToHtmlRatio < 10 ? `${parsed.textToHtmlRatio}% — JS 렌더링 사이트(SPA)일 수 있음` : `${parsed.textToHtmlRatio}%`}
+            ok={parsed.textToHtmlRatio >= 10}
+          />
           <Row label="URL 깊이" value={`${parsed.urlDepth}단계 (${parsed.urlLength}자)`} ok={parsed.urlDepth <= 3} />
           {parsed.redirectCount > 0 && (
-            <Row label="리다이렉트" value={`${parsed.redirectCount}회`} ok={false} />
+            <Row
+              label="리다이렉트"
+              value={parsed.redirectIsWww ? `${parsed.redirectCount}회 (www 정규화 — 정상)` : `${parsed.redirectCount}회`}
+              ok={parsed.redirectIsWww}
+            />
           )}
         </CardContent>
       </Card>
@@ -233,7 +242,11 @@ function ParsedDataCards({ parsed }: { parsed: ParsedSeo }) {
           <Row label="HSTS" value={parsed.hasHsts ? "적용됨" : "미적용"} ok={parsed.hasHsts} />
           <Row label="Cache-Control" value={parsed.hasCacheControl || "없음"} />
           <Row label="인라인 CSS" value={`${(parsed.inlineCssSize / 1024).toFixed(1)} KB`} ok={parsed.inlineCssSize < 50000} />
-          <Row label="인라인 JS" value={`${(parsed.inlineJsSize / 1024).toFixed(1)} KB`} ok={parsed.inlineJsSize < 50000} />
+          <Row
+            label="인라인 JS"
+            value={parsed.inlineJsSize > 50000 ? `${(parsed.inlineJsSize / 1024).toFixed(1)} KB — 외부 파일로 분리 권장` : `${(parsed.inlineJsSize / 1024).toFixed(1)} KB`}
+            ok={parsed.inlineJsSize < 50000}
+          />
           {parsed.hasDeprecatedTags.length > 0 && (
             <Row label="Deprecated 태그" value={parsed.hasDeprecatedTags.join(", ")} ok={false} />
           )}

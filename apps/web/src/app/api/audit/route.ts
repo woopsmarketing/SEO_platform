@@ -111,6 +111,7 @@ interface ParsedSeo {
   hasCacheControl: string | null;
   hasHsts: boolean;
   redirectCount: number;
+  redirectIsWww: boolean;
   duplicateH1: boolean;
   duplicateDescription: boolean;
   ogImageUrl: string | null;
@@ -204,6 +205,18 @@ function parseHtml(html: string, requestUrl: string, finalUrl: string, statusCod
 
   // 리다이렉트 감지
   const redirectCount = requestUrl !== finalUrl ? 1 : 0;
+  // www 리다이렉트인지 판정 (example.com → www.example.com 또는 반대)
+  let redirectIsWww = false;
+  if (redirectCount > 0) {
+    try {
+      const reqHost = new URL(requestUrl).hostname;
+      const finalHost = new URL(finalUrl).hostname;
+      redirectIsWww =
+        reqHost === "www." + finalHost ||
+        finalHost === "www." + reqHost ||
+        reqHost.replace(/^www\./, "") === finalHost.replace(/^www\./, "");
+    } catch {}
+  }
 
   // 중복 H1
   const duplicateH1 = h1s.length > 1;
@@ -273,6 +286,7 @@ function parseHtml(html: string, requestUrl: string, finalUrl: string, statusCod
     hasCacheControl,
     hasHsts,
     redirectCount,
+    redirectIsWww,
     duplicateH1,
     duplicateDescription,
     ogImageUrl,
@@ -400,8 +414,8 @@ ${p.headings || "(없음)"}
       Authorization: `Bearer ${apiKey}`,
     },
     body: JSON.stringify({
-      model: "gpt-4o-mini",
-      max_tokens: 2000,
+      model: "gpt-5-nano-2025-08-07",
+      max_tokens: 4000,
       messages: [{ role: "user", content: prompt }],
     }),
   });
