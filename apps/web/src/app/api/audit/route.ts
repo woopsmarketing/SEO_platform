@@ -430,7 +430,7 @@ ${p.headings || "(없음)"}
     },
     body: JSON.stringify({
       model: "gpt-5-nano-2025-08-07",
-      max_tokens: 4000,
+      max_completion_tokens: 4000,
       messages: [{ role: "user", content: prompt }],
     }),
   });
