@@ -1,5 +1,5 @@
 export const SITE_NAME = "SEO월드";
 export const SITE_DESCRIPTION =
-  "무료 SEO 분석 도구와 도메인 정보를 제공하는 SEO 전문 플랫폼";
+  "메타태그 분석, 온페이지 SEO 진단, 사이트맵 생성 등 무료 SEO 도구를 제공합니다. URL만 입력하면 AI가 검색 순위 개선 방안을 제시합니다.";
 export const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL || "https://seoworld.co.kr";
