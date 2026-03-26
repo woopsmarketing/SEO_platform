@@ -13,6 +13,7 @@ interface ParsedSeo {
   titleLength: number;
   metaDescription: string | null;
   metaDescriptionLength: number;
+  metaKeywords: string | null;
   canonical: string | null;
   h1: string[];
   h2: string[];
@@ -21,6 +22,7 @@ interface ParsedSeo {
   imgWithoutAlt: number;
   internalLinks: number;
   externalLinks: number;
+  nofollowLinks: number;
   hasViewport: boolean;
   hasCharset: boolean;
   hasOgTitle: boolean;
@@ -30,8 +32,27 @@ interface ParsedSeo {
   hasRobotsMeta: string | null;
   hasHreflang: boolean;
   hasStructuredData: boolean;
+  structuredDataTypes: string[];
   wordCount: number;
   htmlSize: number;
+  xRobotsTag: string | null;
+  isHttps: boolean;
+  lang: string | null;
+  hasFavicon: boolean;
+  textToHtmlRatio: number;
+  urlDepth: number;
+  urlLength: number;
+  hasDeprecatedTags: string[];
+  hasIframes: number;
+  inlineCssSize: number;
+  inlineJsSize: number;
+  hasGzip: boolean;
+  hasCacheControl: string | null;
+  hasHsts: boolean;
+  redirectCount: number;
+  duplicateH1: boolean;
+  duplicateDescription: boolean;
+  ogImageUrl: string | null;
 }
 
 interface AuditResult {
@@ -73,7 +94,6 @@ export function AuditForm() {
 
   return (
     <div className="space-y-8">
-      {/* URL 입력 */}
       <Card>
         <CardContent className="pt-6">
           <div className="flex gap-3">
@@ -88,9 +108,7 @@ export function AuditForm() {
               {loading ? "분석 중..." : "SEO 분석"}
             </Button>
           </div>
-          {error && (
-            <p className="mt-3 text-sm text-destructive">{error}</p>
-          )}
+          {error && <p className="mt-3 text-sm text-destructive">{error}</p>}
           {loading && (
             <p className="mt-3 text-sm text-muted-foreground">
               페이지를 가져오고 AI가 분석하고 있습니다... (최대 30초)
@@ -101,12 +119,9 @@ export function AuditForm() {
 
       {result && (
         <div className="grid gap-6 lg:grid-cols-2">
-          {/* 파싱 결과 — 왼쪽 */}
           <div className="space-y-6">
             <ParsedDataCards parsed={result.parsed} />
           </div>
-
-          {/* AI 분석 — 오른쪽 */}
           <div>
             <Card>
               <CardHeader>
@@ -141,9 +156,15 @@ function ParsedDataCards({ parsed }: { parsed: ParsedSeo }) {
         <CardContent className="space-y-2 text-sm">
           <Row label="URL" value={parsed.url} />
           <Row label="상태 코드" value={String(parsed.statusCode)} ok={parsed.statusCode === 200} />
+          <Row label="HTTPS" value={parsed.isHttps ? "적용됨" : "미적용"} ok={parsed.isHttps} />
           <Row label="로딩 시간" value={`${parsed.loadTimeMs}ms`} ok={parsed.loadTimeMs < 3000} />
           <Row label="HTML 크기" value={`${(parsed.htmlSize / 1024).toFixed(1)} KB`} />
           <Row label="단어 수" value={String(parsed.wordCount)} ok={parsed.wordCount >= 300} />
+          <Row label="텍스트/HTML 비율" value={`${parsed.textToHtmlRatio}%`} ok={parsed.textToHtmlRatio >= 10} />
+          <Row label="URL 깊이" value={`${parsed.urlDepth}단계 (${parsed.urlLength}자)`} ok={parsed.urlDepth <= 3} />
+          {parsed.redirectCount > 0 && (
+            <Row label="리다이렉트" value={`${parsed.redirectCount}회`} ok={false} />
+          )}
         </CardContent>
       </Card>
 
@@ -156,13 +177,18 @@ function ParsedDataCards({ parsed }: { parsed: ParsedSeo }) {
             value={parsed.title ? `${parsed.title} (${parsed.titleLength}자)` : "없음"}
             ok={!!parsed.title && parsed.titleLength >= 10 && parsed.titleLength <= 60}
           />
+          {parsed.duplicateDescription && (
+            <Row label="중복 Description" value="description이 2번 이상 선언됨" ok={false} />
+          )}
           <Row
             label="Description"
             value={parsed.metaDescription ? `${parsed.metaDescription.slice(0, 80)}... (${parsed.metaDescriptionLength}자)` : "없음"}
             ok={!!parsed.metaDescription && parsed.metaDescriptionLength >= 50 && parsed.metaDescriptionLength <= 160}
           />
+          <Row label="Keywords" value={parsed.metaKeywords ? `${parsed.metaKeywords.slice(0, 60)}...` : "없음"} />
           <Row label="Canonical" value={parsed.canonical || "없음"} ok={!!parsed.canonical} />
           <Row label="Robots" value={parsed.hasRobotsMeta || "없음"} />
+          <Row label="Lang" value={parsed.lang || "없음"} ok={!!parsed.lang} />
         </CardContent>
       </Card>
 
@@ -171,6 +197,9 @@ function ParsedDataCards({ parsed }: { parsed: ParsedSeo }) {
         <CardHeader><CardTitle className="text-base">제목 구조</CardTitle></CardHeader>
         <CardContent className="space-y-2 text-sm">
           <Row label="H1" value={`${parsed.h1.length}개${parsed.h1.length > 0 ? ` — "${parsed.h1[0]}"` : ""}`} ok={parsed.h1.length === 1} />
+          {parsed.duplicateH1 && (
+            <Row label="중복 H1" value={`H1이 ${parsed.h1.length}개 — 1개만 사용 권장`} ok={false} />
+          )}
           <Row label="H2" value={`${parsed.h2.length}개`} ok={parsed.h2.length > 0} />
           <Row label="H3" value={`${parsed.h3Count}개`} />
         </CardContent>
@@ -184,19 +213,48 @@ function ParsedDataCards({ parsed }: { parsed: ParsedSeo }) {
           <Row label="Alt 미설정" value={`${parsed.imgWithoutAlt}개`} ok={parsed.imgWithoutAlt === 0} />
           <Row label="내부 링크" value={`${parsed.internalLinks}개`} ok={parsed.internalLinks > 0} />
           <Row label="외부 링크" value={`${parsed.externalLinks}개`} />
+          {parsed.nofollowLinks > 0 && (
+            <Row label="Nofollow 링크" value={`${parsed.nofollowLinks}개`} />
+          )}
+          {parsed.hasIframes > 0 && (
+            <Row label="iframe" value={`${parsed.hasIframes}개 — 크롤링 방해 가능`} ok={false} />
+          )}
         </CardContent>
       </Card>
 
-      {/* 기술 & 소셜 */}
+      {/* 기술 SEO */}
       <Card>
-        <CardHeader><CardTitle className="text-base">기술 & 소셜</CardTitle></CardHeader>
+        <CardHeader><CardTitle className="text-base">기술 SEO</CardTitle></CardHeader>
         <CardContent className="space-y-2 text-sm">
           <Row label="Viewport" value={parsed.hasViewport ? "설정됨" : "없음"} ok={parsed.hasViewport} />
           <Row label="Charset" value={parsed.hasCharset ? "설정됨" : "없음"} ok={parsed.hasCharset} />
-          <Row label="Structured Data" value={parsed.hasStructuredData ? "있음" : "없음"} ok={parsed.hasStructuredData} />
-          <Row label="Hreflang" value={parsed.hasHreflang ? "있음" : "없음"} />
+          <Row label="Favicon" value={parsed.hasFavicon ? "있음" : "없음"} ok={parsed.hasFavicon} />
+          <Row label="Gzip/Brotli" value={parsed.hasGzip ? "적용됨" : "미적용"} ok={parsed.hasGzip} />
+          <Row label="HSTS" value={parsed.hasHsts ? "적용됨" : "미적용"} ok={parsed.hasHsts} />
+          <Row label="Cache-Control" value={parsed.hasCacheControl || "없음"} />
+          <Row label="인라인 CSS" value={`${(parsed.inlineCssSize / 1024).toFixed(1)} KB`} ok={parsed.inlineCssSize < 50000} />
+          <Row label="인라인 JS" value={`${(parsed.inlineJsSize / 1024).toFixed(1)} KB`} ok={parsed.inlineJsSize < 50000} />
+          {parsed.hasDeprecatedTags.length > 0 && (
+            <Row label="Deprecated 태그" value={parsed.hasDeprecatedTags.join(", ")} ok={false} />
+          )}
+        </CardContent>
+      </Card>
+
+      {/* 소셜 & 구조화 데이터 */}
+      <Card>
+        <CardHeader><CardTitle className="text-base">소셜 & 구조화 데이터</CardTitle></CardHeader>
+        <CardContent className="space-y-2 text-sm">
           <Row label="OG Tags" value={[parsed.hasOgTitle && "title", parsed.hasOgDescription && "desc", parsed.hasOgImage && "image"].filter(Boolean).join(", ") || "없음"} ok={parsed.hasOgTitle && parsed.hasOgDescription} />
+          {parsed.ogImageUrl && (
+            <Row label="OG Image" value={parsed.ogImageUrl.length > 50 ? parsed.ogImageUrl.slice(0, 50) + "..." : parsed.ogImageUrl} />
+          )}
           <Row label="Twitter Card" value={parsed.hasTwitterCard ? "있음" : "없음"} ok={parsed.hasTwitterCard} />
+          <Row
+            label="JSON-LD"
+            value={parsed.hasStructuredData ? parsed.structuredDataTypes.join(", ") : "없음"}
+            ok={parsed.hasStructuredData}
+          />
+          <Row label="Hreflang" value={parsed.hasHreflang ? "있음" : "없음"} />
         </CardContent>
       </Card>
     </>
@@ -208,14 +266,13 @@ function Row({ label, value, ok }: { label: string; value: string; ok?: boolean 
     <div className="flex items-start justify-between gap-4">
       <span className="shrink-0 font-medium text-muted-foreground">{label}</span>
       <span className={`text-right ${ok === true ? "text-green-700" : ok === false ? "text-red-600" : ""}`}>
-        {ok === true && "✓ "}{ok === false && "✗ "}{value}
+        {ok === true && "\u2714 "}{ok === false && "\u2718 "}{value}
       </span>
     </div>
   );
 }
 
 function MarkdownRenderer({ text }: { text: string }) {
-  // 간단한 마크다운 → HTML 변환
   const lines = text.split("\n");
   const elements: JSX.Element[] = [];
   let i = 0;
@@ -233,7 +290,7 @@ function MarkdownRenderer({ text }: { text: string }) {
     } else if (trimmed.startsWith("- ")) {
       elements.push(
         <p key={i} className="ml-4 my-0.5">
-          <span className="text-muted-foreground mr-1">•</span>
+          <span className="text-muted-foreground mr-1">&bull;</span>
           {formatBold(trimmed.slice(2))}
         </p>
       );
