@@ -233,6 +233,7 @@ export function MetaGeneratorForm() {
 
   const p = result?.parsed;
   const rec = result?.recommendation;
+  const isKr = p ? (isKoreanText(p.title) || isKoreanText(p.metaDescription)) : false;
   const diagnostics = p ? generateDiagnostics(p) : [];
   const errors = diagnostics.filter((d) => d.type === "error");
   const warnings = diagnostics.filter((d) => d.type === "warning");
@@ -393,13 +394,13 @@ export function MetaGeneratorForm() {
                     label="Title"
                     value={p.title}
                     sub={p.title ? `${p.titleLength}자` : undefined}
-                    ok={!!p.title && p.titleLength >= 10 && p.titleLength <= 60}
+                    ok={!!p.title && p.titleLength >= (isKr ? 15 : 30) && p.titleLength <= (isKr ? 40 : 60)}
                   />
                   <MetaRow
                     label="Description"
                     value={p.metaDescription}
                     sub={p.metaDescription ? `${p.metaDescriptionLength}자` : undefined}
-                    ok={!!p.metaDescription && p.metaDescriptionLength >= 50 && p.metaDescriptionLength <= 160}
+                    ok={!!p.metaDescription && p.metaDescriptionLength >= (isKr ? 40 : 80) && p.metaDescriptionLength <= (isKr ? 80 : 160)}
                   />
                   <MetaRow label="Keywords" value={p.metaKeywords} ok={!!p.metaKeywords} />
                   <MetaRow label="Canonical" value={p.canonical} ok={!!p.canonical} />
@@ -458,41 +459,22 @@ export function MetaGeneratorForm() {
 
               {rec ? (
                 <>
-                  <Card className="border-green-200">
-                    <CardHeader>
-                      <CardTitle className="text-base">추천 Title</CardTitle>
-                      <CardDescription>{rec.title.length}자</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex items-start justify-between gap-3">
-                        <p className="text-sm font-medium">{rec.title}</p>
-                        <CopyBtn
-                          text={rec.title}
-                          section="title"
-                          copied={copiedSection}
-                          onCopy={copyText}
-                        />
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  <Card className="border-green-200">
-                    <CardHeader>
-                      <CardTitle className="text-base">추천 Description</CardTitle>
-                      <CardDescription>{rec.description.length}자</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex items-start justify-between gap-3">
-                        <p className="text-sm">{rec.description}</p>
-                        <CopyBtn
-                          text={rec.description}
-                          section="desc"
-                          copied={copiedSection}
-                          onCopy={copyText}
-                        />
-                      </div>
-                    </CardContent>
-                  </Card>
+                  <RecCard
+                    label="추천 Title"
+                    current={p.title}
+                    recommended={rec.title}
+                    section="title"
+                    copied={copiedSection}
+                    onCopy={copyText}
+                  />
+                  <RecCard
+                    label="추천 Description"
+                    current={p.metaDescription}
+                    recommended={rec.description}
+                    section="desc"
+                    copied={copiedSection}
+                    onCopy={copyText}
+                  />
 
                   <Card className="border-green-200">
                     <CardHeader>
@@ -614,6 +596,45 @@ function GooglePreview({
         {description || "(설명 없음)"}
       </p>
     </div>
+  );
+}
+
+function RecCard({
+  label,
+  current,
+  recommended,
+  section,
+  copied,
+  onCopy,
+}: {
+  label: string;
+  current: string | null;
+  recommended: string;
+  section: string;
+  copied: string | null;
+  onCopy: (text: string, section: string) => void;
+}) {
+  const isSame = current?.trim() === recommended.trim();
+
+  return (
+    <Card className={isSame ? "border-muted" : "border-green-200"}>
+      <CardHeader>
+        <CardTitle className="text-base">{label}</CardTitle>
+        <CardDescription>
+          {isSame ? "현재 값 유지 — 변경 불필요" : `${recommended.length}자`}
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        {isSame ? (
+          <p className="text-sm text-muted-foreground">현재 메타태그가 적절합니다. 그대로 유지하세요.</p>
+        ) : (
+          <div className="flex items-start justify-between gap-3">
+            <p className="text-sm font-medium">{recommended}</p>
+            <CopyBtn text={recommended} section={section} copied={copied} onCopy={onCopy} />
+          </div>
+        )}
+      </CardContent>
+    </Card>
   );
 }
 
