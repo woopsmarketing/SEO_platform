@@ -99,13 +99,27 @@ export async function POST(request: Request) {
       const userSupabase = await createClient();
       const { data: { user } } = await userSupabase.auth.getUser();
       if (user) {
+        const summary = {
+          title: parsed.title,
+          titleLength: parsed.titleLength,
+          description: parsed.metaDescription,
+          descriptionLength: parsed.metaDescriptionLength,
+          hasCanonical: !!parsed.canonical,
+          hasOgTitle: !!parsed.ogTitle,
+          hasOgDescription: !!parsed.ogDescription,
+          hasOgImage: !!parsed.ogImage,
+          hasTwitterCard: !!parsed.twitterCard,
+          hasJsonLd: parsed.hasStructuredData,
+          lang: parsed.lang,
+          issuesCount: recommendation?.issues?.length ?? 0,
+        };
         await adminSupabase.from("analyses").insert({
           user_id: user.id,
           tool_type: "meta-analyzer",
           input_summary: url,
           score: null,
           input: { url },
-          result: { parsed, recommendation },
+          result: { summary, recommendation },
         });
       }
     } catch {

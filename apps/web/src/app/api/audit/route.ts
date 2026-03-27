@@ -63,19 +63,40 @@ export async function POST(request: Request) {
       const userSupabase = await createClient();
       const { data: { user } } = await userSupabase.auth.getUser();
       if (user) {
-        // 점수 추출: "SEO 점수: XX점" 또는 "## SEO 점수: XX" 패턴
+        // 점수 추출: "## SEO 점수: 85점" 패턴에서 정확히 추출
         let score: number | null = null;
         if (analysis) {
-          const scoreMatch = analysis.match(/SEO\s*점수[:\s]*([\d]+)/);
-          if (scoreMatch) score = parseInt(scoreMatch[1], 10);
+          const scoreMatch = analysis.match(/##\s*SEO\s*점수[:\s]*(\d{1,3})\s*점/);
+          if (scoreMatch) {
+            const n = parseInt(scoreMatch[1], 10);
+            if (n >= 0 && n <= 100) score = n;
+          }
         }
+
+        // 요약 정보 생성
+        const summary = {
+          title: parsed.title,
+          statusCode: parsed.statusCode,
+          loadTimeMs: parsed.loadTimeMs,
+          isHttps: parsed.isHttps,
+          hasCanonical: !!parsed.canonical,
+          h1Count: parsed.h1?.length ?? 0,
+          imgTotal: parsed.imgTotal,
+          imgWithoutAlt: parsed.imgWithoutAlt,
+          internalLinks: parsed.internalLinks,
+          externalLinks: parsed.externalLinks,
+          hasOg: parsed.hasOgTitle && parsed.hasOgDescription && parsed.hasOgImage,
+          hasJsonLd: parsed.hasStructuredData,
+          structuredDataTypes: parsed.structuredDataTypes,
+        };
+
         await adminSupabase.from("analyses").insert({
           user_id: user.id,
           tool_type: "onpage-audit",
           input_summary: url,
           score,
           input: { url },
-          result: { parsed, analysis },
+          result: { summary, analysis },
         });
       }
     } catch {
