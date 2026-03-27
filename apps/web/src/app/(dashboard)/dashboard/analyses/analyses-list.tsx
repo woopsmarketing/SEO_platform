@@ -18,20 +18,47 @@ const TOOL_LABELS: Record<string, string> = {
   "onpage-audit": "온페이지 SEO 분석",
   "meta-analyzer": "메타태그 분석",
   "meta-generator": "메타태그 분석",
+  "domain-checker": "도메인 분석",
+  "keyword-analyzer": "키워드 분석",
+  "backlink-checker": "백링크 분석",
+  "speed-test": "페이지 속도 분석",
 };
 
-const TABS = [
-  { key: "all", label: "전체" },
-  { key: "onpage-audit", label: "온페이지 SEO" },
-  { key: "meta-analyzer", label: "메타태그" },
-];
+const TOOL_COLORS: Record<string, string> = {
+  "onpage-audit": "bg-blue-100 text-blue-700",
+  "meta-analyzer": "bg-violet-100 text-violet-700",
+  "meta-generator": "bg-violet-100 text-violet-700",
+  "domain-checker": "bg-green-100 text-green-700",
+  "keyword-analyzer": "bg-amber-100 text-amber-700",
+  "backlink-checker": "bg-rose-100 text-rose-700",
+  "speed-test": "bg-cyan-100 text-cyan-700",
+};
+
+// 같은 도구로 취급할 타입 매핑 (meta-generator → meta-analyzer)
+const TYPE_ALIAS: Record<string, string> = {
+  "meta-generator": "meta-analyzer",
+};
+
+function normalizeType(type: string) {
+  return TYPE_ALIAS[type] || type;
+}
 
 export function AnalysesList({ analyses }: { analyses: Analysis[] }) {
   const [activeTab, setActiveTab] = useState("all");
 
+  // DB에 있는 tool_type을 기반으로 탭 자동 생성
+  const toolTypes = Array.from(new Set(analyses.map((a) => normalizeType(a.tool_type))));
+  const tabs = [
+    { key: "all", label: "전체" },
+    ...toolTypes.map((type) => ({
+      key: type,
+      label: TOOL_LABELS[type] || type,
+    })),
+  ];
+
   const filtered = activeTab === "all"
     ? analyses
-    : analyses.filter((a) => a.tool_type === activeTab || (activeTab === "meta-analyzer" && a.tool_type === "meta-generator"));
+    : analyses.filter((a) => normalizeType(a.tool_type) === activeTab);
 
   return (
     <div className="space-y-6">
@@ -45,12 +72,12 @@ export function AnalysesList({ analyses }: { analyses: Analysis[] }) {
         </Link>
       </div>
 
-      {/* 탭 필터 */}
-      <div className="flex gap-1 rounded-lg bg-muted p-1">
-        {TABS.map((tab) => {
+      {/* 탭 필터 — DB의 tool_type 기반 자동 생성 */}
+      <div className="flex gap-1 rounded-lg bg-muted p-1 overflow-x-auto">
+        {tabs.map((tab) => {
           const count = tab.key === "all"
             ? analyses.length
-            : analyses.filter((a) => a.tool_type === tab.key || (tab.key === "meta-analyzer" && a.tool_type === "meta-generator")).length;
+            : analyses.filter((a) => normalizeType(a.tool_type) === tab.key).length;
           return (
             <button
               key={tab.key}
@@ -92,8 +119,9 @@ export function AnalysesList({ analyses }: { analyses: Analysis[] }) {
 function AnalysisCard({ analysis: a }: { analysis: Analysis }) {
   const [expanded, setExpanded] = useState(false);
   const summary = (a.result as Record<string, unknown>)?.summary as Record<string, unknown> | undefined;
-  const isAudit = a.tool_type === "onpage-audit";
-  const isMeta = a.tool_type === "meta-analyzer" || a.tool_type === "meta-generator";
+  const normalizedType = normalizeType(a.tool_type);
+  const isAudit = normalizedType === "onpage-audit";
+  const isMeta = normalizedType === "meta-analyzer";
 
   return (
     <Card>
@@ -103,9 +131,9 @@ function AnalysisCard({ analysis: a }: { analysis: Analysis }) {
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2">
               <span className={`shrink-0 rounded px-2 py-0.5 text-xs font-medium ${
-                isAudit ? "bg-blue-100 text-blue-700" : "bg-violet-100 text-violet-700"
+                TOOL_COLORS[normalizedType] || "bg-gray-100 text-gray-700"
               }`}>
-                {TOOL_LABELS[a.tool_type] || a.tool_type}
+                {TOOL_LABELS[normalizedType] || a.tool_type}
               </span>
               <p className="text-sm font-medium truncate">{a.input_summary || "(URL 없음)"}</p>
             </div>
@@ -134,8 +162,9 @@ function AnalysisCard({ analysis: a }: { analysis: Analysis }) {
         {/* 요약 상세 (펼침) */}
         {expanded && summary && (
           <div className="mt-4 border-t pt-4">
-            {isAudit && <AuditSummary summary={summary} />}
-            {isMeta && <MetaSummary summary={summary} />}
+            {isAudit ? <AuditSummary summary={summary} /> :
+             isMeta ? <MetaSummary summary={summary} /> :
+             <GenericSummary summary={summary} />}
           </div>
         )}
       </CardContent>
@@ -195,6 +224,21 @@ function MetaSummary({ summary }: { summary: Record<string, unknown> }) {
           <p className="text-xs text-amber-600">발견된 이슈: {String(summary.issuesCount)}개</p>
         </div>
       )}
+    </div>
+  );
+}
+
+function GenericSummary({ summary }: { summary: Record<string, unknown> }) {
+  const entries = Object.entries(summary).filter(([, v]) => v !== null && v !== undefined);
+  return (
+    <div className="grid gap-2 sm:grid-cols-2 text-sm">
+      {entries.map(([key, value]) => (
+        <div key={key} className="flex items-center gap-2">
+          {typeof value === "boolean" ? <StatusDot ok={value} /> : null}
+          <span className="text-muted-foreground">{key}:</span>
+          <span>{String(value)}</span>
+        </div>
+      ))}
     </div>
   );
 }
