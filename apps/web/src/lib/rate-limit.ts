@@ -23,12 +23,18 @@ export async function checkRateLimit(
   const supabase = createAdminClient();
   const windowStart = new Date(Date.now() - windowMinutes * 60 * 1000).toISOString();
 
-  const { count } = await supabase
+  const { count, error } = await supabase
     .from("tool_usage_logs")
     .select("*", { count: "exact", head: true })
     .eq("tool_type", toolType)
     .eq("ip_address", ip)
     .gte("created_at", windowStart);
+
+  // DB 에러 시 안전한 방향으로 deny
+  if (error) {
+    console.error("Rate limit DB query failed:", error.message);
+    return { allowed: false, remaining: 0, resetIn: windowMinutes * 60 };
+  }
 
   const used = count ?? 0;
   const allowed = used < maxRequests;

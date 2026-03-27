@@ -33,7 +33,13 @@ export async function signIn(formData: FormData) {
 
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
-  const redirectTo = (formData.get("redirect") as string) || "/dashboard";
+  const rawRedirect = formData.get("redirect") as string | null;
+
+  // Open Redirect 방지: "/"로 시작하는 상대 경로만 허용
+  const redirectTo =
+    rawRedirect && rawRedirect.startsWith("/") && !rawRedirect.startsWith("//")
+      ? rawRedirect
+      : "/dashboard";
 
   let redirectPath = redirectTo;
 

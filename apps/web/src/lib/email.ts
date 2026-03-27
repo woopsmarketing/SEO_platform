@@ -7,6 +7,16 @@ interface SendEmailParams {
   textContent?: string;
 }
 
+/** HTML 특수문자 이스케이프 */
+function escHtml(str: string): string {
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 export async function sendEmail({ to, subject, htmlContent, textContent }: SendEmailParams) {
   const apiKey = process.env.BREVO_API_KEY;
   if (!apiKey) {
@@ -58,34 +68,41 @@ export async function sendInquiryNotification({
 }) {
   const adminEmail = "vnfm0580@gmail.com";
 
+  // 사용자 입력 이스케이프
+  const safeName = escHtml(name);
+  const safeEmail = escHtml(email);
+  const safeCompany = company ? escHtml(company) : undefined;
+  const safeServiceType = escHtml(serviceType);
+  const safeMessage = escHtml(message);
+
   // 관리자에게 알림
   await sendEmail({
     to: [{ email: adminEmail, name: "SEO월드 관리자" }],
-    subject: `[SEO월드] 새 문의 접수 — ${serviceType}`,
+    subject: `[SEO월드] 새 문의 접수 — ${safeServiceType}`,
     htmlContent: `
       <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
         <h2 style="color: #2563EB;">새로운 서비스 문의가 접수되었습니다</h2>
         <table style="width: 100%; border-collapse: collapse; margin-top: 16px;">
           <tr style="border-bottom: 1px solid #eee;">
             <td style="padding: 8px 0; color: #666; width: 100px;">서비스</td>
-            <td style="padding: 8px 0; font-weight: bold;">${serviceType}</td>
+            <td style="padding: 8px 0; font-weight: bold;">${safeServiceType}</td>
           </tr>
           <tr style="border-bottom: 1px solid #eee;">
             <td style="padding: 8px 0; color: #666;">이름</td>
-            <td style="padding: 8px 0;">${name}</td>
+            <td style="padding: 8px 0;">${safeName}</td>
           </tr>
           <tr style="border-bottom: 1px solid #eee;">
             <td style="padding: 8px 0; color: #666;">이메일</td>
-            <td style="padding: 8px 0;"><a href="mailto:${email}">${email}</a></td>
+            <td style="padding: 8px 0;"><a href="mailto:${safeEmail}">${safeEmail}</a></td>
           </tr>
-          ${company ? `
+          ${safeCompany ? `
           <tr style="border-bottom: 1px solid #eee;">
             <td style="padding: 8px 0; color: #666;">회사</td>
-            <td style="padding: 8px 0;">${company}</td>
+            <td style="padding: 8px 0;">${safeCompany}</td>
           </tr>` : ""}
           <tr>
             <td style="padding: 8px 0; color: #666; vertical-align: top;">내용</td>
-            <td style="padding: 8px 0; white-space: pre-wrap;">${message}</td>
+            <td style="padding: 8px 0; white-space: pre-wrap;">${safeMessage}</td>
           </tr>
         </table>
         <div style="margin-top: 24px;">
@@ -108,12 +125,12 @@ export async function sendInquiryNotification({
     htmlContent: `
       <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
         <h2 style="color: #2563EB;">문의가 접수되었습니다</h2>
-        <p>${name}님, 안녕하세요.</p>
+        <p>${safeName}님, 안녕하세요.</p>
         <p>서비스 문의가 정상적으로 접수되었습니다. 빠른 시일 내에 답변드리겠습니다.</p>
         <div style="background: #f8f9fa; border-radius: 8px; padding: 16px; margin: 16px 0;">
           <p style="margin: 0; color: #666; font-size: 14px;">
-            <strong>문의 서비스:</strong> ${serviceType}<br/>
-            <strong>문의 내용:</strong> ${message.slice(0, 200)}${message.length > 200 ? "..." : ""}
+            <strong>문의 서비스:</strong> ${safeServiceType}<br/>
+            <strong>문의 내용:</strong> ${safeMessage.slice(0, 200)}${safeMessage.length > 200 ? "..." : ""}
           </p>
         </div>
         <p style="font-size: 14px; color: #666;">
