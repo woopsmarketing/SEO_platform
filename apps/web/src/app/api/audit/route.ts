@@ -5,12 +5,12 @@ export const maxDuration = 30;
 
 export async function POST(request: Request) {
   try {
-    // Rate Limit: IP당 1시간에 20회
+    // Rate Limit: IP당 하루 3회 (Free 플랜)
     const ip = getClientIp(request);
-    const rateLimit = await checkRateLimit(ip, "onpage-audit", 20, 60);
+    const rateLimit = await checkRateLimit(ip, "onpage-audit", 3, 1440);
     if (!rateLimit.allowed) {
       return NextResponse.json(
-        { error: `요청이 너무 많습니다. ${Math.ceil(rateLimit.resetIn / 60)}분 후에 다시 시도해주세요.` },
+        { error: "일일 무료 분석 횟수(3회)를 초과했습니다. Pro 플랜으로 업그레이드하면 무제한으로 사용할 수 있습니다.", upgrade: true },
         { status: 429, headers: { "Retry-After": String(rateLimit.resetIn) } }
       );
     }

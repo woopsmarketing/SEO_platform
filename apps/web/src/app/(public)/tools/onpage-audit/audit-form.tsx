@@ -67,11 +67,13 @@ export function AuditForm() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<AuditResult | null>(null);
   const [error, setError] = useState("");
+  const [showUpgrade, setShowUpgrade] = useState(false);
 
   async function handleAudit() {
     if (!url) return;
     setLoading(true);
     setError("");
+    setShowUpgrade(false);
     setResult(null);
 
     try {
@@ -84,6 +86,7 @@ export function AuditForm() {
       const data = await res.json();
       if (!res.ok) {
         setError(data.error || "분석에 실패했습니다.");
+        if (data.upgrade) setShowUpgrade(true);
       } else {
         setResult(data);
       }
@@ -109,7 +112,20 @@ export function AuditForm() {
               {loading ? "분석 중..." : "SEO 분석"}
             </Button>
           </div>
-          {error && <p className="mt-3 text-sm text-destructive">{error}</p>}
+          {error && (
+            <div className="mt-3">
+              <p className="text-sm text-destructive">{error}</p>
+              {showUpgrade && (
+                <div className="mt-3 rounded-lg border border-blue-200 bg-blue-50 p-4">
+                  <p className="text-sm font-medium text-blue-900">Pro 플랜으로 업그레이드</p>
+                  <p className="mt-1 text-xs text-blue-700">무제한 SEO 분석, 경쟁사 비교, 주간 리포트 등 모든 기능을 이용하세요.</p>
+                  <a href="/dashboard/settings" className="mt-2 inline-block rounded-md bg-blue-600 px-4 py-1.5 text-xs font-medium text-white hover:bg-blue-700">
+                    플랜 알아보기
+                  </a>
+                </div>
+              )}
+            </div>
+          )}
           {loading && (
             <p className="mt-3 text-sm text-muted-foreground">
               페이지를 가져오고 AI가 분석하고 있습니다... (최대 30초)
