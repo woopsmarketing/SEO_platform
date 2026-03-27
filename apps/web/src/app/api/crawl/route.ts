@@ -1,7 +1,18 @@
 import { NextResponse } from "next/server";
+import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 
 export async function POST(request: Request) {
   try {
+    // Rate Limit: IP당 1시간에 15회
+    const ip = getClientIp(request);
+    const rateLimit = await checkRateLimit(ip, "crawl", 15, 60);
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        { error: `요청이 너무 많습니다. ${Math.ceil(rateLimit.resetIn / 60)}분 후에 다시 시도해주세요.` },
+        { status: 429, headers: { "Retry-After": String(rateLimit.resetIn) } }
+      );
+    }
+
     let { url, maxPages = 30 } = await request.json();
 
     if (!url || typeof url !== "string") {
