@@ -98,6 +98,14 @@ export default function MetaGeneratorPage() {
               미리보기 제목, 설명, 이미지를 결정합니다.
               OG 태그가 없으면 SNS에서 콘텐츠가 매력적으로 보이지 않아 공유 효과가 떨어집니다.
             </p>
+          <div>
+            <h3 className="text-sm font-semibold mb-1">메타태그로 검색 노출을 늘리려면?</h3>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              검색노출을 늘리는 법의 핵심은 타겟 키워드를 title과 description에 자연스럽게 포함하는 것입니다.
+              제목에는 핵심 키워드를 앞쪽에 배치하고, 설명에는 사용자의 검색 의도에 맞는 구체적인 내용을 담으세요.
+              SEO 글쓰기 원칙을 메타태그에도 적용하면 클릭률과 검색 순위를 동시에 개선할 수 있습니다.
+            </p>
+          </div>
           </div>
         </div>
       </div>

@@ -96,6 +96,14 @@ export default function RobotsGeneratorPage() {
               검색엔진이 사이트맵을 자동으로 발견할 수 있습니다.
               Google Search Console에 별도로 제출하는 것과 병행하면 더 효과적입니다.
             </p>
+          <div>
+            <h3 className="text-sm font-semibold mb-1">사이트가 구글에 안뜨는데 robots.txt 때문일 수 있나요?</h3>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              네, 사이트가 구글에 안뜨는 이유 중 하나가 robots.txt 설정 오류입니다.
+              Disallow: / 규칙이 Googlebot에 적용되어 있으면 전체 사이트 크롤링이 차단됩니다.
+              크롤링 문제가 의심된다면 먼저 robots.txt를 확인하고, 필요한 페이지가 차단되어 있지 않은지 점검하세요.
+            </p>
+          </div>
           </div>
         </div>
       </div>

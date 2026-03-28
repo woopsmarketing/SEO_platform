@@ -481,6 +481,10 @@ export default function HomePage() {
                 q: "SEO 비용은 얼마나 드나요?",
                 a: "SEO월드의 분석 도구는 모두 무료입니다. 전문 백링크 서비스, 웹 디자인, 도메인 브로커 서비스는 프로젝트 규모와 목표에 따라 맞춤 견적을 제공합니다. 무료 상담을 통해 정확한 비용을 확인하세요.",
               },
+              {
+                q: "SEO란 무엇인가요?",
+                a: "SEO(검색엔진 최적화)란 웹사이트가 구글 등 검색엔진에서 더 높은 순위에 노출되도록 최적화하는 방법입니다. 검색엔진 최적화 방법에는 온페이지 SEO(메타태그, 콘텐츠 최적화), 테크니컬 SEO(사이트 속도, 크롤링), 오프페이지 SEO(백링크 구축) 등이 있습니다. SEO WORLD의 무료 도구로 지금 바로 시작해보세요.",
+              },
             ].map((item, i) => (
               <div key={i} className="rounded-xl border bg-white p-6 shadow-sm">
                 <h3 className="font-semibold">{item.q}</h3>
@@ -517,7 +521,7 @@ export default function HomePage() {
       {/* ====== 외부 링크 섹션 ====== */}
       <section className="border-t py-10">
         <div className="mx-auto max-w-7xl px-4">
-          <p className="text-center text-xs text-muted-foreground mb-4">SEO 분석 기준</p>
+          <p className="text-center text-xs text-muted-foreground mb-4">SEO WORLD 분석 기준</p>
           <div className="flex flex-wrap justify-center gap-6 text-xs text-muted-foreground">
             <a href="https://developers.google.com/search/docs/fundamentals/seo-starter-guide" target="_blank" rel="noopener noreferrer" className="hover:text-primary">
               Google Search Central &rarr;

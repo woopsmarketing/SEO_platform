@@ -4,7 +4,7 @@ import { AuditForm } from "./audit-form";
 
 export const metadata: Metadata = {
   title: "온페이지 SEO 분석 — 웹사이트 내부최적화 무료 진단",
-  description: "URL을 입력하면 35개 SEO 항목을 자동 검사하고 AI가 점수와 구체적인 개선 방안을 제시합니다. 메타태그, 헤딩 구조, 이미지, 링크, 구조화 데이터까지.",
+  description: "무료 SEO 분석 도구로 테크니컬 SEO와 온페이지 요소를 사이트 진단합니다. URL을 입력하면 35개 항목을 자동 검사하고 AI가 점수와 개선 방안을 제시합니다.",
   openGraph: {
     title: "온페이지 SEO 분석 | SEO월드",
     description: "AI가 분석하는 무료 온페이지 SEO 진단. URL만 입력하면 35개 항목 즉시 검사.",
@@ -30,8 +30,8 @@ export default function OnpageAuditPage() {
           <CardContent className="pt-5 pb-5">
             <h2 className="text-sm font-semibold text-violet-900 mb-2">온페이지 SEO란?</h2>
             <p className="text-xs leading-relaxed text-violet-800/80">
-              온페이지 SEO는 웹사이트 내부 요소를 최적화하여 검색엔진 순위를 높이는 작업입니다.
-              메타태그, 헤딩 구조, 이미지 alt 태그, 내부 링크, 페이지 속도 등
+              온페이지 SEO는 웹사이트 내부 요소를 최적화하여 검색엔진 순위를 높이는 기술 SEO 작업입니다.
+              메타태그 점검, 헤딩 구조, 이미지 alt 태그, 내부링크 구조, 페이지 속도 등
               검색엔진이 페이지를 이해하고 평가하는 데 사용하는 모든 요소를 포함합니다.
             </p>
           </CardContent>
@@ -51,7 +51,7 @@ export default function OnpageAuditPage() {
           <CardContent className="pt-5 pb-5">
             <h2 className="text-sm font-semibold text-rose-900 mb-2">검사 항목 35개</h2>
             <p className="text-xs leading-relaxed text-rose-800/80">
-              상태코드, HTTPS, 로딩 속도, 텍스트 비율, URL 구조,
+              상태코드, HTTPS, 로딩 속도, 텍스트 비율, URL 구조 최적화,
               Title, Description, Canonical, Keywords, H1~H3 구조,
               이미지 alt, 내부/외부 링크, Viewport, Gzip, HSTS,
               OG 태그, Twitter Card, JSON-LD, Favicon 등을 한번에 검사합니다.
@@ -99,6 +99,22 @@ export default function OnpageAuditPage() {
               FAQ, 리뷰, 제품 정보 등을 JSON-LD로 마크업하면 Google 검색결과에서
               리치 스니펫(별점, FAQ 등)으로 노출되어 클릭률이 크게 향상됩니다.
             </p>
+          <div>
+            <h3 className="text-sm font-semibold mb-1">사이트 크롤링 문제는 어떻게 진단하나요?</h3>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              크롤링 문제는 검색엔진이 페이지를 제대로 수집하지 못해 색인 문제로 이어지는 주요 원인입니다.
+              robots.txt 점검으로 크롤러 차단 여부를 확인하고, sitemap 점검으로 모든 페이지가 등록되어 있는지 확인하세요.
+              SEO월드의 온페이지 분석 도구는 이러한 테크니컬 SEO 항목을 자동으로 검사합니다.
+            </p>
+          </div>
+          <div>
+            <h3 className="text-sm font-semibold mb-1">코어 웹 바이탈이 SEO에 미치는 영향은?</h3>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              코어 웹 바이탈(Core Web Vitals)은 Google이 페이지 경험을 평가하는 핵심 지표입니다.
+              LCP(최대 콘텐츠 렌더링), FID(첫 입력 지연), CLS(레이아웃 이동) 세 가지 항목으로 구성되며,
+              이 지표가 좋을수록 구글 검색 순위에서 유리합니다. 홈페이지 SEO 진단 시 반드시 확인해야 할 항목입니다.
+            </p>
+          </div>
           </div>
         </div>
       </div>

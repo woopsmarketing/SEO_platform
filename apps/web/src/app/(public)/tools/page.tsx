@@ -207,6 +207,22 @@ export default function ToolsPage() {
               경쟁사의 메타태그, SEO 구조, 구조화 데이터를 파악하여
               벤치마킹에 활용할 수 있습니다.
             </p>
+          <div>
+            <h3 className="text-sm font-semibold mb-1">사이트 진단 툴 추천이 있나요?</h3>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              SEO월드의 온페이지 SEO 분석기는 35개 항목을 무료로 자동 검사하는 사이트 진단 툴입니다.
+              메타태그 분석기, 사이트맵 생성기, robots.txt 생성기까지 함께 활용하면
+              웹사이트의 SEO 상태를 종합적으로 점검할 수 있습니다.
+            </p>
+          </div>
+          <div>
+            <h3 className="text-sm font-semibold mb-1">무료 SEO 점검 사이트와 유료 도구의 차이는?</h3>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              유료 SEO 도구는 키워드 추적, 백링크 모니터링 등 장기적인 관리 기능을 제공합니다.
+              하지만 온페이지 SEO 진단과 기본적인 기술 점검은 SEO월드 같은 무료 SEO 점검 사이트로도
+              충분히 수행할 수 있습니다. 먼저 무료 도구로 현재 상태를 파악하는 것을 권장합니다.
+            </p>
+          </div>
           </div>
         </div>
       </div>

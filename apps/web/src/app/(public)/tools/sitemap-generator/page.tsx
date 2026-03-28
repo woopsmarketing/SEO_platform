@@ -99,6 +99,14 @@ export default function SitemapGeneratorPage() {
               CMS를 사용한다면 자동 생성을 설정하고,
               정적 사이트라면 월 1회 이상 갱신하여 구글이 최신 상태를 파악하도록 하세요.
             </p>
+          <div>
+            <h3 className="text-sm font-semibold mb-1">페이지가 색인이 안되는 이유는?</h3>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              페이지가 색인이 안되는 이유는 다양합니다. noindex 태그 설정, robots.txt에 의한 크롤링 차단,
+              사이트맵 미등록, 중복 콘텐츠 문제 등이 대표적입니다. 구글 서치콘솔의 색인 확인 기능으로
+              어떤 페이지가 색인에서 제외되었는지 확인하고, 사이트맵을 제출하여 색인을 요청할 수 있습니다.
+            </p>
+          </div>
           </div>
         </div>
       </div>
