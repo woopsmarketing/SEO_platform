@@ -35,11 +35,11 @@ export const tools: Tool[] = [
     ready: true,
   },
   {
-    title: "도메인 분석기",
-    href: "/tools/domain-checker",
-    description: "도메인의 SEO 지표(DA, PA, 백링크)를 빠르게 확인합니다.",
-    icon: "🔍",
-    ready: false,
+    title: "백링크 분석기",
+    href: "/tools/backlink-checker",
+    description: "도메인의 백링크 목록, 참조 도메인, doFollow 비율을 분석합니다.",
+    icon: "🔗",
+    ready: true,
   },
   {
     title: "온페이지 SEO 분석",

@@ -122,6 +122,7 @@ function AnalysisCard({ analysis: a }: { analysis: Analysis }) {
   const normalizedType = normalizeType(a.tool_type);
   const isAudit = normalizedType === "onpage-audit";
   const isMeta = normalizedType === "meta-analyzer";
+  const isBacklink = normalizedType === "backlink-checker";
 
   return (
     <Card>
@@ -164,6 +165,7 @@ function AnalysisCard({ analysis: a }: { analysis: Analysis }) {
           <div className="mt-4 border-t pt-4">
             {isAudit ? <AuditSummary summary={summary} /> :
              isMeta ? <MetaSummary summary={summary} /> :
+             isBacklink ? <BacklinkSummary summary={summary} /> :
              <GenericSummary summary={summary} />}
           </div>
         )}
@@ -224,6 +226,24 @@ function MetaSummary({ summary }: { summary: Record<string, unknown> }) {
           <p className="text-xs text-amber-600">발견된 이슈: {String(summary.issuesCount)}개</p>
         </div>
       )}
+    </div>
+  );
+}
+
+function BacklinkSummary({ summary }: { summary: Record<string, unknown> }) {
+  return (
+    <div className="grid gap-3 sm:grid-cols-2 text-sm">
+      <div className="space-y-1.5">
+        <p className="font-medium text-xs text-muted-foreground mb-2">백링크</p>
+        <div>총 백링크: {String(summary.totalBacklinks ?? 0)}</div>
+        <div>DoFollow: {String(summary.doFollowBacklinks ?? 0)}</div>
+        <div>홈페이지 링크: {String(summary.toHomePage ?? 0)}</div>
+      </div>
+      <div className="space-y-1.5">
+        <p className="font-medium text-xs text-muted-foreground mb-2">참조 도메인</p>
+        <div>참조 도메인: {String(summary.totalDomains ?? 0)}</div>
+        <div>DoFollow 도메인: {String(summary.doFollowDomains ?? 0)}</div>
+      </div>
     </div>
   );
 }
