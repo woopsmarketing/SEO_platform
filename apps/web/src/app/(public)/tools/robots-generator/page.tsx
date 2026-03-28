@@ -4,7 +4,7 @@ import { RobotsGeneratorForm } from "./robots-generator-form";
 
 export const metadata: Metadata = {
   title: "Robots.txt 생성기 — 검색엔진 크롤러 제어 무료 도구",
-  description: "robots.txt 파일을 간편하게 생성하세요. Googlebot, Bingbot, GPTBot 등 22개 크롤러별 허용/차단 규칙을 설정하고 다운로드할 수 있습니다.",
+  description: "robots.txt 점검과 생성을 한번에. 크롤링 문제와 색인 문제를 예방하는 robots.txt를 간편하게 만드세요. Googlebot, Bingbot, GPTBot 등 22개 크롤러별 허용/차단 규칙을 설정하고 다운로드할 수 있습니다.",
   openGraph: {
     title: "Robots.txt 생성기 | SEO월드",
     description: "검색엔진 크롤러 차단/허용 규칙을 설정하고 robots.txt를 무료로 생성하세요.",
@@ -18,7 +18,7 @@ export default function RobotsGeneratorPage() {
       {/* 헤더 */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold">Robots.txt 생성기</h1>
-        <p className="mt-1 text-lg text-muted-foreground">검색엔진 크롤러 접근 제어 도구</p>
+        <p className="mt-1 text-lg text-muted-foreground">검색엔진 크롤링 제어와 robots.txt 점검 도구</p>
         <p className="mt-1 text-sm text-muted-foreground">
           크롤러별 허용/차단 규칙을 설정하고 robots.txt 파일을 생성합니다. 프리셋으로 빠르게 시작할 수 있습니다.
         </p>
@@ -32,7 +32,7 @@ export default function RobotsGeneratorPage() {
             <p className="text-xs leading-relaxed text-blue-800/80">
               robots.txt는 웹사이트 루트에 위치하는 텍스트 파일로,
               검색엔진 크롤러에게 어떤 페이지를 크롤링할 수 있고 어떤 페이지를 차단할지 알려줍니다.
-              구글, 네이버, 빙 등 모든 검색엔진이 이 파일을 우선적으로 확인합니다.
+              잘못된 설정은 크롤링 문제와 색인 문제의 원인이 되므로, 정기적인 robots.txt 점검이 필요합니다.
             </p>
           </CardContent>
         </Card>

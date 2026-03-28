@@ -4,7 +4,7 @@ import { InquiryForm } from "@/components/inquiry-form";
 
 export const metadata: Metadata = {
   title: "도메인 브로커 서비스",
-  description: "프리미엄 도메인 매입/매각 중개. 가치 평가, 소유자 협상, 에스크로 거래까지 원스톱 서비스.",
+  description: "도메인 신뢰도 확인, 도메인 SEO 분석을 기반으로 프리미엄 도메인 매입/매각 중개. 도메인 점수 확인부터 에스크로 거래까지 원스톱 서비스.",
   alternates: { canonical: "/services/domain-broker" },
 };
 
@@ -14,7 +14,7 @@ export default function DomainBrokerServicePage() {
       <div className="mb-10">
         <h1 className="text-3xl font-bold">도메인 브로커 서비스</h1>
         <p className="mt-2 text-lg text-muted-foreground">
-          고가치 도메인의 매입/매각을 전문적으로 중개합니다.
+          도메인 신뢰도 확인과 도메인 SEO 분석을 기반으로 고가치 도메인의 매입/매각을 전문 중개합니다.
         </p>
       </div>
 
@@ -25,7 +25,7 @@ export default function DomainBrokerServicePage() {
             <CardContent className="space-y-3 text-muted-foreground">
               <p>원하는 도메인의 매입 협상부터 안전한 이전까지 도와드립니다.</p>
               <ul className="list-disc space-y-1 pl-5">
-                <li>도메인 가치 평가 및 시장 분석</li>
+                <li>도메인 점수 확인 및 시장 가치 평가</li>
                 <li>소유자 파악 및 매입 협상 대행</li>
                 <li>안전한 에스크로 기반 거래</li>
                 <li>도메인 매각 대행</li>

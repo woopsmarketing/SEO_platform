@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { InquiryForm } from "@/components/inquiry-form";
 
 export const metadata: Metadata = {
-  title: "백링크 서비스",
+  title: "백링크 서비스 — 오프페이지 SEO 전문 링크빌딩",
   description: "오프페이지 SEO의 핵심인 고품질 백링크를 전략적으로 구축합니다. 링크빌딩, 게스트 포스팅, 에디토리얼 링크로 도메인 권위를 높이세요.",
   alternates: { canonical: "/services/backlinks" },
 };
@@ -23,7 +23,7 @@ export default function BacklinksServicePage() {
           <Card>
             <CardHeader><CardTitle>서비스 내용</CardTitle></CardHeader>
             <CardContent className="space-y-3 text-muted-foreground">
-              <p>검색엔진이 신뢰하는 고품질 백링크를 전략적으로 구축하는 링크빌딩 서비스입니다.</p>
+              <p>검색엔진이 신뢰하는 고품질 백링크를 전략적으로 구축하는 오프페이지 SEO 전문 링크빌딩 서비스입니다. 백링크 품질 확인을 거친 안전한 링크만 제공합니다.</p>
               <ul className="list-disc space-y-1 pl-5">
                 <li>DA/DR 높은 사이트에서의 자연스러운 링크 확보</li>
                 <li>게스트 포스팅, 에디토리얼 링크, 니치 관련 링크</li>
@@ -35,8 +35,8 @@ export default function BacklinksServicePage() {
           <Card>
             <CardHeader><CardTitle>진행 프로세스</CardTitle></CardHeader>
             <CardContent className="space-y-2 text-muted-foreground">
-              <p>1. 현재 백링크 프로필 분석</p>
-              <p>2. 타겟 사이트 선정 및 전략 수립</p>
+              <p>1. 현재 백링크 프로필 및 참조도메인 확인</p>
+              <p>2. 경쟁사 백링크 분석 후 타겟 사이트 선정 및 전략 수립</p>
               <p>3. 콘텐츠 제작 및 아웃리치</p>
               <p>4. 링크 확보 및 월간 리포트</p>
             </CardContent>

@@ -4,7 +4,7 @@ import { SitemapGeneratorForm } from "./sitemap-generator-form";
 
 export const metadata: Metadata = {
   title: "사이트맵 생성기 — sitemap.xml 무료 자동 생성 도구",
-  description: "URL을 입력하면 사이트를 자동 크롤링하여 sitemap.xml을 생성합니다. Google Search Console 제출용 사이트맵을 무료로 만드세요.",
+  description: "URL을 입력하면 sitemap 점검과 자동 크롤링으로 sitemap.xml을 생성합니다. 구글 서치콘솔에 사이트맵 제출하여 색인 확인까지 한번에 해결하세요.",
   openGraph: {
     title: "사이트맵 생성기 | SEO월드",
     description: "URL 자동 크롤링으로 sitemap.xml을 무료로 생성하세요. Google Search Console 제출용.",
@@ -32,7 +32,7 @@ export default function SitemapGeneratorPage() {
             <p className="text-xs leading-relaxed text-indigo-800/80">
               sitemap.xml은 웹사이트의 모든 페이지 목록을 검색엔진에 알려주는 XML 파일입니다.
               각 페이지의 URL, 마지막 수정 날짜, 변경 빈도, 우선순위 정보를 포함하며,
-              구글봇이 사이트 구조를 효율적으로 파악하는 데 핵심적인 역할을 합니다.
+              정기적인 sitemap 점검으로 구글봇이 사이트 구조를 효율적으로 파악하도록 돕는 것이 중요합니다.
             </p>
           </CardContent>
         </Card>
@@ -40,9 +40,9 @@ export default function SitemapGeneratorPage() {
           <CardContent className="pt-5 pb-5">
             <h2 className="text-sm font-semibold text-emerald-900 mb-2">구글 상위노출에 미치는 영향</h2>
             <p className="text-xs leading-relaxed text-emerald-800/80">
-              사이트맵을 제출하면 구글이 새로운 페이지를 더 빠르게 발견하고 인덱싱합니다.
+              구글 서치콘솔에 사이트맵을 제출하면 구글이 새로운 페이지를 더 빠르게 발견하고 색인 확인이 수월해집니다.
               특히 신규 사이트, 페이지가 많은 사이트, 내부 링크가 부족한 페이지에서
-              구글 상위노출까지의 시간을 크게 단축할 수 있습니다.
+              사이트맵 제출로 구글 상위노출까지의 시간을 크게 단축할 수 있습니다.
             </p>
           </CardContent>
         </Card>
@@ -52,7 +52,7 @@ export default function SitemapGeneratorPage() {
             <p className="text-xs leading-relaxed text-orange-800/80">
               URL 하나만 입력하면 사이트의 robots.txt와 기존 sitemap을 분석한 후
               내부 링크를 자동으로 크롤링하여 페이지 목록을 수집합니다.
-              각 페이지의 changefreq와 priority를 개별적으로 편집하고 즉시 다운로드할 수 있습니다.
+              구글 서치콘솔 제출용으로 changefreq와 priority를 개별 편집하고 즉시 다운로드할 수 있습니다.
             </p>
           </CardContent>
         </Card>

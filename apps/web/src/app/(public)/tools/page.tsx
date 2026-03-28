@@ -42,8 +42,8 @@ export default function ToolsPage() {
       <div className="mb-10 max-w-3xl">
         <h1 className="text-3xl font-bold">무료 SEO 분석 도구</h1>
         <p className="mt-3 text-lg text-muted-foreground leading-relaxed">
-          구글 상위노출에 필요한 SEO 요소를 무료로 분석하세요.
-          회원가입 없이 URL만 입력하면 즉시 결과를 확인할 수 있습니다.
+          무료 SEO 분석과 무료 SEO 툴로 구글 상위노출에 필요한 요소를 점검하세요.
+          회원가입 없이 URL만 입력하면 무료 사이트 진단 결과를 즉시 확인할 수 있습니다.
         </p>
       </div>
 
@@ -76,7 +76,7 @@ export default function ToolsPage() {
             <p className="mt-3 text-muted-foreground leading-relaxed">
               메타태그는 구글 검색 결과에 직접 노출되는 제목(Title)과 설명(Description)입니다.
               URL을 입력하면 현재 설정된 30개 이상의 메타태그 항목을 자동으로 파싱하고,
-              문제점을 진단하여 구글 상위노출에 최적화된 추천안을 제시합니다.
+              무료 사이트 진단을 통해 구글 상위노출에 최적화된 추천안을 제시합니다.
             </p>
             <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
               <li className="flex gap-2"><span className="text-green-600 shrink-0">✔</span>Title, Description, OG, Twitter Card 등 30+ 항목 분석</li>
@@ -141,17 +141,17 @@ export default function ToolsPage() {
 
       {/* SEO 도구를 사용해야 하는 이유 */}
       <div className="mt-20 border-t pt-16">
-        <h2 className="text-2xl font-bold text-center">왜 SEO 무료 분석 도구를 사용해야 할까요?</h2>
+        <h2 className="text-2xl font-bold text-center">왜 SEO 분석 툴을 사용해야 할까요?</h2>
         <p className="mt-3 text-center text-muted-foreground max-w-2xl mx-auto leading-relaxed">
           구글 상위노출을 위해서는 웹사이트의 SEO 상태를 정확히 파악하는 것이 첫걸음입니다.
-          SEO월드의 무료 도구는 전문 SEO 감사 도구 수준의 분석을 누구나 쉽게 사용할 수 있도록 제공합니다.
+          SEO월드는 무료 SEO 점검 사이트로서 전문 SEO 분석 툴 수준의 진단을 누구나 쉽게 사용할 수 있도록 제공합니다.
         </p>
         <div className="mt-10 grid gap-6 sm:grid-cols-3">
           <div className="rounded-xl border p-6 text-center">
             <div className="text-3xl mb-3">&#x26A1;</div>
             <h3 className="font-semibold">즉시 진단</h3>
             <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
-              URL만 입력하면 수 초 내에 SEO 상태를 진단합니다.
+              URL만 입력하면 수 초 내에 무료 SEO 점검이 완료됩니다.
               복잡한 설정이나 설치 없이 브라우저에서 바로 사용 가능합니다.
             </p>
           </div>

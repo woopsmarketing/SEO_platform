@@ -57,7 +57,7 @@ export default function HomePage() {
           </h1>
           <p className="mx-auto mt-5 max-w-2xl text-lg text-gray-600 leading-relaxed md:text-xl">
             URL만 입력하면 35개 SEO 항목을 자동 진단합니다.
-            구글 SEO에 필요한 메타태그 분석, 온페이지 최적화, 사이트맵 생성까지 모두 무료로 제공합니다.
+            웹사이트 SEO 최적화에 필요한 메타태그 분석, 온페이지 SEO 점검, 사이트맵 생성까지 모두 무료로 제공합니다.
             백링크 서비스와 웹 디자인으로 구글 상위노출을 달성하세요.
           </p>
           <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row sm:gap-4">
@@ -106,7 +106,7 @@ export default function HomePage() {
           <div className="text-center max-w-2xl mx-auto">
             <h2 className="text-3xl font-bold">무료 SEO 분석 도구</h2>
             <p className="mt-3 text-muted-foreground leading-relaxed">
-              구글 상위노출에 필요한 SEO 요소를 무료로 분석하세요.
+              사이트 SEO 진단부터 SEO 점검까지, 구글 상위노출에 필요한 요소를 무료 SEO 분석 툴로 확인하세요.
               회원가입 없이 URL만 입력하면 즉시 결과를 확인할 수 있습니다.
             </p>
           </div>
@@ -133,15 +133,15 @@ export default function HomePage() {
         <div className="mx-auto max-w-7xl px-4">
           <div className="grid items-center gap-12 lg:grid-cols-2">
             <div>
-              <h2 className="text-3xl font-bold">구글 SEO, 왜 중요한가요?</h2>
+              <h2 className="text-3xl font-bold">검색엔진최적화, 왜 중요한가요?</h2>
               <p className="mt-4 text-muted-foreground leading-relaxed">
                 전체 웹 트래픽의 53%가 자연 검색에서 발생합니다.
                 구글 검색 결과 1페이지에 노출되는 것만으로 클릭의 90% 이상을 차지하며,
                 상위 3개 결과가 전체 클릭의 60%를 가져갑니다.
               </p>
               <p className="mt-3 text-muted-foreground leading-relaxed">
-                구글 상위노출은 한 번 달성하면 광고비 없이도 지속적으로 타겟 고객을 유입시키는
-                가장 효율적인 마케팅 전략입니다.
+                웹사이트 SEO를 제대로 갖추면 광고비 없이도 지속적으로 타겟 고객을 유입시키는
+                가장 효율적인 마케팅 전략이 됩니다.
                 SEO 리드의 전환율은 14.6%로, 유료 광고(1.7%)보다 8배 이상 높습니다.
               </p>
               <div className="mt-6">
@@ -191,13 +191,13 @@ export default function HomePage() {
             <div className="order-1 lg:order-2">
               <h2 className="text-3xl font-bold">온페이지 SEO 분석으로<br />구글 상위노출 준비하기</h2>
               <p className="mt-4 text-muted-foreground leading-relaxed">
-                구글 상위노출의 첫걸음은 웹사이트 내부 최적화입니다.
+                구글 상위노출의 첫걸음은 웹사이트 내부 SEO 진단입니다.
                 URL 하나만 입력하면 35개 SEO 항목을 자동으로 검사하고,
                 점수와 함께 구체적인 개선 방법을 코드 예시와 함께 제시합니다.
               </p>
               <p className="mt-3 text-muted-foreground leading-relaxed">
                 메타태그, 헤딩 구조, 이미지 최적화, 보안 헤더, 구조화 데이터까지
-                구글 SEO에 영향을 미치는 모든 요소를 한번에 진단할 수 있는 무료 분석 도구입니다.
+                검색엔진최적화에 영향을 미치는 모든 요소를 한번에 SEO 분석할 수 있는 무료 사이트 진단 도구입니다.
               </p>
               <div className="mt-6">
                 <Link href="/tools/onpage-audit">
@@ -310,10 +310,10 @@ export default function HomePage() {
       <section className="bg-gray-50 py-16 md:py-20">
         <div className="mx-auto max-w-7xl px-4">
           <div className="text-center max-w-2xl mx-auto">
-            <h2 className="text-3xl font-bold">전문 SEO 서비스</h2>
+            <h2 className="text-3xl font-bold">전문 SEO 컨설팅 및 서비스</h2>
             <p className="mt-3 text-muted-foreground leading-relaxed">
               무료 분석 도구로 현재 상태를 파악하고,
-              전문 서비스로 구글 상위노출을 달성하세요.
+              온페이지부터 오프페이지 SEO까지 전문 서비스로 구글 상위노출을 달성하세요.
             </p>
           </div>
           <div className="mt-10 grid gap-8 lg:grid-cols-3">
@@ -413,10 +413,10 @@ export default function HomePage() {
         <div className="mx-auto max-w-7xl px-4">
           <div className="grid items-start gap-12 lg:grid-cols-2">
             <div>
-              <h2 className="text-3xl font-bold">구글 SEO 기본 체크리스트</h2>
+              <h2 className="text-3xl font-bold">SEO 체크리스트 — 테크니컬 SEO 점검 항목</h2>
               <p className="mt-3 text-muted-foreground leading-relaxed">
-                구글 상위노출을 위해 반드시 확인해야 할 핵심 항목들입니다.
-                아래 체크리스트를 기준으로 내 사이트를 점검해보세요.
+                구글 상위노출을 위해 반드시 확인해야 할 테크니컬 SEO 핵심 항목들입니다.
+                아래 SEO 체크리스트를 기준으로 내 사이트를 점검해보세요.
                 SEO월드의 무료 분석 도구로 자동 검사할 수 있습니다.
               </p>
               <div className="mt-6">

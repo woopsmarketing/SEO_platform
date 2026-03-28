@@ -4,7 +4,7 @@ import { MetaGeneratorForm } from "./meta-generator-form";
 
 export const metadata: Metadata = {
   title: "메타태그 분석기 — 무료 메타태그 최적화 도구",
-  description: "URL을 입력하면 현재 메타태그를 분석하고 SEO에 최적화된 제목, 설명, 키워드를 AI가 추천합니다. Google 검색 미리보기 포함.",
+  description: "URL을 입력하면 메타태그 점검을 자동으로 수행합니다. 제목 태그 최적화, 메타 설명 최적화까지 AI가 SEO에 맞는 추천안을 제시합니다. Google 검색 미리보기 포함.",
   openGraph: {
     title: "메타태그 분석기 | SEO월드",
     description: "URL만 입력하면 메타태그를 자동 분석하고 SEO 최적화 추천을 받으세요.",
@@ -32,9 +32,9 @@ export default function MetaGeneratorPage() {
           <CardContent className="pt-5 pb-5">
             <h2 className="text-sm font-semibold text-blue-900 mb-2">메타태그가 중요한 이유</h2>
             <p className="text-xs leading-relaxed text-blue-800/80">
-              메타태그는 검색엔진이 페이지 내용을 이해하는 첫 번째 단서입니다.
+              메타태그는 검색엔진이 페이지 내용을 이해하는 첫 번째 단서이며, 정기적인 메타태그 점검이 필요합니다.
               Google은 title 태그를 검색결과 제목으로, description을 설명문으로 직접 사용합니다.
-              잘 작성된 메타태그는 클릭률(CTR)을 최대 30% 이상 높일 수 있습니다.
+              제목 태그 최적화와 메타 설명 최적화가 잘 된 페이지는 클릭률(CTR)을 최대 30% 이상 높일 수 있습니다.
             </p>
           </CardContent>
         </Card>
@@ -42,8 +42,8 @@ export default function MetaGeneratorPage() {
           <CardContent className="pt-5 pb-5">
             <h2 className="text-sm font-semibold text-green-900 mb-2">이 도구의 이점</h2>
             <p className="text-xs leading-relaxed text-green-800/80">
-              URL 하나만 입력하면 30개 이상의 메타태그 항목을 자동으로 파싱합니다.
-              현재 상태를 진단하고, AI가 Google 검색 가이드 기준에 맞는 최적화된 제목과 설명을 추천합니다.
+              URL 하나만 입력하면 30개 이상의 메타태그 항목을 자동으로 파싱하여 점검합니다.
+              현재 상태를 진단하고, AI가 Google 검색 가이드 기준에 맞는 제목 태그 최적화와 메타 설명 최적화 추천안을 제시합니다.
               현재 vs 추천 Google 검색 미리보기를 나란히 비교할 수 있습니다.
             </p>
           </CardContent>

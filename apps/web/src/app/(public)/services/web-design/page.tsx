@@ -4,7 +4,7 @@ import { InquiryForm } from "@/components/inquiry-form";
 
 export const metadata: Metadata = {
   title: "웹 디자인 서비스",
-  description: "처음부터 SEO를 고려한 반응형 웹사이트 제작. Core Web Vitals 최적화, 시맨틱 HTML 포함.",
+  description: "모바일 SEO와 코어 웹 바이탈을 고려한 반응형 웹사이트 제작. 페이지 속도 SEO 최적화, 시맨틱 HTML 포함.",
   alternates: { canonical: "/services/web-design" },
 };
 
@@ -14,7 +14,7 @@ export default function WebDesignServicePage() {
       <div className="mb-10">
         <h1 className="text-3xl font-bold">웹 디자인 서비스</h1>
         <p className="mt-2 text-lg text-muted-foreground">
-          SEO 최적화된 반응형 웹사이트를 설계하고 제작합니다.
+          모바일 SEO와 페이지 속도 SEO를 고려한 반응형 웹사이트를 설계하고 제작합니다.
         </p>
       </div>
 
@@ -23,12 +23,12 @@ export default function WebDesignServicePage() {
           <Card>
             <CardHeader><CardTitle>서비스 내용</CardTitle></CardHeader>
             <CardContent className="space-y-3 text-muted-foreground">
-              <p>처음부터 SEO를 고려한 웹사이트를 제작합니다.</p>
+              <p>처음부터 SEO를 고려하여 코어 웹 바이탈 기준을 충족하는 웹사이트를 제작합니다.</p>
               <ul className="list-disc space-y-1 pl-5">
                 <li>반응형 디자인 (모바일/태블릿/데스크탑)</li>
-                <li>Core Web Vitals 최적화</li>
+                <li>코어 웹 바이탈(Core Web Vitals) 최적화</li>
                 <li>시맨틱 HTML + 구조화된 데이터</li>
-                <li>빠른 로딩 속도 및 접근성</li>
+                <li>페이지 속도 SEO 및 접근성 최적화</li>
               </ul>
             </CardContent>
           </Card>

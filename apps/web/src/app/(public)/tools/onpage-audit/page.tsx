@@ -4,7 +4,7 @@ import { AuditForm } from "./audit-form";
 
 export const metadata: Metadata = {
   title: "온페이지 SEO 분석 — 웹사이트 내부최적화 무료 진단",
-  description: "무료 SEO 분석 도구로 테크니컬 SEO와 온페이지 요소를 사이트 진단합니다. URL을 입력하면 35개 항목을 자동 검사하고 AI가 점수와 개선 방안을 제시합니다.",
+  description: "무료 SEO 분석 도구로 테크니컬 SEO와 온페이지 요소를 사이트 진단합니다. URL을 입력하면 robots.txt 점검, sitemap 점검, 내부링크 구조까지 35개 항목을 자동 검사하고 AI가 점수와 개선 방안을 제시합니다.",
   openGraph: {
     title: "온페이지 SEO 분석 | SEO월드",
     description: "AI가 분석하는 무료 온페이지 SEO 진단. URL만 입력하면 35개 항목 즉시 검사.",
@@ -18,7 +18,7 @@ export default function OnpageAuditPage() {
       {/* 헤더 */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold">온페이지 SEO 분석</h1>
-        <p className="mt-1 text-lg text-muted-foreground">웹사이트 내부최적화 진단 도구</p>
+        <p className="mt-1 text-lg text-muted-foreground">테크니컬 SEO와 사이트 진단을 한번에</p>
         <p className="mt-1 text-sm text-muted-foreground">
           URL을 입력하면 35개 SEO 항목을 자동 검사하고, AI가 종합적으로 분석하여 점수와 개선 방안을 제시합니다.
         </p>
@@ -32,7 +32,7 @@ export default function OnpageAuditPage() {
             <p className="text-xs leading-relaxed text-violet-800/80">
               온페이지 SEO는 웹사이트 내부 요소를 최적화하여 검색엔진 순위를 높이는 기술 SEO 작업입니다.
               메타태그 점검, 헤딩 구조, 이미지 alt 태그, 내부링크 구조, 페이지 속도 등
-              검색엔진이 페이지를 이해하고 평가하는 데 사용하는 모든 요소를 포함합니다.
+              SEO 사이트 진단 시 검색엔진이 페이지를 이해하고 평가하는 데 사용하는 모든 요소를 포함합니다.
             </p>
           </CardContent>
         </Card>
@@ -40,7 +40,7 @@ export default function OnpageAuditPage() {
           <CardContent className="pt-5 pb-5">
             <h2 className="text-sm font-semibold text-teal-900 mb-2">이 도구의 이점</h2>
             <p className="text-xs leading-relaxed text-teal-800/80">
-              URL 하나만 입력하면 35개 항목을 자동으로 검사합니다.
+              URL 하나만 입력하면 테크니컬 SEO부터 웹사이트 오류 진단까지 35개 항목을 자동으로 검사합니다.
               HTTPS, 로딩 속도, 메타태그, 헤딩 구조, 이미지, 링크, 구조화 데이터, 보안 헤더까지
               전문 SEO 감사 도구 수준의 분석을 무료로 제공합니다.
               AI가 점수를 매기고 코드 예시와 함께 구체적인 개선 방안을 제시합니다.
@@ -52,9 +52,9 @@ export default function OnpageAuditPage() {
             <h2 className="text-sm font-semibold text-rose-900 mb-2">검사 항목 35개</h2>
             <p className="text-xs leading-relaxed text-rose-800/80">
               상태코드, HTTPS, 로딩 속도, 텍스트 비율, URL 구조 최적화,
-              Title, Description, Canonical, Keywords, H1~H3 구조,
-              이미지 alt, 내부/외부 링크, Viewport, Gzip, HSTS,
-              OG 태그, Twitter Card, JSON-LD, Favicon 등을 한번에 검사합니다.
+              Title, Description, canonical 점검, Keywords, H1~H3 구조,
+              이미지 alt, 내부링크 구조 분석, Viewport, Gzip, HSTS,
+              OG 태그, Twitter Card, JSON-LD, robots.txt 점검, sitemap 점검까지 한번에 검사합니다.
             </p>
           </CardContent>
         </Card>
