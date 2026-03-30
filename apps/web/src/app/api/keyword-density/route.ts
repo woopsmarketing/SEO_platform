@@ -61,28 +61,70 @@ export async function POST(request: Request) {
     const fullText = [title || "", description || "", textContent].join(" ").toLowerCase();
     const totalWordCount = fullText.split(/\s+/).filter(Boolean).length;
 
-    // 5. 키워드 밀도 분석 — 1~3단어 조합 추출
-    const words = fullText.split(/\s+/).filter(Boolean);
+    // 5. 한국어 불용어 + 조사/어미 처리
+    const STOPWORDS = new Set([
+      // 한국어 조사/어미/접속사
+      "은", "는", "이", "가", "을", "를", "의", "에", "에서", "로", "으로", "와", "과", "도", "만", "까지",
+      "부터", "에게", "한테", "께", "보다", "처럼", "같이", "마다", "밖에", "뿐", "이나", "나", "든지",
+      // 한국어 용언 어미/보조
+      "있는", "없는", "하는", "되는", "있는가?", "합니다", "입니다", "합니다.", "입니다.", "있습니다",
+      "있습니다.", "됩니다", "됩니다.", "하세요", "하세요.", "보세요", "보세요.",
+      "수", "것", "등", "위한", "위해", "통해", "대한", "따라", "관련", "포함",
+      "더", "및", "또는", "그리고", "하지만", "그러나", "때문", "때문에",
+      // 일반적 의미 없는 단어
+      "있는가?", "있는가", "없는가", "인가요?", "인가요", "무엇", "어떻게", "왜",
+      "이상", "이하", "이내", "이전", "이후", "현재", "모든", "각", "매우", "가장",
+      // 숫자/특수문자 관련
+      "q-", "q.", "n/a", "null", "undefined", "true", "false",
+    ]);
+
+    // 한국어 조사 제거 함수
+    function removeKoreanParticles(word: string): string {
+      return word
+        .replace(/[을를은는이가의에와과도만로으로에서까지부터]$/, "")
+        .replace(/[합입됩]니다\.?$/, "")
+        .replace(/하세요\.?$/, "")
+        .replace(/[?!.,;:'"()\[\]{}□■◆◇○●▶▷★☆]+/g, "")
+        .trim();
+    }
+
+    // 유효한 키워드인지 확인
+    function isValidKeyword(word: string): boolean {
+      if (word.length < 2) return false;
+      if (STOPWORDS.has(word)) return false;
+      // 순수 숫자/특수문자만
+      if (/^[\d\s.,!?;:'"()\-\/\\@#$%^&*=+_~`□■◆◇○●▶▷★☆\[\]{}|<>]+$/.test(word)) return false;
+      // 한글 1글자만 (조사 등)
+      if (/^[\uac00-\ud7af]$/.test(word)) return false;
+      // 영문 1글자만
+      if (/^[a-z]$/i.test(word)) return false;
+      // 특수문자로 시작하거나 끝남
+      if (/^[^a-z가-힣0-9]/i.test(word) || /[^a-z가-힣0-9]$/i.test(word)) return false;
+      return true;
+    }
+
+    // 6. 키워드 밀도 분석 — 1~3단어 조합 추출 (정제된)
+    const rawWords = fullText.split(/\s+/).filter(Boolean);
+    const cleanedWords = rawWords.map(removeKoreanParticles).filter(Boolean);
     const ngramCounts: Record<string, number> = {};
 
-    // 1-gram, 2-gram, 3-gram
     for (let n = 1; n <= 3; n++) {
-      for (let i = 0; i <= words.length - n; i++) {
-        const gram = words.slice(i, i + n).join(" ");
+      for (let i = 0; i <= cleanedWords.length - n; i++) {
+        const parts = cleanedWords.slice(i, i + n);
+        if (parts.some((p) => !isValidKeyword(p))) continue;
+        const gram = parts.join(" ");
         if (gram.length < 2) continue;
-        // 순수 숫자, 특수문자만인 경우 스킵
-        if (/^[\d\s.,!?;:'"()\-]+$/.test(gram)) continue;
         ngramCounts[gram] = (ngramCounts[gram] || 0) + 1;
       }
     }
 
-    // 6. 2회 이상 등장한 키워드만 필터 + 상위 50개
+    // 7. 2회 이상 등장 + 상위 50개
     const targetKw = keyword.trim().toLowerCase();
     const titleLower = (title || "").toLowerCase();
     const descLower = (description || "").toLowerCase();
 
     const sortedWords = Object.entries(ngramCounts)
-      .filter(([, count]) => count >= 2)
+      .filter(([word, count]) => count >= 2 && isValidKeyword(word.split(" ")[0]))
       .sort((a, b) => b[1] - a[1])
       .slice(0, 50)
       .map(([word, occurrences]) => {
