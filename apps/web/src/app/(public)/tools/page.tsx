@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { tools } from "@/lib/data";
 import { SITE_NAME, SITE_URL } from "@/lib/constants";
 
 export const metadata: Metadata = {
@@ -47,24 +46,70 @@ export default function ToolsPage() {
         </p>
       </div>
 
-      {/* 도구 카드 */}
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {tools.map((tool) => (
-          <Link key={tool.href} href={tool.href}>
-            <Card className={`h-full transition-all hover:shadow-lg hover:-translate-y-1 ${!tool.ready ? "opacity-60" : ""}`}>
-              <CardHeader>
-                <div className="text-3xl">{tool.icon}</div>
-                <CardTitle className="text-lg">
-                  {tool.title}
-                  {!tool.ready && <span className="ml-2 text-xs font-normal text-muted-foreground">(준비중)</span>}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription>{tool.description}</CardDescription>
-              </CardContent>
-            </Card>
-          </Link>
-        ))}
+      {/* 카테고리별 도구 */}
+      <div className="space-y-12">
+        {/* 온페이지 분석 */}
+        <div>
+          <div className="mb-4 flex items-center gap-2">
+            <span className="text-2xl">📊</span>
+            <h2 className="text-xl font-bold">온페이지 분석 도구</h2>
+          </div>
+          <p className="mb-6 text-sm text-muted-foreground">웹사이트 내부 SEO 요소를 검사하고 최적화하는 도구입니다.</p>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <ToolCard href="/tools/onpage-audit" icon="📊" title="온페이지 SEO 분석" desc="테크니컬 SEO부터 메타태그까지 35개 항목을 자동 검사하고 AI가 점수와 개선안을 제시합니다." />
+            <ToolCard href="/tools/meta-generator" icon="🏷️" title="메타태그 분석기" desc="URL을 입력하면 메타태그를 파싱하여 점검하고, 제목 태그 최적화와 메타 설명 최적화를 추천합니다." />
+          </div>
+        </div>
+
+        {/* 색인 도구 */}
+        <div>
+          <div className="mb-4 flex items-center gap-2">
+            <span className="text-2xl">🗂️</span>
+            <h2 className="text-xl font-bold">색인 도구</h2>
+          </div>
+          <p className="mb-6 text-sm text-muted-foreground">검색엔진이 사이트를 올바르게 크롤링하고 색인하도록 돕는 도구입니다.</p>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <ToolCard href="/tools/robots-generator" icon="🤖" title="Robots.txt 생성기" desc="22개 크롤러별 허용/차단 규칙을 설정하여 크롤링 문제와 색인 문제를 예방합니다." />
+            <ToolCard href="/tools/sitemap-generator" icon="🗺️" title="사이트맵 생성기" desc="URL을 입력하면 사이트를 크롤링하여 구글 서치콘솔 제출용 sitemap.xml을 생성합니다." />
+          </div>
+        </div>
+
+        {/* 백링크 분석 */}
+        <div>
+          <div className="mb-4 flex items-center gap-2">
+            <span className="text-2xl">🔗</span>
+            <h2 className="text-xl font-bold">백링크 분석 도구</h2>
+          </div>
+          <p className="mb-6 text-sm text-muted-foreground">사이트의 백링크 프로필을 분석하여 오프페이지 SEO를 점검하는 도구입니다.</p>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <ToolCard href="/tools/backlink-checker" icon="🔗" title="백링크 분석기" desc="도메인의 백링크 목록, 참조 도메인, doFollow 비율, 앵커 텍스트를 분석합니다." />
+          </div>
+        </div>
+
+        {/* 도메인 도구 */}
+        <div>
+          <div className="mb-4 flex items-center gap-2">
+            <span className="text-2xl">🌐</span>
+            <h2 className="text-xl font-bold">도메인 도구</h2>
+          </div>
+          <p className="mb-6 text-sm text-muted-foreground">도메인의 SEO 지표와 WHOIS 정보를 확인하는 도구입니다.</p>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <ToolCard href="/tools/domain-checker" icon="🌐" title="도메인 분석기" desc="도메인 점수, WHOIS 정보, DNS 데이터를 확인합니다." ready={false} />
+          </div>
+        </div>
+
+        {/* 키워드 분석 */}
+        <div>
+          <div className="mb-4 flex items-center gap-2">
+            <span className="text-2xl">🔍</span>
+            <h2 className="text-xl font-bold">키워드 분석 도구</h2>
+          </div>
+          <p className="mb-6 text-sm text-muted-foreground">타겟 키워드의 검색량, 경쟁도를 분석하고 관련 키워드를 추천하는 도구입니다.</p>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <ToolCard href="/tools/keyword-research" icon="🔍" title="키워드 조사" desc="키워드의 월간 검색량, CPC, 경쟁도를 조회합니다." ready={false} />
+            <ToolCard href="/tools/keyword-related" icon="💡" title="관련 키워드" desc="입력한 키워드와 관련된 롱테일 키워드를 추천합니다." ready={false} />
+          </div>
+        </div>
       </div>
 
       {/* 도구별 상세 소개 */}
@@ -227,5 +272,24 @@ export default function ToolsPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+function ToolCard({ href, icon, title, desc, ready = true }: { href: string; icon: string; title: string; desc: string; ready?: boolean }) {
+  return (
+    <Link href={ready ? href : "#"} onClick={(e) => { if (!ready) e.preventDefault(); }}>
+      <Card className={`h-full transition-all hover:shadow-lg hover:-translate-y-1 ${!ready ? "opacity-50 cursor-not-allowed" : ""}`}>
+        <CardHeader className="pb-2">
+          <div className="text-2xl">{icon}</div>
+          <CardTitle className="text-base">
+            {title}
+            {!ready && <span className="ml-2 text-xs font-normal text-muted-foreground">(준비중)</span>}
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-sm text-muted-foreground">{desc}</p>
+        </CardContent>
+      </Card>
+    </Link>
   );
 }
