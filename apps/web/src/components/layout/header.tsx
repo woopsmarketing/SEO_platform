@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { signOut } from "@/lib/supabase/actions";
 import { Button } from "@/components/ui/button";
 import { MobileNav } from "./mobile-nav";
+import { ToolsMegaMenu } from "./tools-mega-menu";
 
 export async function Header() {
   const supabase = await createClient();
@@ -24,13 +25,11 @@ export async function Header() {
           SEO월드
         </Link>
 
-        <nav className="hidden gap-6 md:flex">
+        <nav className="hidden items-center gap-6 md:flex">
           <Link href="/domains" className="text-sm font-medium text-muted-foreground hover:text-foreground">
             도메인
           </Link>
-          <Link href="/tools" className="text-sm font-medium text-muted-foreground hover:text-foreground">
-            무료 툴
-          </Link>
+          <ToolsMegaMenu />
           <Link href="/services" className="text-sm font-medium text-muted-foreground hover:text-foreground">
             서비스
           </Link>
