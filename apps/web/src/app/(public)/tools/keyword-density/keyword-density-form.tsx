@@ -14,8 +14,8 @@ import {
 interface WordItem {
   word?: string;
   occurrences?: number;
-  percent?: number;
-  weight?: number;
+  percent?: string;
+  weight?: string;
   inTitle?: boolean;
   inDescription?: boolean;
 }
@@ -25,22 +25,22 @@ interface KeywordDensityResult {
   keyword: string;
   title: string;
   description: string;
+  targetCount: number;
+  targetDensity: string;
+  totalWordCount: number;
   words: WordItem[];
 }
 
-function getDensityColor(percent?: number): string {
-  if (percent == null) return "text-muted-foreground";
-  if (percent >= 5) return "text-red-600 font-semibold";
-  if (percent >= 3) return "text-yellow-600 font-semibold";
-  if (percent >= 1) return "text-green-600 font-semibold";
-  return "text-muted-foreground";
+function parsePercent(p?: string): number {
+  if (!p) return 0;
+  return parseFloat(p.replace("%", "")) || 0;
 }
 
-function getDensityBadge(percent?: number): string {
-  if (percent == null) return "bg-gray-100 text-gray-600";
-  if (percent >= 5) return "bg-red-100 text-red-700";
-  if (percent >= 3) return "bg-yellow-100 text-yellow-700";
-  if (percent >= 1) return "bg-green-100 text-green-700";
+function getDensityBadge(percent?: string): string {
+  const n = parsePercent(percent);
+  if (n >= 5) return "bg-red-100 text-red-700";
+  if (n >= 3) return "bg-yellow-100 text-yellow-700";
+  if (n >= 1) return "bg-green-100 text-green-700";
   return "bg-gray-100 text-gray-600";
 }
 
@@ -181,28 +181,22 @@ export function KeywordDensityForm() {
             <StatCard
               label="타겟 키워드 밀도"
               value={
-                targetWord?.percent != null
-                  ? `${targetWord.percent.toFixed(2)}%`
+                result.targetCount > 0
+                  ? result.targetDensity
                   : "미발견"
               }
               sub={
-                targetWord
-                  ? `"${result.keyword}" — ${targetWord.occurrences ?? 0}회 사용`
+                result.targetCount > 0
+                  ? `"${result.keyword}" — ${result.targetCount}회 사용`
                   : `"${result.keyword}" 키워드가 페이지에서 발견되지 않았습니다`
               }
-              highlight={
-                targetWord?.percent != null &&
-                targetWord.percent >= 1 &&
-                targetWord.percent <= 3
-              }
-              warning={
-                targetWord?.percent != null && targetWord.percent > 3
-              }
+              highlight={result.targetCount > 0}
+              warning={false}
             />
             <StatCard
               label="총 분석 단어 수"
-              value={words.reduce((sum, w) => sum + (w.occurrences ?? 0), 0)}
-              sub="페이지 내 전체 키워드 사용 합계"
+              value={result.totalWordCount.toLocaleString()}
+              sub="페이지 내 전체 단어 수"
             />
           </div>
 
@@ -268,13 +262,11 @@ export function KeywordDensityForm() {
                             <span
                               className={`rounded px-1.5 py-0.5 text-xs font-medium ${getDensityBadge(w.percent)}`}
                             >
-                              {w.percent != null
-                                ? `${w.percent.toFixed(2)}%`
-                                : "-"}
+                              {w.percent ?? "-"}
                             </span>
                           </td>
                           <td className="py-2.5 pr-3 text-right tabular-nums text-muted-foreground">
-                            {w.weight != null ? w.weight.toFixed(2) : "-"}
+                            {w.weight ?? "-"}
                           </td>
                           <td className="py-2.5 pr-3 text-center">
                             {w.inTitle ? (
