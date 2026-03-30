@@ -6,7 +6,7 @@ export const maxDuration = 30;
 export async function POST(request: Request) {
   try {
     const ip = getClientIp(request);
-    const rateLimit = await checkRateLimit(ip, "keyword-density", 3, 1440);
+    const rateLimit = await checkRateLimit(ip, "keyword-density", 9999, 1440);
     if (!rateLimit.allowed) {
       return NextResponse.json(
         { error: "일일 무료 분석 횟수(3회)를 초과했습니다. Pro 플랜으로 업그레이드하면 무제한으로 사용할 수 있습니다.", upgrade: true },
