@@ -276,20 +276,21 @@ export default function ToolsPage() {
 }
 
 function ToolCard({ href, icon, title, desc, ready = true }: { href: string; icon: string; title: string; desc: string; ready?: boolean }) {
-  return (
-    <Link href={ready ? href : "#"} onClick={(e) => { if (!ready) e.preventDefault(); }}>
-      <Card className={`h-full transition-all hover:shadow-lg hover:-translate-y-1 ${!ready ? "opacity-50 cursor-not-allowed" : ""}`}>
-        <CardHeader className="pb-2">
-          <div className="text-2xl">{icon}</div>
-          <CardTitle className="text-base">
-            {title}
-            {!ready && <span className="ml-2 text-xs font-normal text-muted-foreground">(준비중)</span>}
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-muted-foreground">{desc}</p>
-        </CardContent>
-      </Card>
-    </Link>
+  const content = (
+    <Card className={`h-full transition-all ${ready ? "hover:shadow-lg hover:-translate-y-1" : "opacity-50 cursor-not-allowed"}`}>
+      <CardHeader className="pb-2">
+        <div className="text-2xl">{icon}</div>
+        <CardTitle className="text-base">
+          {title}
+          {!ready && <span className="ml-2 text-xs font-normal text-muted-foreground">(준비중)</span>}
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <p className="text-sm text-muted-foreground">{desc}</p>
+      </CardContent>
+    </Card>
   );
+
+  if (!ready) return <div>{content}</div>;
+  return <Link href={href}>{content}</Link>;
 }
