@@ -5,9 +5,9 @@ export const maxDuration = 30;
 
 export async function POST(request: Request) {
   try {
-    // Rate Limit: 3회/일
+    // Rate Limit: 무제한 (추후 Pro 플랜 적용 시 변경)
     const ip = getClientIp(request);
-    const rateLimit = await checkRateLimit(ip, "keyword-research", 3, 1440);
+    const rateLimit = await checkRateLimit(ip, "keyword-research", 9999, 1440);
     if (!rateLimit.allowed) {
       return NextResponse.json(
         {
