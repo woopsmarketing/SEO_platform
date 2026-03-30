@@ -58,6 +58,7 @@ export default function ToolsPage() {
           <div className="grid gap-4 sm:grid-cols-2">
             <ToolCard href="/tools/onpage-audit" icon="📊" title="온페이지 SEO 분석" desc="테크니컬 SEO부터 메타태그까지 35개 항목을 자동 검사하고 AI가 점수와 개선안을 제시합니다." />
             <ToolCard href="/tools/meta-generator" icon="🏷️" title="메타태그 분석기" desc="URL을 입력하면 메타태그를 파싱하여 점검하고, 제목 태그 최적화와 메타 설명 최적화를 추천합니다." />
+            <ToolCard href="/tools/keyword-density" icon="📝" title="사이트 키워드 분석기" desc="웹페이지의 키워드 사용 빈도, 밀도, 제목/설명 포함 여부를 분석합니다." />
           </div>
         </div>
 

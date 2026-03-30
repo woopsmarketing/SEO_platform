@@ -23,6 +23,7 @@ const TOOL_LABELS: Record<string, string> = {
   "keyword-research": "키워드 분석",
   "backlink-checker": "백링크 분석",
   "speed-test": "페이지 속도 분석",
+  "keyword-density": "키워드 밀도 분석",
 };
 
 const TOOL_COLORS: Record<string, string> = {
@@ -34,6 +35,7 @@ const TOOL_COLORS: Record<string, string> = {
   "keyword-research": "bg-amber-100 text-amber-700",
   "backlink-checker": "bg-rose-100 text-rose-700",
   "speed-test": "bg-cyan-100 text-cyan-700",
+  "keyword-density": "bg-orange-100 text-orange-700",
 };
 
 // 같은 도구로 취급할 타입 매핑 (meta-generator → meta-analyzer)

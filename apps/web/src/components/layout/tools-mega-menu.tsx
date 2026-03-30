@@ -23,6 +23,7 @@ const TOOL_CATEGORIES: ToolCategory[] = [
     tools: [
       { title: "온페이지 SEO 분석", href: "/tools/onpage-audit", description: "35개 항목 자동 검사 + AI 점수" },
       { title: "메타태그 분석기", href: "/tools/meta-generator", description: "메타태그 파싱 + AI 최적화 추천" },
+      { title: "사이트 키워드 분석기", href: "/tools/keyword-density", description: "페이지 키워드 밀도 확인" },
     ],
   },
   {
