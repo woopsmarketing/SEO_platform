@@ -24,6 +24,7 @@ const TOOL_LABELS: Record<string, string> = {
   "backlink-checker": "백링크 분석",
   "speed-test": "페이지 속도 분석",
   "keyword-density": "키워드 밀도 분석",
+  "related-keywords": "관련 키워드",
 };
 
 const TOOL_COLORS: Record<string, string> = {
@@ -34,6 +35,7 @@ const TOOL_COLORS: Record<string, string> = {
   "keyword-analyzer": "bg-amber-100 text-amber-700",
   "keyword-research": "bg-amber-100 text-amber-700",
   "backlink-checker": "bg-rose-100 text-rose-700",
+  "related-keywords": "bg-purple-100 text-purple-700",
   "speed-test": "bg-cyan-100 text-cyan-700",
   "keyword-density": "bg-orange-100 text-orange-700",
 };

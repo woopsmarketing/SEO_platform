@@ -53,7 +53,7 @@ const TOOL_CATEGORIES: ToolCategory[] = [
     icon: "🔍",
     tools: [
       { title: "키워드 조사", href: "/tools/keyword-research", description: "검색량, CPC, 경쟁도 조회" },
-      { title: "관련 키워드", href: "/tools/keyword-related", description: "키워드 추천 및 확장", ready: false },
+      { title: "관련 키워드", href: "/tools/keyword-related", description: "구글 연관 검색어 기반 키워드 추천" },
     ],
   },
 ];
