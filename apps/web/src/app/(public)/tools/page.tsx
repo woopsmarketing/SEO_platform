@@ -106,7 +106,7 @@ export default function ToolsPage() {
           </div>
           <p className="mb-6 text-sm text-muted-foreground">타겟 키워드의 검색량, 경쟁도를 분석하고 관련 키워드를 추천하는 도구입니다.</p>
           <div className="grid gap-4 sm:grid-cols-2">
-            <ToolCard href="/tools/keyword-research" icon="🔍" title="키워드 조사" desc="키워드의 월간 검색량, CPC, 경쟁도를 조회합니다." ready={false} />
+            <ToolCard href="/tools/keyword-research" icon="🔍" title="키워드 조사" desc="키워드의 월간 검색량, CPC, 경쟁도를 조회합니다." />
             <ToolCard href="/tools/keyword-related" icon="💡" title="관련 키워드" desc="입력한 키워드와 관련된 롱테일 키워드를 추천합니다." ready={false} />
           </div>
         </div>

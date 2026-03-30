@@ -51,7 +51,7 @@ const TOOL_CATEGORIES: ToolCategory[] = [
     name: "키워드 분석",
     icon: "🔍",
     tools: [
-      { title: "키워드 조사", href: "/tools/keyword-research", description: "검색량, CPC, 경쟁도 조회", ready: false },
+      { title: "키워드 조사", href: "/tools/keyword-research", description: "검색량, CPC, 경쟁도 조회" },
       { title: "관련 키워드", href: "/tools/keyword-related", description: "키워드 추천 및 확장", ready: false },
     ],
   },

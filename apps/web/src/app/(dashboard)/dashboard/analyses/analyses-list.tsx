@@ -20,6 +20,7 @@ const TOOL_LABELS: Record<string, string> = {
   "meta-generator": "메타태그 분석",
   "domain-checker": "도메인 분석",
   "keyword-analyzer": "키워드 분석",
+  "keyword-research": "키워드 분석",
   "backlink-checker": "백링크 분석",
   "speed-test": "페이지 속도 분석",
 };
@@ -30,6 +31,7 @@ const TOOL_COLORS: Record<string, string> = {
   "meta-generator": "bg-violet-100 text-violet-700",
   "domain-checker": "bg-green-100 text-green-700",
   "keyword-analyzer": "bg-amber-100 text-amber-700",
+  "keyword-research": "bg-amber-100 text-amber-700",
   "backlink-checker": "bg-rose-100 text-rose-700",
   "speed-test": "bg-cyan-100 text-cyan-700",
 };
