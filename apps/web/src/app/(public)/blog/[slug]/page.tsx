@@ -113,7 +113,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     .limit(3);
 
   return (
-    <article className="mx-auto max-w-3xl px-4 py-12">
+    <article className="mx-auto max-w-6xl px-4 py-12">
       {/* JSON-LD */}
       <script
         type="application/ld+json"
@@ -182,19 +182,24 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         )}
       </header>
 
-      {/* 목차 */}
-      <TableOfContents content={post.content} />
+      {/* 본문 + 사이드바 목차 2컬럼 */}
+      <div className="relative lg:grid lg:grid-cols-[1fr_240px] lg:gap-10">
+        {/* 본문 */}
+        <div>
+          <div className="blog-content">
+            <MarkdownRenderer content={post.content} />
+          </div>
+          <AuthorBox />
+          <BlogCta />
+        </div>
 
-      {/* 본문 */}
-      <div className="blog-content">
-        <MarkdownRenderer content={post.content} />
+        {/* 오른쪽 sticky 목차 — 데스크톱만 */}
+        <aside className="hidden lg:block">
+          <div className="sticky top-24">
+            <TableOfContents content={post.content} />
+          </div>
+        </aside>
       </div>
-
-      {/* 저자 박스 */}
-      <AuthorBox />
-
-      {/* CTA */}
-      <BlogCta />
 
       {/* 관련 글 */}
       {relatedPosts && relatedPosts.length > 0 && (

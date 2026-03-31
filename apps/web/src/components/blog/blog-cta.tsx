@@ -10,10 +10,10 @@ export function BlogCta() {
       </p>
       <div className="mt-5 flex justify-center gap-3">
         <Link href="/tools">
-          <Button className="bg-white text-blue-700 hover:bg-blue-50">무료 도구 사용하기</Button>
+          <Button className="bg-white text-blue-700 hover:bg-blue-50 font-semibold">무료 도구 사용하기</Button>
         </Link>
         <Link href="/services">
-          <Button variant="outline" className="border-white text-white hover:bg-blue-500">서비스 문의</Button>
+          <Button className="bg-blue-500 text-white border-2 border-white hover:bg-blue-400 font-semibold">서비스 문의</Button>
         </Link>
       </div>
     </div>

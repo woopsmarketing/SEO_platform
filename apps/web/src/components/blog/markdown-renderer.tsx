@@ -33,7 +33,7 @@ export function MarkdownRenderer({ content }: { content: string }) {
   );
 }
 
-// 목차 자동 생성 — 번호 매기기, H2 볼드, H3 들여쓰기
+// 사이드바 sticky 목차
 export function TableOfContents({ content }: { content: string }) {
   const headings = content
     .split("\n")
@@ -47,41 +47,25 @@ export function TableOfContents({ content }: { content: string }) {
 
   if (headings.length < 3) return null;
 
-  let h2Counter = 0;
-  let h3Counter = 0;
-
   return (
-    <nav className="mb-10 rounded-xl border bg-gray-50/80 p-6">
-      <p className="mb-4 text-sm font-bold text-gray-900">목차</p>
-      <ol className="space-y-1.5 list-none">
-        {headings.map((h, i) => {
-          let label: string;
-          if (h.level === 2) {
-            h2Counter++;
-            h3Counter = 0;
-            label = `${h2Counter}.`;
-          } else {
-            h3Counter++;
-            label = `${h2Counter}.${h3Counter}`;
-          }
-
-          return (
-            <li key={i} className={h.level === 3 ? "ml-5" : ""}>
-              <a
-                href={`#${h.id}`}
-                className={`text-sm hover:text-blue-600 transition-colors ${
-                  h.level === 2
-                    ? "font-semibold text-gray-800"
-                    : "text-gray-500"
-                }`}
-              >
-                <span className="inline-block w-8 text-gray-400">{label}</span>
-                {h.text}
-              </a>
-            </li>
-          );
-        })}
-      </ol>
+    <nav className="rounded-lg border bg-gray-50/80 p-4">
+      <p className="mb-3 text-xs font-bold text-gray-500 uppercase tracking-wider">목차</p>
+      <ul className="space-y-1 list-none">
+        {headings.map((h, i) => (
+          <li key={i} className={h.level === 3 ? "ml-3" : ""}>
+            <a
+              href={`#${h.id}`}
+              className={`block py-1 text-xs leading-snug transition-colors hover:text-blue-600 ${
+                h.level === 2
+                  ? "font-medium text-gray-700"
+                  : "text-gray-400"
+              }`}
+            >
+              {h.text}
+            </a>
+          </li>
+        ))}
+      </ul>
     </nav>
   );
 }
