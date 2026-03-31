@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { InquiryForm } from "@/components/inquiry-form";
 
 export const metadata: Metadata = {
-  title: "웹 디자인 서비스",
+  title: "SEO 웹 디자인 서비스 — 모바일 반응형 · Core Web Vitals 최적화",
   description: "모바일 SEO와 코어 웹 바이탈을 고려한 반응형 웹사이트 제작. 페이지 속도 SEO 최적화, 시맨틱 HTML 포함.",
   alternates: { canonical: "/services/web-design" },
 };

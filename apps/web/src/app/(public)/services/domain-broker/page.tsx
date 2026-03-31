@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { InquiryForm } from "@/components/inquiry-form";
 
 export const metadata: Metadata = {
-  title: "도메인 브로커 서비스",
+  title: "도메인 브로커 서비스 — 프리미엄 도메인 매입 · 매각 중개",
   description: "도메인 신뢰도 확인, 도메인 SEO 분석을 기반으로 프리미엄 도메인 매입/매각 중개. 도메인 점수 확인부터 에스크로 거래까지 원스톱 서비스.",
   alternates: { canonical: "/services/domain-broker" },
 };

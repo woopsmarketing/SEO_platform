@@ -4,7 +4,7 @@ import { services } from "@/lib/data";
 import { SITE_NAME, SITE_URL } from "@/lib/constants";
 
 export const metadata: Metadata = {
-  title: "SEO 컨설팅 및 서비스",
+  title: "SEO 컨설팅 및 서비스 — 백링크 · 트래픽 · 웹 디자인 전문",
   description: "SEO 컨설팅, 백링크 구축, 트래픽 유입, SEO 웹 디자인, 도메인 브로커 등 전문 SEO 서비스. 무료 상담 가능.",
   openGraph: {
     title: "전문 SEO 서비스 | SEO월드",

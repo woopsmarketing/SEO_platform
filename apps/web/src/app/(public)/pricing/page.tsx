@@ -4,12 +4,12 @@ import { Button } from "@/components/ui/button";
 import { PricingCards } from "@/components/pricing-cards";
 
 export const metadata: Metadata = {
-  title: "요금제 — Free vs Pro",
+  title: "요금제 비교 — 무료 SEO 분석 vs Pro 무제한 (월 9,900원)",
   description:
     "SEO월드 무료 요금제와 Pro 요금제를 비교하세요. 월 9,900원으로 무제한 SEO 분석, 경쟁사 비교, 주간 리포트를 이용할 수 있습니다.",
   openGraph: {
-    title: "요금제 | SEO월드",
-    description: "Free vs Pro 요금제 비교 — 월 9,900원으로 무제한 SEO 분석",
+    title: "요금제 비교 — Free vs Pro | SEO월드",
+    description: "무료 SEO 분석 vs Pro 무제한 — 월 9,900원으로 구글 SEO 분석 업그레이드",
   },
   alternates: { canonical: "/pricing" },
 };

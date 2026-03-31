@@ -8,8 +8,8 @@ export async function generateMetadata({
   params,
 }: DomainDetailPageProps): Promise<Metadata> {
   return {
-    title: `${params.domain} 도메인 분석`,
-    description: `${params.domain}의 SEO 지표, 백링크, 히스토리 분석 결과`,
+    title: `${params.domain} 도메인 분석 — SEO 지표 · DA · 백링크 조회`,
+    description: `${params.domain}의 도메인 권위(DA), 백링크 현황, 트래픽 추이, 히스토리를 무료로 분석한 결과입니다.`,
   };
 }
 

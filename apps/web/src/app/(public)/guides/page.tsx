@@ -6,11 +6,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 export const revalidate = 60;
 
 export const metadata: Metadata = {
-  title: "SEO 가이드",
-  description: "SEO 초보자부터 실무자까지, 단계별 가이드와 실전 튜토리얼로 검색엔진 최적화를 학습하세요.",
+  title: "SEO 가이드 — 초보자부터 실무자까지 단계별 검색엔진 최적화 튜토리얼",
+  description: "SEO 초보자부터 실무자까지, 구글 상위노출을 위한 단계별 가이드와 실전 튜토리얼로 검색엔진 최적화를 학습하세요.",
   openGraph: {
-    title: "SEO 가이드 | SEO월드",
-    description: "단계별 SEO 가이드와 실전 튜토리얼",
+    title: "SEO 가이드 — 단계별 검색엔진 최적화 튜토리얼 | SEO월드",
+    description: "구글 상위노출을 위한 단계별 SEO 가이드와 실전 튜토리얼",
   },
   alternates: { canonical: "/guides" },
 };

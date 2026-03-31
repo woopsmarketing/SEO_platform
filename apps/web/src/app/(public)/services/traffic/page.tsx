@@ -3,8 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { InquiryForm } from "@/components/inquiry-form";
 
 export const metadata: Metadata = {
-  title: "트래픽 서비스",
-  description: "키워드 리서치 기반 오가닉 트래픽 유입 서비스. 검색 순위 상승과 전환율 개선.",
+  title: "트래픽 서비스 — 오가닉 트래픽 유입 · 검색 순위 상승",
+  description: "키워드 리서치 기반 오가닉 트래픽 유입 서비스. 구글 검색 순위 상승과 전환율 개선을 위한 맞춤 트래픽 전략.",
   alternates: { canonical: "/services/traffic" },
 };
 

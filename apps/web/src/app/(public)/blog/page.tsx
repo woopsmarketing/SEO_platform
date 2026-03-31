@@ -8,11 +8,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 export const revalidate = 60;
 
 export const metadata: Metadata = {
-  title: "SEO 블로그",
-  description: "SEO 전략, 도메인 팁, 검색엔진 최적화 노하우, 디지털 마케팅 인사이트를 제공합니다.",
+  title: "SEO 블로그 — 구글 상위노출 전략 · 검색엔진 최적화 노하우",
+  description: "SEO 전략, 백링크 팁, 구글 상위노출 방법, 검색엔진 최적화 노하우, 디지털 마케팅 인사이트를 제공합니다.",
   openGraph: {
-    title: "SEO 블로그 | SEO월드",
-    description: "SEO 실무 팁과 검색엔진 최적화 인사이트",
+    title: "SEO 블로그 — 구글 상위노출 전략 | SEO월드",
+    description: "SEO 실무 팁, 백링크 전략, 검색엔진 최적화 인사이트",
   },
   alternates: { canonical: "/blog" },
 };

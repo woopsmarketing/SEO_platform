@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "경매 도메인",
-  description: "SEO 가치가 높은 경매 도메인 목록을 확인하세요.",
+  title: "경매 도메인 — SEO 가치 높은 프리미엄 만료 도메인 목록",
+  description: "SEO 가치가 높은 경매 도메인과 만료 도메인 목록을 확인하세요. DA · 백링크 · 트래픽 기반으로 엄선된 프리미엄 도메인.",
   alternates: { canonical: "/domains/auction" },
 };
 
