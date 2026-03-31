@@ -5,6 +5,8 @@ import { createClient } from "@/lib/supabase/server";
 import { Button } from "@/components/ui/button";
 import { MarkdownRenderer, TableOfContents } from "@/components/blog/markdown-renderer";
 
+export const revalidate = 60;
+
 interface GuidePageProps {
   params: { slug: string };
 }

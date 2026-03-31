@@ -3,6 +3,8 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
+export const revalidate = 60;
+
 export const metadata: Metadata = {
   title: "SEO 가이드",
   description: "SEO 초보자부터 실무자까지, 단계별 가이드와 실전 튜토리얼로 검색엔진 최적화를 학습하세요.",

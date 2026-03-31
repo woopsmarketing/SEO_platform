@@ -9,6 +9,9 @@ import { AuthorBox } from "@/components/blog/author-box";
 import { BlogCta } from "@/components/blog/blog-cta";
 import "@/styles/blog.css";
 
+// ISR: 60초마다 재검증 — 캐시된 HTML 제공 + 주기적 갱신
+export const revalidate = 60;
+
 interface BlogPostPageProps {
   params: Promise<{ slug: string }>;
 }

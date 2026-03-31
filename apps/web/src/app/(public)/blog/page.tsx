@@ -4,6 +4,9 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
+// ISR: 60초마다 재검증
+export const revalidate = 60;
+
 export const metadata: Metadata = {
   title: "SEO 블로그",
   description: "SEO 전략, 도메인 팁, 검색엔진 최적화 노하우, 디지털 마케팅 인사이트를 제공합니다.",
