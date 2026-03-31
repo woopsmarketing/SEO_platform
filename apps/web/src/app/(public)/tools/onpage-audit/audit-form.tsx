@@ -88,6 +88,10 @@ export function AuditForm() {
         setError(data.error || "분석에 실패했습니다.");
         if (data.upgrade) setShowUpgrade(true);
       } else {
+        // 403 상태코드 감지 시 안내
+        if (data.parsed?.statusCode === 403) {
+          setError("대상 사이트가 서버에서의 접근을 차단하고 있습니다(403 Forbidden). 일부 사이트는 클라우드 서버 IP를 차단하여 분석이 제한될 수 있습니다.");
+        }
         setResult(data);
       }
     } catch {

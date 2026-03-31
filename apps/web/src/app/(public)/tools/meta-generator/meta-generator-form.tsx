@@ -218,7 +218,11 @@ export function MetaGeneratorForm() {
       });
       const data = await res.json();
       if (!res.ok) {
-        setError(data.error || "분석에 실패했습니다.");
+        if (data.error?.includes("가져올 수 없습니다")) {
+          setError("대상 사이트에 접근할 수 없습니다. 사이트가 서버 IP를 차단하고 있거나 접속이 불가능한 상태일 수 있습니다.");
+        } else {
+          setError(data.error || "분석에 실패했습니다.");
+        }
         if (data.upgrade) setShowUpgrade(true);
       } else {
         setResult(data);
