@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { Button } from "@/components/ui/button";
+import { MarkdownRenderer, TableOfContents } from "@/components/blog/markdown-renderer";
 
 interface GuidePageProps {
   params: { slug: string };
@@ -63,10 +64,9 @@ export default async function GuidePage({ params }: GuidePageProps) {
         )}
       </header>
 
-      <div className="prose prose-gray max-w-none">
-        {post.content.split("\n").map((paragraph: string, i: number) => (
-          <p key={i}>{paragraph}</p>
-        ))}
+      <TableOfContents content={post.content} />
+      <div className="blog-content">
+        <MarkdownRenderer content={post.content} />
       </div>
 
       <div className="mt-12 border-t pt-8">
