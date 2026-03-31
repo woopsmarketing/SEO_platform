@@ -1,0 +1,131 @@
+/* H2 — 파란 왼쪽 보더 */
+.blog-content h2 {
+  border-left: 4px solid #2563eb;
+  padding-left: 16px;
+  margin-top: 48px;
+  margin-bottom: 16px;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+/* H3 — 하단 회색 보더 */
+.blog-content h3 {
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 8px;
+  margin-top: 32px;
+  margin-bottom: 12px;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+/* 본문 문단 */
+.blog-content p {
+  margin-bottom: 16px;
+  line-height: 1.8;
+  color: #374151;
+  font-size: 1rem;
+}
+
+/* 강조 */
+.blog-content strong {
+  font-weight: 700;
+  color: #111827;
+}
+
+/* 리스트 */
+.blog-content ul, .blog-content ol {
+  margin-bottom: 16px;
+  padding-left: 24px;
+}
+.blog-content li {
+  margin-bottom: 6px;
+  line-height: 1.8;
+  color: #374151;
+}
+.blog-content ul li {
+  list-style-type: disc;
+}
+.blog-content ol li {
+  list-style-type: decimal;
+}
+
+/* 인용 → CTA 카드 */
+.blog-content blockquote {
+  margin: 24px 0;
+  padding: 16px 20px;
+  border-left: 4px solid #2563eb;
+  background: #eff6ff;
+  border-radius: 0 8px 8px 0;
+}
+.blog-content blockquote p {
+  margin: 0;
+  color: #1e40af;
+  font-weight: 500;
+}
+
+/* 표 */
+.blog-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 24px 0;
+  font-size: 0.875rem;
+}
+.blog-content thead {
+  background: #f9fafb;
+  border-bottom: 2px solid #e5e7eb;
+}
+.blog-content th {
+  padding: 10px 16px;
+  text-align: left;
+  font-weight: 600;
+  color: #374151;
+}
+.blog-content td {
+  padding: 10px 16px;
+  border-bottom: 1px solid #f3f4f6;
+  color: #4b5563;
+}
+.blog-content tbody tr:hover {
+  background: #f9fafb;
+}
+
+/* 구분선 */
+.blog-content hr {
+  margin: 40px 0;
+  border: none;
+  border-top: 1px solid #e5e7eb;
+}
+
+/* 코드 */
+.blog-content code {
+  background: #f3f4f6;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.875em;
+  color: #1f2937;
+}
+.blog-content pre {
+  background: #1f2937;
+  color: #e5e7eb;
+  padding: 16px;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 24px 0;
+}
+.blog-content pre code {
+  background: none;
+  padding: 0;
+  color: inherit;
+}
+
+/* 내부 링크 */
+.blog-content a {
+  color: #2563eb;
+  font-weight: 500;
+  text-decoration: none;
+}
+.blog-content a:hover {
+  text-decoration: underline;
+}

@@ -3,9 +3,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { Button } from "@/components/ui/button";
 import { SITE_NAME, SITE_URL } from "@/lib/constants";
 import { MarkdownRenderer, TableOfContents } from "@/components/blog/markdown-renderer";
+import { AuthorBox } from "@/components/blog/author-box";
+import { BlogCta } from "@/components/blog/blog-cta";
+import "@/styles/blog.css";
 
 interface BlogPostPageProps {
   params: Promise<{ slug: string }>;
@@ -16,7 +18,7 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
   const supabase = await createClient();
   const { data: post } = await supabase
     .from("posts")
-    .select("title, excerpt, cover_image_url")
+    .select("title, excerpt, cover_image_url, tags, published_at, updated_at")
     .eq("slug", slug)
     .eq("status", "published")
     .single();
@@ -26,14 +28,30 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
   return {
     title: post.title,
     description: post.excerpt || undefined,
+    keywords: post.tags?.join(", "),
     openGraph: {
       title: post.title,
       description: post.excerpt || undefined,
       type: "article",
+      publishedTime: post.published_at || undefined,
+      modifiedTime: post.updated_at || undefined,
+      tags: post.tags || undefined,
+      url: `https://seoworld.co.kr/blog/${slug}`,
       ...(post.cover_image_url ? { images: [post.cover_image_url] } : {}),
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.excerpt || undefined,
     },
     alternates: { canonical: `/blog/${slug}` },
   };
+}
+
+function getReadingTime(content: string): number {
+  const charCount = content.replace(/\s/g, "").length;
+  const minutes = Math.ceil(charCount / 500);
+  return Math.max(1, minutes);
 }
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
@@ -48,6 +66,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
   if (!post) notFound();
 
+  const readingTime = getReadingTime(post.content || "");
+
+  // Article JSON-LD
   const articleJsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -61,6 +82,17 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     mainEntityOfPage: { "@type": "WebPage", "@id": `${SITE_URL}/blog/${slug}` },
   };
 
+  // BreadcrumbList JSON-LD
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "홈", item: "https://seoworld.co.kr" },
+      { "@type": "ListItem", position: 2, name: "블로그", item: "https://seoworld.co.kr/blog" },
+      { "@type": "ListItem", position: 3, name: post.title, item: `https://seoworld.co.kr/blog/${slug}` },
+    ],
+  };
+
   // 관련 글 조회
   const { data: relatedPosts } = await supabase
     .from("posts")
@@ -71,8 +103,22 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     .order("published_at", { ascending: false })
     .limit(3);
 
+  // 최신글 조회
+  const { data: latestPosts } = await supabase
+    .from("posts")
+    .select("slug, title, excerpt, published_at")
+    .eq("status", "published")
+    .neq("slug", slug)
+    .order("published_at", { ascending: false })
+    .limit(3);
+
   return (
     <article className="mx-auto max-w-3xl px-4 py-12">
+      {/* JSON-LD */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
@@ -114,6 +160,10 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
               })}
             </time>
           )}
+          <span className="flex items-center gap-1">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
+            약 {readingTime}분
+          </span>
           <span>SEO월드</span>
         </div>
         {post.tags && post.tags.length > 0 && (
@@ -135,24 +185,16 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       {/* 목차 */}
       <TableOfContents content={post.content} />
 
-      {/* 본문 — 마크다운 렌더링 */}
+      {/* 본문 */}
       <div className="blog-content">
         <MarkdownRenderer content={post.content} />
       </div>
 
-      {/* 하단 CTA */}
-      <div className="mt-12 rounded-xl bg-blue-50 border border-blue-100 p-6 text-center">
-        <p className="text-lg font-bold text-blue-900">SEO 분석이 필요하신가요?</p>
-        <p className="mt-2 text-sm text-blue-700">무료 SEO 도구로 웹사이트를 점검해보세요.</p>
-        <div className="mt-4 flex justify-center gap-3">
-          <Link href="/tools">
-            <Button>무료 도구 사용하기</Button>
-          </Link>
-          <Link href="/services">
-            <Button variant="outline">서비스 문의</Button>
-          </Link>
-        </div>
-      </div>
+      {/* 저자 박스 */}
+      <AuthorBox />
+
+      {/* CTA */}
+      <BlogCta />
 
       {/* 관련 글 */}
       {relatedPosts && relatedPosts.length > 0 && (
@@ -171,10 +213,33 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         </div>
       )}
 
+      {/* 최신글 */}
+      {latestPosts && latestPosts.length > 0 && (
+        <div className="mt-12 border-t pt-8">
+          <h2 className="text-xl font-bold mb-4">최신 글</h2>
+          <div className="grid gap-4 sm:grid-cols-3">
+            {latestPosts.map((lp) => (
+              <Link key={lp.slug} href={`/blog/${lp.slug}`} className="group">
+                <div className="rounded-lg border p-4 transition-shadow group-hover:shadow-md">
+                  <p className="text-sm font-semibold group-hover:text-blue-600 line-clamp-2">{lp.title}</p>
+                  {lp.excerpt && <p className="mt-1 text-xs text-muted-foreground line-clamp-2">{lp.excerpt}</p>}
+                  {lp.published_at && (
+                    <p className="mt-2 text-xs text-muted-foreground">
+                      {new Date(lp.published_at).toLocaleDateString("ko-KR")}
+                    </p>
+                  )}
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* 하단 네비게이션 */}
       <div className="mt-8 border-t pt-6">
-        <Link href="/blog">
-          <Button variant="outline">블로그 목록으로</Button>
+        <Link href="/blog" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5" /><polyline points="12 19 5 12 12 5" /></svg>
+          블로그 목록으로
         </Link>
       </div>
     </article>
