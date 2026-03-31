@@ -11,12 +11,12 @@ const notoSansKR = Noto_Sans_KR({
 
 export const metadata: Metadata = {
   title: {
-    default: `${SITE_NAME} — 무료 SEO 분석 도구`,
+    default: `구글 SEO 분석 도구 — 구글 상위노출 무료 진단 | ${SITE_NAME}`,
     template: `%s | ${SITE_NAME}`,
   },
   description: SITE_DESCRIPTION,
   metadataBase: new URL(SITE_URL),
-  keywords: ["SEO", "검색엔진최적화", "메타태그", "사이트맵", "robots.txt", "온페이지SEO", "도메인분석", "백링크", "SEO도구", "무료SEO"],
+  keywords: ["구글 SEO", "구글 상위노출", "SEO 분석", "검색엔진최적화", "백링크 조회", "키워드 분석", "메타태그 분석", "사이트맵 생성", "온페이지 SEO", "무료 SEO 도구", "구글 검색 순위", "SEO 최적화"],
   authors: [{ name: SITE_NAME, url: SITE_URL }],
   creator: SITE_NAME,
   publisher: SITE_NAME,
@@ -25,12 +25,12 @@ export const metadata: Metadata = {
     siteName: SITE_NAME,
     locale: "ko_KR",
     url: SITE_URL,
-    title: `${SITE_NAME} — 무료 SEO 분석 도구`,
+    title: `구글 SEO 분석 도구 — 구글 상위노출 무료 진단 | ${SITE_NAME}`,
     description: SITE_DESCRIPTION,
   },
   twitter: {
     card: "summary_large_image",
-    title: `${SITE_NAME} — 무료 SEO 분석 도구`,
+    title: `구글 SEO 분석 도구 — 구글 상위노출 무료 진단 | ${SITE_NAME}`,
     description: SITE_DESCRIPTION,
   },
   robots: {

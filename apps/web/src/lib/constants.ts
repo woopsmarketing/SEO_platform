@@ -1,5 +1,5 @@
 export const SITE_NAME = "SEO월드";
 export const SITE_DESCRIPTION =
-  "검색엔진최적화(SEO) 전문 플랫폼. 무료 SEO 분석 툴로 웹사이트 SEO를 진단하고, 메타태그·온페이지·사이트맵을 점검하세요. 백링크 서비스와 SEO 최적화 컨설팅까지 제공합니다.";
+  "구글 상위노출을 위한 무료 SEO 분석 도구. 구글 SEO 진단, 메타태그 분석, 백링크 조회, 키워드 분석까지 한번에. 35개 항목 자동 점검으로 구글 검색 순위를 올리세요.";
 export const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL || "https://seoworld.co.kr";
