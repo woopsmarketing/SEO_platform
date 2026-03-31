@@ -165,8 +165,29 @@ export function AuditForm() {
 }
 
 function ParsedDataCards({ parsed }: { parsed: ParsedSeo }) {
+  // SPA/CSR 감지: title은 있는데 description, h1, 이미지가 모두 없으면
+  const isSpaLikely = !!parsed.title
+    && !parsed.metaDescription
+    && parsed.h1.length === 0
+    && parsed.imgTotal === 0
+    && parsed.wordCount < 100;
+
   return (
     <>
+      {/* SPA 감지 경고 배너 */}
+      {isSpaLikely && (
+        <Card className="border-amber-300 bg-amber-50">
+          <CardContent className="p-4">
+            <p className="text-sm font-semibold text-amber-800">JavaScript 렌더링 사이트(SPA) 감지</p>
+            <p className="mt-1 text-xs text-amber-700 leading-relaxed">
+              이 사이트는 title만 서버에서 렌더링되고, description, H1, 이미지 등은 JavaScript 실행 후에 표시되는 것으로 보입니다.
+              아래 분석 결과는 <strong>구글봇이 1차 크롤링 시 보는 것과 동일한 관점</strong>입니다.
+              구글봇은 JS를 실행하지만 지연이 발생하므로, 서버사이드 렌더링(SSR)으로 메타태그와 콘텐츠를 즉시 제공하는 것이 SEO에 유리합니다.
+            </p>
+          </CardContent>
+        </Card>
+      )}
+
       {/* 기본 정보 */}
       <Card>
         <CardHeader><CardTitle className="text-base">기본 정보</CardTitle></CardHeader>
