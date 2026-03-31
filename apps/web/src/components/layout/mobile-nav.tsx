@@ -32,6 +32,7 @@ export function MobileNav({ user }: { user: User | null }) {
             <Link href="/tools" onClick={() => setOpen(false)} className="text-sm font-medium">무료 툴</Link>
             <Link href="/services" onClick={() => setOpen(false)} className="text-sm font-medium">서비스</Link>
             <Link href="/blog" onClick={() => setOpen(false)} className="text-sm font-medium">블로그</Link>
+            <Link href="/pricing" onClick={() => setOpen(false)} className="text-sm font-medium">가격</Link>
             <hr className="my-1" />
             {user ? (
               <>

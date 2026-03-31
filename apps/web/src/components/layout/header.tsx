@@ -36,6 +36,9 @@ export async function Header() {
           <Link href="/blog" className="text-sm font-medium text-muted-foreground hover:text-foreground">
             블로그
           </Link>
+          <Link href="/pricing" className="text-sm font-medium text-muted-foreground hover:text-foreground">
+            가격
+          </Link>
         </nav>
 
         <div className="hidden items-center gap-3 md:flex">

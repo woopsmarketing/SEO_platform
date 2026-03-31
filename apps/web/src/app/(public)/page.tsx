@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { SITE_NAME, SITE_DESCRIPTION, SITE_URL } from "@/lib/constants";
 import { homeTools } from "@/lib/data";
+import { PricingCards } from "@/components/pricing-cards";
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -495,7 +496,27 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ====== 12. CTA ====== */}
+      {/* ====== 12. 요금제 비교 ====== */}
+      <section className="py-16 md:py-20">
+        <div className="mx-auto max-w-7xl px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold">요금제</h2>
+            <p className="mt-3 text-muted-foreground">
+              무료로 시작하고, 필요할 때 Pro로 업그레이드하세요.
+            </p>
+          </div>
+          <PricingCards />
+          <div className="mt-8 text-center">
+            <Link href="/pricing">
+              <Button variant="link" className="text-blue-600">
+                요금제 자세히 비교하기 &rarr;
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ====== 13. CTA ====== */}
       <section className="bg-blue-50 py-20">
         <div className="mx-auto max-w-3xl px-4 text-center">
           <h2 className="text-3xl font-bold text-gray-900">구글 상위노출, 지금 시작하세요</h2>
