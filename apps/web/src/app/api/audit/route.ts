@@ -6,9 +6,9 @@ export const maxDuration = 30;
 export async function POST(request: Request) {
   try {
     // 로그인 유저는 무제한, 비로그인은 IP당 하루 3회
+    const ip = getClientIp(request);
     const loggedIn = await isAuthenticated(request);
     if (!loggedIn) {
-      const ip = getClientIp(request);
       const rateLimit = await checkRateLimit(ip, "onpage-audit", 3, 1440);
       if (!rateLimit.allowed) {
         return NextResponse.json(
@@ -69,6 +69,7 @@ export async function POST(request: Request) {
     await adminSupabase.from("tool_usage_logs").insert({
       tool_type: "onpage-audit",
       input_summary: url,
+      ip_address: ip,
     });
 
     // 로그인 사용자면 analyses 테이블에도 저장
