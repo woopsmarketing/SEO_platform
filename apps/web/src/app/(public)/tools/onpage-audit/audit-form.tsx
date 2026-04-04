@@ -4,6 +4,8 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { trackToolUsage } from "@/lib/gtag";
+import { SignupModal } from "@/components/signup-modal";
 
 interface ParsedSeo {
   url: string;
@@ -92,6 +94,7 @@ export function AuditForm() {
         if (data.parsed?.statusCode === 403) {
           setError("대상 사이트가 서버에서의 접근을 차단하고 있습니다(403 Forbidden). 일부 사이트는 클라우드 서버 IP를 차단하여 분석이 제한될 수 있습니다.");
         }
+        trackToolUsage("onpage-audit");
         setResult(data);
       }
     } catch {
@@ -119,15 +122,7 @@ export function AuditForm() {
           {error && (
             <div className="mt-3">
               <p className="text-sm text-destructive">{error}</p>
-              {showUpgrade && (
-                <div className="mt-3 rounded-lg border border-blue-200 bg-blue-50 p-4">
-                  <p className="text-sm font-medium text-blue-900">Pro 플랜으로 업그레이드</p>
-                  <p className="mt-1 text-xs text-blue-700">무제한 SEO 분석, 경쟁사 비교, 주간 리포트 등 모든 기능을 이용하세요.</p>
-                  <a href="/dashboard/settings" className="mt-2 inline-block rounded-md bg-blue-600 px-4 py-1.5 text-xs font-medium text-white hover:bg-blue-700">
-                    플랜 알아보기
-                  </a>
-                </div>
-              )}
+              <SignupModal open={showUpgrade} onClose={() => setShowUpgrade(false)} toolName="온페이지 SEO 분석" />
             </div>
           )}
           {loading && (

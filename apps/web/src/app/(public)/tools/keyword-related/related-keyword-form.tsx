@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { trackToolUsage } from "@/lib/gtag";
 
 interface RelatedResult {
   keyword: string;
@@ -35,6 +36,7 @@ export function RelatedKeywordForm() {
       if (!res.ok) {
         setError(data.error || "분석에 실패했습니다.");
       } else {
+        trackToolUsage("keyword-related");
         setResult(data);
       }
     } catch {

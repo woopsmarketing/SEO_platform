@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Noto_Sans_KR } from "next/font/google";
 import "@/styles/globals.css";
 import { SITE_NAME, SITE_DESCRIPTION, SITE_URL } from "@/lib/constants";
+import { GoogleAnalytics } from "@/components/google-analytics";
 
 const notoSansKR = Noto_Sans_KR({
   subsets: ["latin"],
@@ -64,7 +65,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko">
-      <body className={notoSansKR.className}>{children}</body>
+      <body className={notoSansKR.className}>
+        <GoogleAnalytics />
+        {children}
+      </body>
     </html>
   );
 }

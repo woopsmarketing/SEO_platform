@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { trackToolUsage } from "@/lib/gtag";
+import { SignupModal } from "@/components/signup-modal";
 import {
   Card,
   CardContent,
@@ -102,6 +104,7 @@ export function BacklinkForm() {
         setError(data.error || "분석에 실패했습니다.");
         if (data.upgrade) setShowUpgrade(true);
       } else {
+        trackToolUsage("backlink-checker");
         setResult(data);
       }
     } catch {
@@ -133,23 +136,7 @@ export function BacklinkForm() {
           {error && (
             <div className="mt-3">
               <p className="text-sm text-destructive">{error}</p>
-              {showUpgrade && (
-                <div className="mt-3 rounded-lg border border-blue-200 bg-blue-50 p-4">
-                  <p className="text-sm font-medium text-blue-900">
-                    Pro 플랜으로 업그레이드
-                  </p>
-                  <p className="mt-1 text-xs text-blue-700">
-                    무제한 백링크 분석, 경쟁사 비교, 주간 리포트 등 모든 기능을
-                    이용하세요.
-                  </p>
-                  <a
-                    href="/dashboard/settings"
-                    className="mt-2 inline-block rounded-md bg-blue-600 px-4 py-1.5 text-xs font-medium text-white hover:bg-blue-700"
-                  >
-                    플랜 알아보기
-                  </a>
-                </div>
-              )}
+              <SignupModal open={showUpgrade} onClose={() => setShowUpgrade(false)} toolName="백링크 분석" />
             </div>
           )}
           {loading && (

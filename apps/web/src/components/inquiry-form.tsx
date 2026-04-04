@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { trackInquirySubmit } from "@/lib/gtag";
 
 interface InquiryFormProps {
   serviceType: string;
@@ -35,6 +36,7 @@ export function InquiryForm({ serviceType, serviceLabel }: InquiryFormProps) {
     });
 
     if (res.ok) {
+      trackInquirySubmit(serviceType);
       setStatus("success");
       form.reset();
     } else {

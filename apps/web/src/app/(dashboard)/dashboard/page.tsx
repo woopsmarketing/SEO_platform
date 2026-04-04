@@ -3,6 +3,8 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Suspense } from "react";
+import { OAuthTracker } from "@/components/oauth-tracker";
 
 export const metadata: Metadata = { title: "대시보드" };
 
@@ -45,6 +47,7 @@ export default async function DashboardPage() {
 
   return (
     <div className="space-y-6">
+      <Suspense fallback={null}><OAuthTracker /></Suspense>
       <div>
         <h1 className="text-2xl font-bold">{displayName}님, 안녕하세요</h1>
         <p className="mt-1 text-muted-foreground">SEO 분석 결과와 활동을 한눈에 확인하세요.</p>

@@ -4,6 +4,7 @@ import { signIn, signInWithGoogle } from "@/lib/supabase/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { SignupTracker } from "@/components/signup-tracker";
 
 export const metadata: Metadata = {
   title: "로그인",
@@ -24,6 +25,7 @@ export default async function LoginPage({
 
   return (
     <div className="flex min-h-[60vh] items-center justify-center px-4">
+      <SignupTracker signedUp={!!message} />
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle className="text-2xl">로그인</CardTitle>

@@ -57,3 +57,18 @@ export function getClientIp(request: Request): string {
   if (real) return real;
   return "unknown";
 }
+
+/**
+ * 로그인 유저인지 확인 — 로그인 시 rate limit 무시
+ * API Route에서 request의 cookie를 읽어서 세션 확인
+ */
+export async function isAuthenticated(request: Request): Promise<boolean> {
+  try {
+    const { createClient } = await import("@/lib/supabase/server");
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    return !!user;
+  } catch {
+    return false;
+  }
+}

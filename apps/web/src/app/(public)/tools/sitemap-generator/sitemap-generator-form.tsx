@@ -5,6 +5,7 @@ import { saveDownload } from "@/lib/download-store";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { trackToolUsage } from "@/lib/gtag";
 
 interface SitemapUrl {
   id: string;
@@ -144,6 +145,7 @@ export function SitemapGeneratorForm() {
 
   async function handleCopy() {
     await navigator.clipboard.writeText(output);
+    trackToolUsage("sitemap-generator");
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
     fetch("/api/tool-usage", {

@@ -1,22 +1,21 @@
 import { NextResponse } from "next/server";
-import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
+import { checkRateLimit, getClientIp, isAuthenticated } from "@/lib/rate-limit";
 
 export const maxDuration = 30;
 
 export async function POST(request: Request) {
   try {
-    // Rate Limit: 무제한 (추후 Pro 플랜 적용 시 변경)
+    // 로그인 유저는 무제한, 비로그인은 IP당 하루 5회
     const ip = getClientIp(request);
-    const rateLimit = await checkRateLimit(ip, "keyword-research", 9999, 1440);
-    if (!rateLimit.allowed) {
-      return NextResponse.json(
-        {
-          error:
-            "일일 무료 분석 횟수(3회)를 초과했습니다. Pro 플랜으로 업그레이드하면 무제한으로 사용할 수 있습니다.",
-          upgrade: true,
-        },
-        { status: 429 }
-      );
+    const loggedIn = await isAuthenticated(request);
+    if (!loggedIn) {
+      const rateLimit = await checkRateLimit(ip, "keyword-research", 5, 1440);
+      if (!rateLimit.allowed) {
+        return NextResponse.json(
+          { error: "일일 무료 분석 횟수(5회)를 초과했습니다.", upgrade: true, remaining: 0 },
+          { status: 429 }
+        );
+      }
     }
 
     const { keyword, country = "kr" } = await request.json();
