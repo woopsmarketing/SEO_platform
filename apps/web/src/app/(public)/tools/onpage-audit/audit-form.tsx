@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { trackToolUsage } from "@/lib/gtag";
 import { SignupModal } from "@/components/signup-modal";
+import { BacklinkCta } from "@/components/backlink-cta";
 
 interface ParsedSeo {
   url: string;
@@ -134,30 +135,33 @@ export function AuditForm() {
       </Card>
 
       {result && (
-        <div className="grid gap-6 lg:grid-cols-2">
-          <div className="space-y-6">
-            <ParsedDataCards parsed={result.parsed} />
+        <>
+          <div className="grid gap-6 lg:grid-cols-2">
+            <div className="space-y-6">
+              <ParsedDataCards parsed={result.parsed} />
+            </div>
+            <div>
+              <Card>
+                <CardHeader>
+                  <CardTitle>AI SEO 분석</CardTitle>
+                  <CardDescription>AI가 분석한 SEO 진단 결과입니다.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {result.analysis ? (
+                    <div className="prose prose-sm max-w-none prose-headings:text-base prose-headings:font-semibold">
+                      <MarkdownRenderer text={result.analysis} />
+                    </div>
+                  ) : result.error ? (
+                    <p className="text-sm text-muted-foreground">{result.error}</p>
+                  ) : (
+                    <p className="text-sm text-muted-foreground">AI 분석 결과가 없습니다.</p>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
           </div>
-          <div>
-            <Card>
-              <CardHeader>
-                <CardTitle>AI SEO 분석</CardTitle>
-                <CardDescription>AI가 분석한 SEO 진단 결과입니다.</CardDescription>
-              </CardHeader>
-              <CardContent>
-                {result.analysis ? (
-                  <div className="prose prose-sm max-w-none prose-headings:text-base prose-headings:font-semibold">
-                    <MarkdownRenderer text={result.analysis} />
-                  </div>
-                ) : result.error ? (
-                  <p className="text-sm text-muted-foreground">{result.error}</p>
-                ) : (
-                  <p className="text-sm text-muted-foreground">AI 분석 결과가 없습니다.</p>
-                )}
-              </CardContent>
-            </Card>
-          </div>
-        </div>
+          <BacklinkCta variant="audit" />
+        </>
       )}
     </div>
   );

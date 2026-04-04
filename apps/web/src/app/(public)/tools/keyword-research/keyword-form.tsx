@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { trackToolUsage } from "@/lib/gtag";
 import { SignupModal } from "@/components/signup-modal";
+import { BacklinkCta } from "@/components/backlink-cta";
 import {
   Card,
   CardContent,
@@ -308,6 +309,7 @@ export function KeywordForm() {
               )}
             </CardContent>
           </Card>
+          <BacklinkCta variant="general" />
         </>
       )}
     </div>

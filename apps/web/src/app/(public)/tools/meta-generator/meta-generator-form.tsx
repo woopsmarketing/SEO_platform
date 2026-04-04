@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { trackToolUsage } from "@/lib/gtag";
 import { SignupModal } from "@/components/signup-modal";
+import { BacklinkCta } from "@/components/backlink-cta";
 
 interface ParsedMeta {
   url: string;
@@ -573,6 +574,7 @@ export function MetaGeneratorForm() {
               )}
             </div>
           </div>
+          <BacklinkCta variant="general" />
         </>
       )}
     </div>
