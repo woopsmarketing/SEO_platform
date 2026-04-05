@@ -36,6 +36,111 @@ interface ServiceRecommendation {
   priority: number;
 }
 
+interface HealthScore {
+  score: number;
+  passed: number;
+  warnings: number;
+  critical: number;
+  total: number;
+}
+
+function calculateHealth(parsed: ParsedSeo): HealthScore {
+  const checks = [
+    parsed.loadTimeMs < 3000,
+    parsed.isHttps,
+    !!(parsed.title && parsed.titleLength >= 15),
+    !!(parsed.metaDescription && parsed.metaDescriptionLength >= 40),
+    parsed.hasStructuredData,
+    parsed.hasOgTitle && parsed.hasOgDescription && parsed.hasOgImage,
+    parsed.h1.length === 1,
+    parsed.imgTotal === 0 || parsed.imgWithoutAlt === 0,
+    parsed.hasViewport,
+    parsed.hasGzip,
+  ];
+
+  const total = checks.length;
+  const passed = checks.filter(Boolean).length;
+  const failed = total - passed;
+
+  // 심각: 점수가 50 미만이 되게 하는 항목들 (HTTPS, 속도, 뷰포트)
+  let critical = 0;
+  if (!parsed.isHttps) critical++;
+  if (parsed.loadTimeMs >= 3000) critical++;
+  if (!parsed.hasViewport) critical++;
+  if (!parsed.title || parsed.titleLength < 15) critical++;
+
+  const warnings = failed - critical;
+
+  return {
+    score: Math.round((passed / total) * 100),
+    passed,
+    warnings: Math.max(0, warnings),
+    critical: Math.max(0, critical),
+    total,
+  };
+}
+
+function getScoreColor(score: number) {
+  if (score >= 80) return { bg: "bg-green-500", text: "text-green-700", label: "양호", border: "border-green-200", bgLight: "bg-green-50" };
+  if (score >= 50) return { bg: "bg-orange-500", text: "text-orange-700", label: "개선 필요", border: "border-orange-200", bgLight: "bg-orange-50" };
+  return { bg: "bg-red-500", text: "text-red-700", label: "심각", border: "border-red-200", bgLight: "bg-red-50" };
+}
+
+function SeoHealthBanner({ parsed }: { parsed: ParsedSeo }) {
+  const health = calculateHealth(parsed);
+  const color = getScoreColor(health.score);
+  const failedCount = health.warnings + health.critical;
+
+  // 손실 트래픽 추정: 심각 1개당 100~200
+  const lossMin = failedCount * 100;
+  const lossMax = failedCount * 200;
+
+  return (
+    <div className={`rounded-xl border ${color.border} ${color.bgLight} p-5`}>
+      {/* 점수 헤더 */}
+      <div className="flex items-center gap-3 mb-3">
+        <span className="text-base font-bold text-gray-900">
+          SEO 건강도: {health.score}/100
+        </span>
+        <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${color.bgLight} ${color.text} border ${color.border}`}>
+          {health.score >= 80 ? "✅" : health.score >= 50 ? "⚠️" : "❌"} {color.label}
+        </span>
+      </div>
+
+      {/* 프로그레스 바 */}
+      <div className="w-full h-2.5 bg-gray-200 rounded-full overflow-hidden mb-4">
+        <div
+          className={`h-full rounded-full transition-all ${color.bg}`}
+          style={{ width: `${health.score}%` }}
+        />
+      </div>
+
+      {/* 문제 요약 태그 */}
+      <div className="flex flex-wrap gap-3 text-sm mb-4">
+        <span className="text-green-700 font-medium">✅ 양호 {health.passed}개</span>
+        {health.warnings > 0 && (
+          <span className="text-orange-700 font-medium">⚠️ 주의 {health.warnings}개</span>
+        )}
+        {health.critical > 0 && (
+          <span className="text-red-700 font-medium">❌ 심각 {health.critical}개</span>
+        )}
+      </div>
+
+      {/* 손실 프레이밍 메시지 */}
+      {failedCount > 0 && (
+        <p className="text-sm text-gray-700 leading-relaxed">
+          현재 사이트의 SEO 문제로 인해{" "}
+          <strong className={color.text}>
+            매월 약 {lossMin.toLocaleString()}~{lossMax.toLocaleString()}회의 잠재 방문자
+          </strong>
+          를 놓치고 있을 수 있습니다.
+          아래 문제를 해결하면 검색 노출을 크게 개선할 수 있습니다.
+        </p>
+      )}
+    </div>
+  );
+}
+
 function detectIssues(parsed: ParsedSeo): ServiceRecommendation[] {
   const recs: ServiceRecommendation[] = [];
 
@@ -168,44 +273,50 @@ export function SmartServiceCta({ parsed }: { parsed: ParsedSeo }) {
   const recommendations = detectIssues(parsed);
 
   if (recommendations.length === 0) {
-    // 문제가 없어도 백링크 일반 배너는 표시
+    // 문제가 없어도 건강도 배너 + 백링크 일반 배너는 표시
     return (
-      <div className="rounded-xl border border-green-200 bg-green-50/50 p-6">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h3 className="text-base font-bold text-green-900">SEO 상태가 양호합니다</h3>
-            <p className="text-sm text-green-700 mt-1">이제 고품질 백링크로 검색 순위를 더 높여보세요.</p>
+      <div className="space-y-4">
+        <SeoHealthBanner parsed={parsed} />
+        <div className="rounded-xl border border-green-200 bg-green-50/50 p-6">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h3 className="text-base font-bold text-green-900">SEO 상태가 양호합니다</h3>
+              <p className="text-sm text-green-700 mt-1">이제 고품질 백링크로 검색 순위를 더 높여보세요.</p>
+            </div>
+            <Link href="/services/backlinks" className="shrink-0">
+              <Button variant="outline" className="border-green-300 text-green-800 hover:bg-green-100">
+                백링크 서비스 알아보기
+              </Button>
+            </Link>
           </div>
-          <Link href="/services/backlinks" className="shrink-0">
-            <Button variant="outline" className="border-green-300 text-green-800 hover:bg-green-100">
-              백링크 서비스 알아보기
-            </Button>
-          </Link>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-3">
-      <h3 className="text-lg font-bold">SEO월드가 해결해드립니다</h3>
-      <p className="text-sm text-muted-foreground">분석 결과를 기반으로 가장 시급한 개선 사항을 추천해드립니다.</p>
-      <div className="grid gap-3 sm:grid-cols-1 lg:grid-cols-3">
-        {recommendations.map((rec, i) => (
-          <div
-            key={i}
-            className="rounded-xl border bg-white p-5 shadow-sm hover:shadow-md transition-shadow"
-          >
-            <div className="text-2xl mb-2">{rec.icon}</div>
-            <h4 className="text-sm font-bold text-gray-900">{rec.title}</h4>
-            <p className="mt-1 text-xs text-gray-600 leading-relaxed">{rec.desc}</p>
-            <Link href={rec.href} className="mt-3 block">
-              <Button size="sm" className="w-full text-xs">
-                {rec.btnText}
-              </Button>
-            </Link>
-          </div>
-        ))}
+    <div className="space-y-4">
+      <SeoHealthBanner parsed={parsed} />
+      <div className="space-y-3">
+        <h3 className="text-lg font-bold">SEO월드가 해결해드립니다</h3>
+        <p className="text-sm text-muted-foreground">분석 결과를 기반으로 가장 시급한 개선 사항을 추천해드립니다.</p>
+        <div className="grid gap-3 sm:grid-cols-1 lg:grid-cols-3">
+          {recommendations.map((rec, i) => (
+            <div
+              key={i}
+              className="rounded-xl border bg-white p-5 shadow-sm hover:shadow-md transition-shadow"
+            >
+              <div className="text-2xl mb-2">{rec.icon}</div>
+              <h4 className="text-sm font-bold text-gray-900">{rec.title}</h4>
+              <p className="mt-1 text-xs text-gray-600 leading-relaxed">{rec.desc}</p>
+              <Link href={rec.href} className="mt-3 block">
+                <Button size="sm" className="w-full text-xs">
+                  {rec.btnText}
+                </Button>
+              </Link>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

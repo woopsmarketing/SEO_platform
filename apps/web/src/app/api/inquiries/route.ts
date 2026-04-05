@@ -10,11 +10,19 @@ const ALLOWED_SERVICE_TYPES = [
   "general",
 ];
 
+const ALLOWED_BUDGETS = [
+  "30만원 이하",
+  "30~60만원",
+  "60~120만원",
+  "120만원 이상",
+  "상담 후 결정",
+];
+
 export async function POST(request: Request) {
   try {
     const body = await request.json();
 
-    const { name, email, service_type, message, company } = body;
+    const { name, email, service_type, message, company, site_url, budget } = body;
 
     if (!name || !email || !service_type || !message) {
       return NextResponse.json(
@@ -51,10 +59,34 @@ export async function POST(request: Request) {
       );
     }
 
+    // 선택 필드 검증
+    if (site_url !== undefined && site_url !== null) {
+      if (typeof site_url !== "string" || site_url.length > 2000) {
+        return NextResponse.json(
+          { error: "사이트 URL은 2000자 이내로 입력해주세요." },
+          { status: 400 }
+        );
+      }
+    }
+
+    if (budget !== undefined && budget !== null) {
+      if (!ALLOWED_BUDGETS.includes(budget)) {
+        return NextResponse.json(
+          { error: "유효하지 않은 예산 범위입니다." },
+          { status: 400 }
+        );
+      }
+    }
+
+    const insertData: Record<string, string> = { name, email, service_type, message };
+    if (company) insertData.company = company;
+    if (site_url) insertData.site_url = site_url;
+    if (budget) insertData.budget = budget;
+
     const supabase = createAdminClient();
     const { data, error } = await supabase
       .from("inquiries")
-      .insert({ name, email, service_type, message, company })
+      .insert(insertData)
       .select()
       .single();
 
