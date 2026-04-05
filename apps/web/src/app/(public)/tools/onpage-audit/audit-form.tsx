@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { trackToolUsage } from "@/lib/gtag";
 import { SignupModal } from "@/components/signup-modal";
-import { BacklinkCta } from "@/components/backlink-cta";
+import { SmartServiceCta } from "@/components/smart-service-cta";
 
 interface ParsedSeo {
   url: string;
@@ -160,7 +160,7 @@ export function AuditForm() {
               </Card>
             </div>
           </div>
-          <BacklinkCta variant="audit" />
+          <SmartServiceCta parsed={result.parsed} />
         </>
       )}
     </div>
