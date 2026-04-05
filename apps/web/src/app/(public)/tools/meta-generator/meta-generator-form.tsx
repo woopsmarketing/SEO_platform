@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { trackToolUsage } from "@/lib/gtag";
 import { SignupModal } from "@/components/signup-modal";
 import { BacklinkCta } from "@/components/backlink-cta";
+import { RelatedTools } from "@/components/related-tools";
 
 interface ParsedMeta {
   url: string;
@@ -575,6 +576,7 @@ export function MetaGeneratorForm() {
             </div>
           </div>
           <BacklinkCta variant="general" />
+          <RelatedTools currentTool="meta-generator" />
         </>
       )}
     </div>

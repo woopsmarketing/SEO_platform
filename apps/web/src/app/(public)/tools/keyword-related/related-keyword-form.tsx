@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { trackToolUsage } from "@/lib/gtag";
 import { BacklinkCta } from "@/components/backlink-cta";
+import { RelatedTools } from "@/components/related-tools";
 
 interface RelatedResult {
   keyword: string;
@@ -171,6 +172,7 @@ export function RelatedKeywordForm() {
             </Card>
           )}
           <BacklinkCta variant="general" />
+          <RelatedTools currentTool="keyword-related" />
         </>
       )}
     </div>

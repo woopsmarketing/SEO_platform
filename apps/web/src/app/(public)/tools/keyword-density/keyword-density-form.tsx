@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { trackToolUsage } from "@/lib/gtag";
 import { SignupModal } from "@/components/signup-modal";
 import { BacklinkCta } from "@/components/backlink-cta";
+import { RelatedTools } from "@/components/related-tools";
 import {
   Card,
   CardContent,
@@ -292,6 +293,7 @@ export function KeywordDensityForm() {
             </CardContent>
           </Card>
           <BacklinkCta variant="general" />
+          <RelatedTools currentTool="keyword-density" />
         </>
       )}
     </div>

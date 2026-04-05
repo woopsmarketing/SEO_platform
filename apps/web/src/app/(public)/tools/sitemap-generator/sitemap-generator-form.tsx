@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { trackToolUsage } from "@/lib/gtag";
+import { RelatedTools } from "@/components/related-tools";
 
 interface SitemapUrl {
   id: string;
@@ -389,6 +390,7 @@ export function SitemapGeneratorForm() {
           </CardContent>
         </Card>
       </div>
+      <RelatedTools currentTool="sitemap-generator" />
     </div>
   );
 }

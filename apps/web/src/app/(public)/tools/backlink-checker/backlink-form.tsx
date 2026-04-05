@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { trackToolUsage } from "@/lib/gtag";
 import { SignupModal } from "@/components/signup-modal";
 import Link from "next/link";
+import { RelatedTools } from "@/components/related-tools";
 import {
   Card,
   CardContent,
@@ -346,6 +347,7 @@ export function BacklinkForm() {
               )}
             </CardContent>
           </Card>
+          <RelatedTools currentTool="backlink-checker" />
         </>
       )}
     </div>

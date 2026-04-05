@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { trackToolUsage } from "@/lib/gtag";
 import { SignupModal } from "@/components/signup-modal";
 import { SmartServiceCta } from "@/components/smart-service-cta";
+import { RelatedTools } from "@/components/related-tools";
 
 interface ParsedSeo {
   url: string;
@@ -210,6 +211,7 @@ export function AuditForm() {
               </Card>
             </div>
           </div>
+          <RelatedTools currentTool="onpage-audit" />
         </>
       )}
     </div>
