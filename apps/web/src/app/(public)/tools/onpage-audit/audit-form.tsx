@@ -203,11 +203,13 @@ export function AuditForm() {
                   ) : (
                     <p className="text-sm text-muted-foreground">AI 분석 결과가 없습니다.</p>
                   )}
+                  <div className="mt-6 border-t pt-6">
+                    <SmartServiceCta parsed={result.parsed} />
+                  </div>
                 </CardContent>
               </Card>
             </div>
           </div>
-          <SmartServiceCta parsed={result.parsed} />
         </>
       )}
     </div>
