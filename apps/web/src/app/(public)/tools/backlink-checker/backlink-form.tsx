@@ -114,8 +114,21 @@ export function BacklinkForm() {
     setLoading(false);
   }
 
-  const counts = result?.counts;
-  const backlinks = result?.backlinks ?? [];
+  // eslint-disable-next-line
+  const backlinks: any[] = result?.backlinks ?? [];
+  // counts가 0일 때 목록에서 직접 계산
+  // eslint-disable-next-line
+  const apiCounts = result?.counts as any;
+  const apiTotal = apiCounts?.backlinks?.total ?? 0;
+  const apiDoFollow = apiCounts?.backlinks?.doFollow ?? 0;
+  const totalBacklinks = apiTotal > 0 ? apiTotal : backlinks.length;
+  const doFollowCount = apiDoFollow > 0 ? apiDoFollow : backlinks.filter((bl) => !bl.nofollow).length;
+  const noFollowCount = totalBacklinks - doFollowCount;
+  const uniqueDomains = (apiCounts?.domains?.total ?? 0) > 0
+    ? apiCounts.domains.total
+    : new Set(backlinks.map((bl) => { try { return new URL(bl.url_from).hostname; } catch { return bl.url_from; } })).size;
+  const doFollowDomains = apiCounts?.domains?.doFollow ?? 0;
+  const toHomePage = apiCounts?.backlinks?.toHomePage ?? 0;
 
   return (
     <div className="space-y-8">
@@ -154,36 +167,74 @@ export function BacklinkForm() {
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <StatCard
               label="총 백링크"
-              value={counts?.backlinks?.total ?? 0}
-              sub={`doFollow ${counts?.backlinks?.doFollow ?? 0} / noFollow ${counts?.backlinks?.noFollow ?? 0}`}
+              value={totalBacklinks}
+              sub={`doFollow ${doFollowCount} / noFollow ${noFollowCount}`}
             />
             <StatCard
               label="doFollow 백링크"
-              value={counts?.backlinks?.doFollow ?? 0}
+              value={doFollowCount}
               sub={
-                counts?.backlinks?.total
-                  ? `전체의 ${Math.round(((counts.backlinks.doFollow ?? 0) / counts.backlinks.total) * 100)}%`
+                totalBacklinks > 0
+                  ? `전체의 ${Math.round((doFollowCount / totalBacklinks) * 100)}%`
                   : undefined
               }
               highlight
             />
             <StatCard
               label="참조 도메인"
-              value={counts?.domains?.total ?? 0}
-              sub={`doFollow ${counts?.domains?.doFollow ?? 0} / noFollow ${counts?.domains?.noFollow ?? 0}`}
+              value={uniqueDomains}
+              sub={doFollowDomains > 0 ? `doFollow ${doFollowDomains}` : undefined}
             />
             <StatCard
               label="홈페이지 링크"
-              value={counts?.backlinks?.toHomePage ?? 0}
+              value={toHomePage}
               sub="루트 도메인으로 향하는 백링크"
             />
+          </div>
+
+          {/* 백링크 서비스 CTA — 연두색 배경 */}
+          <div className="rounded-xl border border-green-200 bg-green-50/70 p-6">
+            <h3 className="text-base font-bold text-green-900">백링크 전문 서비스</h3>
+            <p className="text-sm text-green-700 mt-1 mb-4">분석 결과를 바탕으로 사이트의 백링크 품질을 개선하세요.</p>
+            <div className="grid gap-3 sm:grid-cols-3">
+              <div className="rounded-lg border border-green-100 bg-white p-4 shadow-sm hover:shadow-md transition-shadow">
+                <div className="text-xl mb-1">🛡️</div>
+                <h4 className="text-sm font-bold text-gray-900">스팸 백링크 제거</h4>
+                <p className="mt-1 text-xs text-gray-600 leading-relaxed">
+                  저품질·스팸 백링크를 식별하고 Google Disavow 처리까지 대행합니다.
+                </p>
+                <Link href="/services/backlinks" className="mt-2 block">
+                  <Button size="sm" variant="outline" className="w-full text-xs border-green-300 text-green-800 hover:bg-green-100">스팸 제거 문의</Button>
+                </Link>
+              </div>
+              <div className="rounded-lg border border-green-100 bg-white p-4 shadow-sm hover:shadow-md transition-shadow">
+                <div className="text-xl mb-1">🔗</div>
+                <h4 className="text-sm font-bold text-gray-900">고품질 백링크 구축</h4>
+                <p className="mt-1 text-xs text-gray-600 leading-relaxed">
+                  DA 높은 사이트에서 doFollow 백링크를 확보하여 검색 순위를 개선합니다.
+                </p>
+                <Link href="/services/backlinks" className="mt-2 block">
+                  <Button size="sm" variant="outline" className="w-full text-xs border-green-300 text-green-800 hover:bg-green-100">백링크 구축 문의</Button>
+                </Link>
+              </div>
+              <div className="rounded-lg border border-green-100 bg-white p-4 shadow-sm hover:shadow-md transition-shadow">
+                <div className="text-xl mb-1">📊</div>
+                <h4 className="text-sm font-bold text-gray-900">백링크 정밀 분석</h4>
+                <p className="mt-1 text-xs text-gray-600 leading-relaxed">
+                  경쟁사 대비 심층 분석과 링크 갭 분석으로 효과적인 전략을 수립합니다.
+                </p>
+                <Link href="/services/backlinks" className="mt-2 block">
+                  <Button size="sm" variant="outline" className="w-full text-xs border-green-300 text-green-800 hover:bg-green-100">정밀 분석 문의</Button>
+                </Link>
+              </div>
+            </div>
           </div>
 
           {/* 백링크 목록 테이블 */}
           <Card>
             <CardHeader>
               <CardTitle className="text-base">
-                백링크 목록 ({backlinks.length}개)
+                백링크 목록
               </CardTitle>
               <CardDescription>
                 {result.domain}에 연결된 백링크 목록입니다.
@@ -280,46 +331,20 @@ export function BacklinkForm() {
               )}
             </CardContent>
           </Card>
-          {/* 백링크 서비스 CTA */}
-          <div className="space-y-3">
-            <h3 className="text-lg font-bold">백링크 전문 서비스</h3>
-            <p className="text-sm text-muted-foreground">분석 결과를 바탕으로 사이트의 백링크 품질을 개선하세요.</p>
-            <div className="grid gap-3 sm:grid-cols-3">
-              <div className="rounded-xl border bg-white p-5 shadow-sm hover:shadow-md transition-shadow">
-                <div className="text-2xl mb-2">🛡️</div>
-                <h4 className="text-sm font-bold text-gray-900">스팸 백링크 제거</h4>
-                <p className="mt-1 text-xs text-gray-600 leading-relaxed">
-                  저품질·스팸 백링크는 구글 패널티의 원인이 됩니다.
-                  유해한 링크를 식별하고 Google Disavow 처리까지 대행합니다.
-                </p>
-                <Link href="/services/backlinks" className="mt-3 block">
-                  <Button size="sm" className="w-full text-xs">스팸 제거 문의하기</Button>
-                </Link>
-              </div>
-              <div className="rounded-xl border bg-white p-5 shadow-sm hover:shadow-md transition-shadow">
-                <div className="text-2xl mb-2">🔗</div>
-                <h4 className="text-sm font-bold text-gray-900">고품질 백링크 구축</h4>
-                <p className="mt-1 text-xs text-gray-600 leading-relaxed">
-                  DA 높은 사이트에서 doFollow 백링크를 확보합니다.
-                  도메인 권한을 높여 구글 검색 순위를 직접적으로 개선하세요.
-                </p>
-                <Link href="/services/backlinks" className="mt-3 block">
-                  <Button size="sm" className="w-full text-xs">백링크 구축 문의하기</Button>
-                </Link>
-              </div>
-              <div className="rounded-xl border bg-white p-5 shadow-sm hover:shadow-md transition-shadow">
-                <div className="text-2xl mb-2">📊</div>
-                <h4 className="text-sm font-bold text-gray-900">백링크 정밀 분석</h4>
-                <p className="mt-1 text-xs text-gray-600 leading-relaxed">
-                  경쟁사 대비 백링크 현황을 심층 분석하고,
-                  링크 갭 분석을 통해 효과적인 백링크 전략을 수립해드립니다.
-                </p>
-                <Link href="/services/backlinks" className="mt-3 block">
-                  <Button size="sm" className="w-full text-xs">정밀 분석 문의하기</Button>
-                </Link>
-              </div>
+
+          {/* 더 자세한 분석 유도 */}
+          {backlinks.length > 0 && (
+            <div className="rounded-xl border border-blue-200 bg-blue-50/50 p-6 text-center">
+              <p className="text-base font-bold text-blue-900">더 자세한 백링크 분석이 필요하신가요?</p>
+              <p className="mt-1 text-sm text-blue-700">
+                경쟁사 비교, 스팸 링크 필터링, 앵커 텍스트 분석, 링크 획득 추이 등
+                심층 분석 리포트를 제공합니다.
+              </p>
+              <Link href="/services/backlinks" className="mt-4 inline-block">
+                <Button className="px-8">백링크 정밀 분석 문의하기</Button>
+              </Link>
             </div>
-          </div>
+          )}
         </>
       )}
     </div>
