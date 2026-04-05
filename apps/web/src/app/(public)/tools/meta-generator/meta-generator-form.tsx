@@ -576,9 +576,9 @@ export function MetaGeneratorForm() {
             </div>
           </div>
           <BacklinkCta variant="general" />
-          <RelatedTools currentTool="meta-generator" />
         </>
       )}
+      <RelatedTools currentTool="meta-generator" />
     </div>
   );
 }

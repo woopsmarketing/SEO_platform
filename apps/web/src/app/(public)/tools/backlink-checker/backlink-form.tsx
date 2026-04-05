@@ -347,9 +347,9 @@ export function BacklinkForm() {
               )}
             </CardContent>
           </Card>
-          <RelatedTools currentTool="backlink-checker" />
         </>
       )}
+      <RelatedTools currentTool="backlink-checker" />
     </div>
   );
 }

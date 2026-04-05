@@ -158,7 +158,7 @@ export function RobotsGeneratorForm() {
     saveDownload({ type: "robots.txt", filename: "robots.txt", content: output });
   }
 
-  return (
+  return (<>
     <div className="grid gap-8 lg:grid-cols-2">
       {/* 설정 */}
       <div className="space-y-6">
@@ -299,8 +299,9 @@ export function RobotsGeneratorForm() {
           </CardContent>
         </Card>
       </div>
-      <RelatedTools currentTool="robots-generator" />
     </div>
+    <RelatedTools currentTool="robots-generator" />
+  </>
   );
 }
 

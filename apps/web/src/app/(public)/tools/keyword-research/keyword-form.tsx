@@ -311,9 +311,9 @@ export function KeywordForm() {
             </CardContent>
           </Card>
           <BacklinkCta variant="general" />
-          <RelatedTools currentTool="keyword-research" />
         </>
       )}
+      <RelatedTools currentTool="keyword-research" />
     </div>
   );
 }

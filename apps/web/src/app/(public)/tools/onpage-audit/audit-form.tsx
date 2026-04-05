@@ -211,9 +211,9 @@ export function AuditForm() {
               </Card>
             </div>
           </div>
-          <RelatedTools currentTool="onpage-audit" />
         </>
       )}
+      <RelatedTools currentTool="onpage-audit" />
     </div>
   );
 }

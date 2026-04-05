@@ -293,9 +293,9 @@ export function KeywordDensityForm() {
             </CardContent>
           </Card>
           <BacklinkCta variant="general" />
-          <RelatedTools currentTool="keyword-density" />
         </>
       )}
+      <RelatedTools currentTool="keyword-density" />
     </div>
   );
 }

@@ -167,7 +167,7 @@ export function SitemapGeneratorForm() {
     saveDownload({ type: "sitemap.xml", filename: "sitemap.xml", content: output });
   }
 
-  return (
+  return (<>
     <div className="grid gap-8 lg:grid-cols-2">
       {/* 입력 */}
       <div className="space-y-6">
@@ -390,9 +390,9 @@ export function SitemapGeneratorForm() {
           </CardContent>
         </Card>
       </div>
-      <RelatedTools currentTool="sitemap-generator" />
     </div>
-  );
+    <RelatedTools currentTool="sitemap-generator" />
+  </>);
 }
 
 function esc(s: string): string {

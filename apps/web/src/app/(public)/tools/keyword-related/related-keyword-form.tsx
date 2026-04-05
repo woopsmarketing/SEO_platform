@@ -172,9 +172,9 @@ export function RelatedKeywordForm() {
             </Card>
           )}
           <BacklinkCta variant="general" />
-          <RelatedTools currentTool="keyword-related" />
         </>
       )}
+      <RelatedTools currentTool="keyword-related" />
     </div>
   );
 }
