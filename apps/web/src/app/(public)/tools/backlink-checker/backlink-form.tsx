@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { trackToolUsage } from "@/lib/gtag";
 import { SignupModal } from "@/components/signup-modal";
-import { BacklinkCta } from "@/components/backlink-cta";
+import Link from "next/link";
 import {
   Card,
   CardContent,
@@ -280,7 +280,46 @@ export function BacklinkForm() {
               )}
             </CardContent>
           </Card>
-          <BacklinkCta variant="backlink" />
+          {/* 백링크 서비스 CTA */}
+          <div className="space-y-3">
+            <h3 className="text-lg font-bold">백링크 전문 서비스</h3>
+            <p className="text-sm text-muted-foreground">분석 결과를 바탕으로 사이트의 백링크 품질을 개선하세요.</p>
+            <div className="grid gap-3 sm:grid-cols-3">
+              <div className="rounded-xl border bg-white p-5 shadow-sm hover:shadow-md transition-shadow">
+                <div className="text-2xl mb-2">🛡️</div>
+                <h4 className="text-sm font-bold text-gray-900">스팸 백링크 제거</h4>
+                <p className="mt-1 text-xs text-gray-600 leading-relaxed">
+                  저품질·스팸 백링크는 구글 패널티의 원인이 됩니다.
+                  유해한 링크를 식별하고 Google Disavow 처리까지 대행합니다.
+                </p>
+                <Link href="/services/backlinks" className="mt-3 block">
+                  <Button size="sm" className="w-full text-xs">스팸 제거 문의하기</Button>
+                </Link>
+              </div>
+              <div className="rounded-xl border bg-white p-5 shadow-sm hover:shadow-md transition-shadow">
+                <div className="text-2xl mb-2">🔗</div>
+                <h4 className="text-sm font-bold text-gray-900">고품질 백링크 구축</h4>
+                <p className="mt-1 text-xs text-gray-600 leading-relaxed">
+                  DA 높은 사이트에서 doFollow 백링크를 확보합니다.
+                  도메인 권한을 높여 구글 검색 순위를 직접적으로 개선하세요.
+                </p>
+                <Link href="/services/backlinks" className="mt-3 block">
+                  <Button size="sm" className="w-full text-xs">백링크 구축 문의하기</Button>
+                </Link>
+              </div>
+              <div className="rounded-xl border bg-white p-5 shadow-sm hover:shadow-md transition-shadow">
+                <div className="text-2xl mb-2">📊</div>
+                <h4 className="text-sm font-bold text-gray-900">백링크 정밀 분석</h4>
+                <p className="mt-1 text-xs text-gray-600 leading-relaxed">
+                  경쟁사 대비 백링크 현황을 심층 분석하고,
+                  링크 갭 분석을 통해 효과적인 백링크 전략을 수립해드립니다.
+                </p>
+                <Link href="/services/backlinks" className="mt-3 block">
+                  <Button size="sm" className="w-full text-xs">정밀 분석 문의하기</Button>
+                </Link>
+              </div>
+            </div>
+          </div>
         </>
       )}
     </div>
