@@ -241,7 +241,7 @@ export function BacklinkForm() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              {backlinks.length > 0 ? (
+              {backlinks.length > 0 ? (<>
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
                     <thead>
@@ -256,7 +256,7 @@ export function BacklinkForm() {
                       </tr>
                     </thead>
                     <tbody>
-                      {backlinks.map((bl, i) => (
+                      {backlinks.slice(0, 20).map((bl, i) => (
                         <tr
                           key={i}
                           className="border-b last:border-0 hover:bg-muted/50"
@@ -324,6 +324,26 @@ export function BacklinkForm() {
                     </tbody>
                   </table>
                 </div>
+                {/* 20개 이상일 때 페이드아웃 + 더보기 유도 */}
+                {backlinks.length > 20 && (
+                  <div className="relative">
+                    <div className="absolute inset-x-0 -top-20 h-20 bg-gradient-to-t from-white to-transparent pointer-events-none" />
+                    <div className="pt-6 pb-2 text-center">
+                      <p className="text-sm font-medium text-gray-700">
+                        {backlinks.length - 20}개의 백링크가 더 있습니다
+                      </p>
+                      <p className="mt-1 text-xs text-gray-500">
+                        경쟁사 비교, 스팸 링크 필터링, 앵커 텍스트 분석 등 심층 분석 리포트를 제공합니다.
+                      </p>
+                      <Link href="/services/backlinks" className="mt-3 inline-block">
+                        <Button className="px-8">
+                          더 많고 자세한 백링크 보기
+                        </Button>
+                      </Link>
+                    </div>
+                  </div>
+                )}
+              </>
               ) : (
                 <p className="text-sm text-muted-foreground py-4 text-center">
                   이 도메인에 대한 백링크 데이터가 없습니다.
@@ -331,20 +351,6 @@ export function BacklinkForm() {
               )}
             </CardContent>
           </Card>
-
-          {/* 더 자세한 분석 유도 */}
-          {backlinks.length > 0 && (
-            <div className="rounded-xl border border-blue-200 bg-blue-50/50 p-6 text-center">
-              <p className="text-base font-bold text-blue-900">더 자세한 백링크 분석이 필요하신가요?</p>
-              <p className="mt-1 text-sm text-blue-700">
-                경쟁사 비교, 스팸 링크 필터링, 앵커 텍스트 분석, 링크 획득 추이 등
-                심층 분석 리포트를 제공합니다.
-              </p>
-              <Link href="/services/backlinks" className="mt-4 inline-block">
-                <Button className="px-8">백링크 정밀 분석 문의하기</Button>
-              </Link>
-            </div>
-          )}
         </>
       )}
     </div>
