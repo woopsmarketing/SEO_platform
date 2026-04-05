@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -71,6 +72,52 @@ export function AuditForm() {
   const [result, setResult] = useState<AuditResult | null>(null);
   const [error, setError] = useState("");
   const [showUpgrade, setShowUpgrade] = useState(false);
+  const searchParams = useSearchParams();
+
+  // URL 쿼리 파라미터로 전달된 경우 자동 분석 시작
+  useEffect(() => {
+    const urlParam = searchParams.get("url");
+    if (urlParam && !url && !loading && !result) {
+      setUrl(urlParam);
+      // 다음 렌더 사이클에서 분석 실행
+      setTimeout(() => {
+        setUrl(urlParam);
+        handleAuditWithUrl(urlParam);
+      }, 100);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
+
+  async function handleAuditWithUrl(targetUrl: string) {
+    if (!targetUrl) return;
+    setLoading(true);
+    setError("");
+    setShowUpgrade(false);
+    setResult(null);
+
+    try {
+      const res = await fetch("/api/audit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url: targetUrl }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error || "분석에 실패했습니다.");
+        if (data.upgrade) setShowUpgrade(true);
+      } else {
+        if (data.parsed?.statusCode === 403) {
+          setError("대상 사이트가 서버에서의 접근을 차단하고 있습니다(403 Forbidden). 일부 사이트는 클라우드 서버 IP를 차단하여 분석이 제한될 수 있습니다.");
+        }
+        trackToolUsage("onpage-audit");
+        setResult(data);
+      }
+    } catch {
+      setError("네트워크 오류가 발생했습니다.");
+    }
+    setLoading(false);
+  }
 
   async function handleAudit() {
     if (!url) return;

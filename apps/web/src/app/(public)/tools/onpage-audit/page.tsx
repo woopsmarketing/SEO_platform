@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { AuditForm } from "./audit-form";
 
@@ -61,7 +62,9 @@ export default function OnpageAuditPage() {
       </div>
 
       {/* 도구 본체 */}
-      <AuditForm />
+      <Suspense fallback={null}>
+        <AuditForm />
+      </Suspense>
 
       {/* 하단 SEO 콘텐츠 — FAQ */}
       <div className="mt-16 border-t pt-12">

@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { SITE_NAME, SITE_DESCRIPTION, SITE_URL } from "@/lib/constants";
 import { homeTools } from "@/lib/data";
 import { PricingCards } from "@/components/pricing-cards";
+import { HeroAnalyzer } from "@/components/hero-analyzer";
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -61,19 +62,14 @@ export default function HomePage() {
             웹사이트 SEO 최적화에 필요한 메타태그 분석, 온페이지 SEO 점검, 사이트맵 생성까지 모두 무료로 제공합니다.
             백링크 서비스와 웹 디자인으로 구글 상위노출을 달성하세요.
           </p>
-          <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row sm:gap-4">
-            <Link href="/tools">
-              <Button size="lg" className="w-full bg-blue-600 hover:bg-blue-700 text-white text-base px-8 sm:w-auto">
-                무료 SEO 분석 시작하기
-              </Button>
-            </Link>
+          <HeroAnalyzer />
+          <div className="mt-4 flex justify-center">
             <Link href="/services/backlinks">
-              <Button size="lg" variant="outline" className="w-full text-base px-8 sm:w-auto">
-                백링크 서비스 보기
+              <Button variant="ghost" className="text-sm text-gray-500 hover:text-blue-600">
+                백링크 서비스 알아보기 →
               </Button>
             </Link>
           </div>
-          <p className="mt-4 text-sm text-gray-400">회원가입 없이 바로 사용 가능 &middot; 완전 무료</p>
         </div>
       </section>
 
