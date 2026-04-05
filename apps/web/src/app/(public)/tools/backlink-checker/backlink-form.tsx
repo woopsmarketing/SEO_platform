@@ -256,7 +256,7 @@ export function BacklinkForm() {
                       </tr>
                     </thead>
                     <tbody>
-                      {backlinks.slice(0, 20).map((bl, i) => (
+                      {backlinks.map((bl, i) => (
                         <tr
                           key={i}
                           className="border-b last:border-0 hover:bg-muted/50"
@@ -324,25 +324,20 @@ export function BacklinkForm() {
                     </tbody>
                   </table>
                 </div>
-                {/* 20개 이상일 때 페이드아웃 + 더보기 유도 */}
-                {backlinks.length > 20 && (
-                  <div className="relative">
-                    <div className="absolute inset-x-0 -top-20 h-20 bg-gradient-to-t from-white to-transparent pointer-events-none" />
-                    <div className="pt-6 pb-2 text-center">
-                      <p className="text-sm font-medium text-gray-700">
-                        {backlinks.length - 20}개의 백링크가 더 있습니다
-                      </p>
-                      <p className="mt-1 text-xs text-gray-500">
-                        경쟁사 비교, 스팸 링크 필터링, 앵커 텍스트 분석 등 심층 분석 리포트를 제공합니다.
-                      </p>
-                      <Link href="/services/backlinks" className="mt-3 inline-block">
-                        <Button className="px-8">
-                          더 많고 자세한 백링크 보기
-                        </Button>
-                      </Link>
-                    </div>
-                  </div>
-                )}
+                {/* 목록 하단 — 더 자세한 분석 유도 */}
+                <div className="pt-6 pb-2 text-center border-t mt-4">
+                  <p className="text-sm font-medium text-gray-700">
+                    더 많고 자세한 백링크 데이터가 필요하신가요?
+                  </p>
+                  <p className="mt-1 text-xs text-gray-500">
+                    경쟁사 비교, 스팸 링크 필터링, 앵커 텍스트 분석, 링크 획득 추이 등 심층 분석 리포트를 제공합니다.
+                  </p>
+                  <Link href="/services/backlinks" className="mt-3 inline-block">
+                    <Button className="px-8">
+                      더 많고 자세한 백링크 보기
+                    </Button>
+                  </Link>
+                </div>
               </>
               ) : (
                 <p className="text-sm text-muted-foreground py-4 text-center">
