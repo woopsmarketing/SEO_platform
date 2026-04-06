@@ -30,6 +30,7 @@ export function MobileNav({ user }: { user: User | null }) {
           <nav className="flex flex-col gap-3">
             <Link href="/domains" onClick={() => setOpen(false)} className="text-sm font-medium">도메인</Link>
             <Link href="/tools" onClick={() => setOpen(false)} className="text-sm font-medium">무료 툴</Link>
+            <Link href="/services/backlinks" onClick={() => setOpen(false)} className="text-sm font-medium">백링크</Link>
             <Link href="/services" onClick={() => setOpen(false)} className="text-sm font-medium">서비스</Link>
             <Link href="/blog" onClick={() => setOpen(false)} className="text-sm font-medium">블로그</Link>
             <Link href="/pricing" onClick={() => setOpen(false)} className="text-sm font-medium">가격</Link>

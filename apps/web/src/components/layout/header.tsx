@@ -30,6 +30,9 @@ export async function Header() {
             도메인
           </Link>
           <ToolsMegaMenu />
+          <Link href="/services/backlinks" className="text-sm font-medium text-muted-foreground hover:text-foreground">
+            백링크
+          </Link>
           <Link href="/services" className="text-sm font-medium text-muted-foreground hover:text-foreground">
             서비스
           </Link>

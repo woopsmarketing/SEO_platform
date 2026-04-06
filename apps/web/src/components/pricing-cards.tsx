@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 
-const plans = [
+const plans: { name: string; price: string; description: string; features: string[]; cta: string; href: string; popular: boolean; comingSoon?: boolean }[] = [
   {
     name: "Free",
     price: "0",
@@ -36,9 +36,10 @@ const plans = [
       "주간 SEO 리포트",
       "우선 고객 지원",
     ],
-    cta: "Pro 구독하기",
-    href: "/auth/signup",
+    cta: "출시 예정",
+    href: "#",
     popular: true,
+    comingSoon: true,
   },
 ];
 
@@ -79,19 +80,25 @@ export function PricingCards() {
             </ul>
           </CardContent>
           <CardFooter>
-            <Link href={plan.href} className="w-full">
-              <Button
-                className={`w-full ${
-                  plan.popular
-                    ? "bg-blue-600 hover:bg-blue-700 text-white"
-                    : ""
-                }`}
-                variant={plan.popular ? "default" : "outline"}
-                size="lg"
-              >
-                {plan.cta}
+            {plan.comingSoon ? (
+              <Button className="w-full" size="lg" disabled>
+                출시 예정
               </Button>
-            </Link>
+            ) : (
+              <Link href={plan.href} className="w-full">
+                <Button
+                  className={`w-full ${
+                    plan.popular
+                      ? "bg-blue-600 hover:bg-blue-700 text-white"
+                      : ""
+                  }`}
+                  variant={plan.popular ? "default" : "outline"}
+                  size="lg"
+                >
+                  {plan.cta}
+                </Button>
+              </Link>
+            )}
           </CardFooter>
         </Card>
       ))}
