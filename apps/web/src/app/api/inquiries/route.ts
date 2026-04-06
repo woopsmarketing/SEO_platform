@@ -22,7 +22,7 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
 
-    const { name, email, service_type, message, company, site_url, budget } = body;
+    const { name, email, service_type, message, company, site_url, budget, telegram } = body;
 
     if (!name || !email || !service_type || !message) {
       return NextResponse.json(
@@ -82,6 +82,7 @@ export async function POST(request: Request) {
     if (company) insertData.company = company;
     if (site_url) insertData.site_url = site_url;
     if (budget) insertData.budget = budget;
+    if (telegram) insertData.telegram = telegram;
 
     const supabase = createAdminClient();
     const { data, error } = await supabase
