@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowLeft, ArrowRight, ChevronRight, Home } from "lucide-react";
 import type { Post } from "@/lib/db/posts";
 import { SITE_URL } from "@/lib/constants";
+import { ReadingProgress } from "./reading-progress";
 
 const CATEGORY_COLORS: Record<string, string> = {
   "SEO 전략": "bg-blue-500/10 text-blue-600 dark:text-blue-400",
@@ -45,6 +46,18 @@ export function BlogLayout({
   const d = new Date(post.published_at);
   const dateKR = `${d.getFullYear()}년 ${d.getMonth() + 1}월 ${d.getDate()}일`;
   const canonicalUrl = `${SITE_URL}/blog/${post.slug}`;
+
+  // 최종 수정일 (published_at과 다를 때만 표시)
+  const hasUpdated =
+    post.updated_at &&
+    post.updated_at !== post.published_at &&
+    new Date(post.updated_at).getTime() - new Date(post.published_at).getTime() > 86400000; // 1일 이상 차이
+  const updatedKR = hasUpdated
+    ? (() => {
+        const u = new Date(post.updated_at!);
+        return `${u.getFullYear()}년 ${u.getMonth() + 1}월 ${u.getDate()}일`;
+      })()
+    : null;
 
   /* TOC: HTML에서 h2 추출 */
   const tocItems = (
@@ -168,6 +181,12 @@ export function BlogLayout({
             {/* 메타 */}
             <div className="blog-meta mt-3">
               <time dateTime={post.published_at}>{dateKR}</time>
+              {updatedKR && (
+                <>
+                  <span aria-hidden="true">&middot;</span>
+                  <span className="text-xs">수정: {updatedKR}</span>
+                </>
+              )}
               <span aria-hidden="true">&middot;</span>
               <span>{post.read_time} 읽기</span>
               {post.category && (
@@ -347,7 +366,7 @@ export function BlogLayout({
           {/* 사이드바 TOC — 데스크탑에서만 표시 */}
           {tocItems.length > 0 && (
             <aside className="hidden lg:block w-64 shrink-0">
-              <nav className="sticky top-20 rounded-xl border border-border/60 bg-card p-5">
+              <div className="sticky top-20 rounded-xl border border-border/60 bg-card p-5">
                 <p className="mb-4 text-sm font-bold text-foreground">목차</p>
                 <ol className="space-y-3 border-l-2 border-primary/20 pl-4">
                   {tocItems.map((item, i) => (
@@ -364,7 +383,8 @@ export function BlogLayout({
                     </li>
                   ))}
                 </ol>
-              </nav>
+                <ReadingProgress />
+              </div>
             </aside>
           )}
         </div>
