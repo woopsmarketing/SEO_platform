@@ -5,14 +5,14 @@ export const maxDuration = 30;
 
 export async function POST(request: Request) {
   try {
-    // 로그인 유저는 무제한, 비로그인은 IP당 하루 5회
+    // 로그인 유저는 무제한, 비로그인은 IP당 하루 2회
     const ip = getClientIp(request);
     const loggedIn = await isAuthenticated(request);
     if (!loggedIn) {
-      const rateLimit = await checkRateLimit(ip, "keyword-density", 5, 1440);
+      const rateLimit = await checkRateLimit(ip, "keyword-density", 2, 1440);
       if (!rateLimit.allowed) {
         return NextResponse.json(
-          { error: "일일 무료 분석 횟수(5회)를 초과했습니다.", upgrade: true, remaining: 0 },
+          { error: "일일 무료 분석 횟수(2회)를 초과했습니다.", upgrade: true, remaining: 0 },
           { status: 429 }
         );
       }

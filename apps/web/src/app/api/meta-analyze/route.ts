@@ -49,15 +49,15 @@ export interface MetaRecommendation {
 
 export async function POST(request: Request) {
   try {
-    // 로그인 유저는 무제한, 비로그인은 IP당 하루 3회
+    // 로그인 유저는 무제한, 비로그인은 IP당 하루 1회
     const { checkRateLimit, getClientIp, isAuthenticated } = await import("@/lib/rate-limit");
     const ip = getClientIp(request);
     const loggedIn = await isAuthenticated(request);
     if (!loggedIn) {
-      const rateLimit = await checkRateLimit(ip, "meta-analyzer", 3, 1440);
+      const rateLimit = await checkRateLimit(ip, "meta-analyzer", 1, 1440);
       if (!rateLimit.allowed) {
         return NextResponse.json(
-          { error: "일일 무료 분석 횟수(3회)를 초과했습니다.", upgrade: true, remaining: 0 },
+          { error: "일일 무료 분석 횟수(1회)를 초과했습니다.", upgrade: true, remaining: 0 },
           { status: 429, headers: { "Retry-After": String(rateLimit.resetIn) } }
         );
       }

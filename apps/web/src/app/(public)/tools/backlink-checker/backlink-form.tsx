@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { trackToolUsage } from "@/lib/gtag";
 import { SignupModal } from "@/components/signup-modal";
+import { SignupBanner } from "@/components/signup-banner";
 import Link from "next/link";
 import { RelatedTools } from "@/components/related-tools";
 import {
@@ -162,6 +163,7 @@ export function BacklinkForm() {
         </CardContent>
       </Card>
 
+      <SignupBanner />
       {result && (
         <>
           {/* 통계 카드 4개 */}

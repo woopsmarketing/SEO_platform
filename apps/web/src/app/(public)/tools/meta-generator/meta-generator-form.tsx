@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { trackToolUsage } from "@/lib/gtag";
 import { SignupModal } from "@/components/signup-modal";
+import { SignupBanner } from "@/components/signup-banner";
 import { BacklinkCta } from "@/components/backlink-cta";
 import { RelatedTools } from "@/components/related-tools";
 
@@ -283,6 +284,7 @@ export function MetaGeneratorForm() {
         </CardContent>
       </Card>
 
+      <SignupBanner />
       {p && (
         <>
           {/* 종합 진단 결과 */}

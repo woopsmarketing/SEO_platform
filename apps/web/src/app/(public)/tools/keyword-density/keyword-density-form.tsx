@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { trackToolUsage } from "@/lib/gtag";
 import { SignupModal } from "@/components/signup-modal";
+import { SignupBanner } from "@/components/signup-banner";
 import { BacklinkCta } from "@/components/backlink-cta";
 import { RelatedTools } from "@/components/related-tools";
 import {
@@ -135,6 +136,7 @@ export function KeywordDensityForm() {
         </CardContent>
       </Card>
 
+      <SignupBanner />
       {result && (
         <>
           {/* 페이지 정보 카드 */}

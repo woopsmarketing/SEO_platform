@@ -5,6 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { trackToolUsage } from "@/lib/gtag";
+import { SignupModal } from "@/components/signup-modal";
+import { SignupBanner } from "@/components/signup-banner";
 import { BacklinkCta } from "@/components/backlink-cta";
 import { RelatedTools } from "@/components/related-tools";
 
@@ -21,6 +23,7 @@ export function RelatedKeywordForm() {
   const [result, setResult] = useState<RelatedResult | null>(null);
   const [error, setError] = useState("");
   const [copied, setCopied] = useState(false);
+  const [showUpgrade, setShowUpgrade] = useState(false);
 
   async function handleAnalyze() {
     if (!keyword.trim()) return;
@@ -35,7 +38,10 @@ export function RelatedKeywordForm() {
         body: JSON.stringify({ keyword: keyword.trim() }),
       });
       const data = await res.json();
-      if (!res.ok) {
+      if (res.status === 429) {
+        setShowUpgrade(true);
+        setError(data.error || "일일 무료 사용량을 초과했습니다.");
+      } else if (!res.ok) {
         setError(data.error || "분석에 실패했습니다.");
       } else {
         trackToolUsage("keyword-related");
@@ -77,9 +83,11 @@ export function RelatedKeywordForm() {
               구글 자동완성 데이터를 확장 분석하고 있습니다... (약 5~10초)
             </p>
           )}
+          <SignupModal open={showUpgrade} onClose={() => setShowUpgrade(false)} toolName="연관 키워드 분석" />
         </CardContent>
       </Card>
 
+      <SignupBanner />
       {result && (
         <>
           {/* 통계 */}
