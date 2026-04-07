@@ -4,6 +4,34 @@ import type { Post } from "@/lib/db/posts";
 import { SITE_URL } from "@/lib/constants";
 import { ReadingProgress } from "./reading-progress";
 
+/** 본문 HTML의 <img> 태그에 loading, decoding, width, height 속성을 자동 주입 */
+function optimizeContentImages(html: string): string {
+  return html.replace(
+    /<img\b([^>]*)>/gi,
+    (match, attrs: string) => {
+      // 이미 loading 속성이 있으면 건너뜀
+      if (/loading\s*=/i.test(attrs)) return match;
+
+      let optimized = attrs;
+
+      // loading="lazy" + decoding="async" 추가
+      optimized += ' loading="lazy" decoding="async"';
+
+      // width/height 없으면 기본값 추가 (CLS 방지)
+      if (!/width\s*=/i.test(optimized)) {
+        optimized += ' width="800" height="450"';
+      }
+
+      // style로 반응형 보장
+      if (!/style\s*=/i.test(optimized)) {
+        optimized += ' style="max-width:100%;height:auto"';
+      }
+
+      return `<img${optimized}>`;
+    }
+  );
+}
+
 const CATEGORY_COLORS: Record<string, string> = {
   "SEO 전략": "bg-blue-500/10 text-blue-600 dark:text-blue-400",
   "백링크": "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400",
@@ -236,7 +264,7 @@ export function BlogLayout({
 
             {/* 본문 */}
             <div className="blog-prose mt-10">
-              <div dangerouslySetInnerHTML={{ __html: post.content }} />
+              <div dangerouslySetInnerHTML={{ __html: optimizeContentImages(post.content) }} />
 
               {/* FAQ */}
               {faqs.length > 0 && (

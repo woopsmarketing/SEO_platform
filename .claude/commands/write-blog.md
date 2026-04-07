@@ -90,8 +90,9 @@ H1, H2(5~8개) + h2Id, H3, FAQ 질문(4~6개), 시각 요소 배치 계획(visua
 .claude/agents/blog-image-generator.md의 규칙에 따라:
 1. 커버 이미지 1장 (1024x1024, GPT Image 1.5 Medium)
 2. 섹션 일러스트 (imageNeeded=true인 섹션당 1장)
-3. Supabase Storage에 업로드
-4. JSON으로 URL 반환
+3. optimize-image.js로 압축 (PNG→WebP, 커버 1200px/q80, 섹션 800px/q75)
+4. 압축된 WebP를 Supabase Storage에 업로드
+5. JSON으로 URL 반환
 
 프로젝트 경로: /mnt/d/Documents/SEO_platform/apps/web
 .env.local에서 OPENAI_API_KEY와 Supabase 키를 읽으세요.

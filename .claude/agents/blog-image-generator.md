@@ -88,21 +88,59 @@ No text labels, no watermarks.
 - 매번 브랜드 컬러(#2563eb, #10b981) + 배경(white/#f8fafc) 포함
 - "no text" 반드시 포함
 
+### 이미지 압축 (필수 — 업로드 전 반드시 실행)
+
+OpenAI API 응답은 PNG 원본(약 500KB~1.5MB)이다. **업로드 전에 반드시 압축**한다.
+
+압축 스크립트: `/mnt/d/Documents/SEO_platform/.claude/scripts/optimize-image.js`
+
+```bash
+# 커버 이미지: 1200px 폭, WebP 품질 80
+node /mnt/d/Documents/SEO_platform/.claude/scripts/optimize-image.js /tmp/cover.png /tmp/cover.webp --format=webp --quality=80 --width=1200
+
+# 섹션 이미지: 800px 폭, WebP 품질 75
+node /mnt/d/Documents/SEO_platform/.claude/scripts/optimize-image.js /tmp/section-1.png /tmp/section-1.webp --format=webp --quality=75 --width=800
+```
+
+**흐름:**
+```
+OpenAI API → PNG 원본 (1024x1024)
+  ↓ /tmp/{slug}-cover.png 저장
+optimize-image.js 실행
+  ↓ /tmp/{slug}-cover.webp (약 60~70% 감소)
+Supabase Storage 업로드
+  ↓ blog-images/{slug}/cover.webp
+임시 파일 삭제
+```
+
+**압축 설정:**
+| 이미지 유형 | 최대 폭 | 품질 | 예상 크기 |
+|---|---|---|---|
+| 커버 이미지 | 1200px | 80 | 80~150KB |
+| 섹션 이미지 | 800px | 75 | 40~80KB |
+
+**압축 실패 시:** 원본 PNG를 그대로 업로드 (글 발행은 중단하지 않음)
+
 ### Supabase Storage 업로드
 
 1. blog-images 버킷이 없으면 생성 (public)
 2. 경로: `blog-images/{slug}/cover.webp`, `blog-images/{slug}/section-1.webp`
-3. 업로드 후 public URL 반환
+3. 압축된 WebP 파일을 업로드 (contentType: "image/webp")
+4. 업로드 후 public URL 반환
+5. /tmp 임시 파일 삭제
 
 ### 이미지 사양
 - 모델: gpt-image-1 (GPT Image 1.5)
 - 품질: medium
 - 크기: 1024x1024 (모든 이미지 통일)
-- 포맷: WebP 변환 권장 (API 응답이 PNG이면 변환)
+- 포맷: 반드시 WebP로 압축 변환 후 업로드
 - 커버 이미지 1장 + 섹션 이미지 자연스럽게 1~2장
 
 ## 주의사항
 - OPENAI_API_KEY는 .env.local에서 읽기
 - Supabase Storage URL/KEY는 .env.local에서 읽기
+- sharp 패키지 필요 — 없으면 `cd /mnt/d/Documents/SEO_platform/.claude/scripts && npm install sharp`
 - 이미지 생성 실패 시 → 해당 이미지 건너뜀 (글 발행은 진행)
+- 압축 실패 시 → 원본 PNG 업로드 (글 발행은 진행)
 - alt 텍스트 반드시 포함 (SEO 필수)
+- 업로드 완료 후 /tmp 임시 파일 정리 필수
