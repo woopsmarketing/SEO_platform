@@ -286,13 +286,46 @@ posts (
 
 ## 10. 이미지 생성 규칙 (image-generator 참조)
 
-- 모델: GPT Image 1.5 Medium
+- 모델: gpt-image-1 (GPT Image 1.5), quality: medium
 - 크기: 1024x1024 (모든 이미지 통일)
-- 커버 이미지 1장 + 섹션 일러스트 1~2장
-- Supabase Storage에 업로드 → public URL
+- 커버 이미지 1장 + 섹션 일러스트 자연스럽게 1~2장
+- Supabase Storage 버킷: blog-images (public)
 - 커버 이미지는 cover_image_url에 저장
 - 섹션 이미지는 본문 HTML에 `<figure class="blog-figure">` 로 삽입
-- WebP 변환 권장 (용량 절약)
+
+### 이미지 프롬프트 스타일 가이드 (일관성 유지용)
+
+**브랜드 컬러 (모든 프롬프트에 포함):**
+- Primary: #2563eb (blue)
+- Accent: #10b981 (green)
+- Background: #ffffff 또는 #f8fafc (light gray)
+
+**커버 이미지 프롬프트 템플릿:**
+```
+Isometric 3D illustration on a clean white (#f8fafc) background.
+Main scene: [주제에 맞는 구체적 시각 요소 묘사 — 예: "a web browser window with structured HTML elements, a magnifying glass examining title tags and heading hierarchy"].
+Color palette: #2563eb (primary blue), #10b981 (green accent), #f8fafc (background), soft gray shadows.
+Style: modern SaaS product illustration, Figma/Notion-like aesthetic, soft drop shadows, rounded corners.
+No text, no watermarks, no human faces.
+High detail, professional blog header image.
+```
+
+**섹션 일러스트 프롬프트 템플릿:**
+```
+Flat vector icon composition on clean white background.
+Elements: [요소 3~5개 구체적 나열 — 예: "title tag label, meta description card, heading hierarchy tree, URL bar, internal link arrows"].
+Arranged in a balanced grid or flow layout with subtle connecting lines.
+Single accent color: #2563eb with light #dbeafe tints.
+Style: minimal line art, tech documentation illustration, rounded shapes.
+No text labels, no watermarks.
+```
+
+**프롬프트 작성 규칙:**
+- "abstract representation" 같은 모호한 표현 금지 → 구체적 시각 오브젝트 명시
+- 매번 반드시 배경색(white/#f8fafc)과 브랜드 컬러 포함
+- "isometric 3D" (커버) 또는 "flat vector" (섹션) 스타일 일관 유지
+- 블로그 주제에 맞는 구체적 오브젝트를 3~5개 나열
+- "no text" 반드시 포함 (텍스트가 들어가면 깨짐)
 
 ## 11. 금지사항
 

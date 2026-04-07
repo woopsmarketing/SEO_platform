@@ -59,21 +59,34 @@ const response = await fetch("https://api.openai.com/v1/images/generations", {
 
 ### 프롬프트 생성 규칙
 
+반드시 /mnt/d/Documents/SEO_platform/.claude/blog-config.md의 "이미지 프롬프트 스타일 가이드"를 참조하세요.
+"abstract representation" 같은 모호한 표현 대신 구체적 시각 오브젝트를 3~5개 명시하세요.
+
 **커버 이미지 프롬프트 템플릿:**
 ```
-Professional, modern digital illustration for a blog article about "{글 제목}".
-Clean, minimal design with a {카테고리 관련 컬러} color palette.
-Abstract representation of {키워드 관련 시각 요소}.
-No text, no watermarks. Suitable for a professional SEO blog header.
-Style: flat illustration, subtle gradients, tech-inspired.
+Isometric 3D illustration on a clean white (#f8fafc) background.
+Main scene: [주제에 맞는 구체적 시각 오브젝트 3~5개 묘사].
+Color palette: #2563eb (primary blue), #10b981 (green accent), #f8fafc (background), soft gray shadows.
+Style: modern SaaS product illustration, Figma/Notion-like aesthetic, soft drop shadows, rounded corners.
+No text, no watermarks, no human faces.
+High detail, professional blog header image.
 ```
 
 **섹션 일러스트 프롬프트 템플릿:**
 ```
-Clean, minimal icon-style illustration representing "{섹션 주제}".
-Simple composition, {컬러} accent color on white/light background.
-Professional, suitable for a tech blog. No text.
+Flat vector icon composition on clean white background.
+Elements: [요소 3~5개 구체적 나열].
+Arranged in a balanced grid or flow layout with subtle connecting lines.
+Single accent color: #2563eb with light #dbeafe tints.
+Style: minimal line art, tech documentation illustration, rounded shapes.
+No text labels, no watermarks.
 ```
+
+**프롬프트 작성 시 주의:**
+- "abstract", "concept", "representation" 같은 모호한 단어 사용 금지
+- 대신 "browser window", "magnifying glass", "checklist card" 같은 구체적 오브젝트 명시
+- 매번 브랜드 컬러(#2563eb, #10b981) + 배경(white/#f8fafc) 포함
+- "no text" 반드시 포함
 
 ### Supabase Storage 업로드
 

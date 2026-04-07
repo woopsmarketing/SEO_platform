@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Clock, Calendar } from "lucide-react";
 import { getPublishedPosts } from "@/lib/db/posts";
@@ -86,42 +87,57 @@ export default async function BlogIndexPage() {
               className="group"
             >
               <div className="blog-card">
-                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                      <span
-                        className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                          CATEGORY_COLORS[post.category as BlogCategory] ||
-                          "bg-muted text-muted-foreground"
-                        }`}
-                      >
-                        {post.category}
+                <div className="flex flex-col sm:flex-row sm:items-start gap-4">
+                  {/* 썸네일 */}
+                  {post.cover_image_url && (
+                    <div className="relative w-full sm:w-32 sm:h-24 h-40 shrink-0 overflow-hidden rounded-lg bg-muted">
+                      <Image
+                        src={post.cover_image_url}
+                        alt={post.title}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 640px) 100vw, 128px"
+                      />
+                    </div>
+                  )}
+
+                  <div className="flex-1 min-w-0 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span
+                          className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                            CATEGORY_COLORS[post.category as BlogCategory] ||
+                            "bg-muted text-muted-foreground"
+                          }`}
+                        >
+                          {post.category}
+                        </span>
+                        {index === 0 && (
+                          <span className="blog-badge-new">NEW</span>
+                        )}
+                      </div>
+
+                      <h2 className="blog-card-title">{post.title}</h2>
+
+                      <p className="mt-1.5 text-sm text-muted-foreground line-clamp-2">
+                        {post.excerpt}
+                      </p>
+
+                      <span className="blog-card-arrow mt-3 inline-flex items-center gap-1 text-sm font-medium text-primary">
+                        읽어보기 <ArrowRight className="h-3.5 w-3.5" />
                       </span>
-                      {index === 0 && (
-                        <span className="blog-badge-new">NEW</span>
-                      )}
                     </div>
 
-                    <h2 className="blog-card-title">{post.title}</h2>
-
-                    <p className="mt-1.5 text-sm text-muted-foreground line-clamp-2">
-                      {post.excerpt}
-                    </p>
-
-                    <span className="blog-card-arrow mt-3 inline-flex items-center gap-1 text-sm font-medium text-primary">
-                      읽어보기 <ArrowRight className="h-3.5 w-3.5" />
-                    </span>
-                  </div>
-
-                  <div className="flex sm:flex-col items-center sm:items-end gap-3 sm:gap-1.5 text-xs text-muted-foreground shrink-0">
-                    <span className="inline-flex items-center gap-1">
-                      <Calendar className="h-3.5 w-3.5" />
-                      {formatDateKR(post.published_at)}
-                    </span>
-                    <span className="inline-flex items-center gap-1">
-                      <Clock className="h-3.5 w-3.5" />
-                      {post.read_time}
-                    </span>
+                    <div className="flex sm:flex-col items-center sm:items-end gap-3 sm:gap-1.5 text-xs text-muted-foreground shrink-0">
+                      <span className="inline-flex items-center gap-1">
+                        <Calendar className="h-3.5 w-3.5" />
+                        {formatDateKR(post.published_at)}
+                      </span>
+                      <span className="inline-flex items-center gap-1">
+                        <Clock className="h-3.5 w-3.5" />
+                        {post.read_time}
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>

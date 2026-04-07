@@ -102,15 +102,16 @@
 }
 
 .blog-prose a {
-  color: var(--color-primary);
+  color: #2563eb;
   text-decoration: none;
-  font-weight: 500;
-  transition: opacity 0.15s ease;
+  font-weight: 600;
+  border-bottom: 1px dashed #93c5fd;
+  transition: all 0.15s ease;
 }
 
 .blog-prose a:hover {
-  text-decoration: underline;
-  opacity: 0.85;
+  color: #1d4ed8;
+  border-bottom: 2px solid #2563eb;
 }
 
 .blog-prose ul,
@@ -475,21 +476,22 @@
 
 /* ── 외부 링크 스타일 ── */
 .blog-external-link {
-  color: var(--color-primary);
-  font-weight: 500;
+  color: #2563eb;
+  font-weight: 600;
   text-decoration: none;
-  transition: opacity 0.15s ease;
+  border-bottom: 1px dashed #93c5fd;
+  transition: all 0.15s ease;
 }
 
 .blog-external-link::after {
   content: " ↗";
   font-size: 0.75em;
-  opacity: 0.6;
+  opacity: 0.7;
 }
 
 .blog-external-link:hover {
-  text-decoration: underline;
-  opacity: 0.85;
+  color: #1d4ed8;
+  border-bottom: 2px solid #2563eb;
 }
 
 /* ── 접기/펼치기 (details/summary) ── */
