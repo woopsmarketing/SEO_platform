@@ -285,19 +285,20 @@ export function BlogLayout({
                 </section>
               )}
 
-              {/* CTA — FAQ 바로 아래 */}
-              <div className="blog-cta mt-10">
-                <p className="text-lg font-semibold">{finalCta.title}</p>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  {finalCta.description}
-                </p>
-                <Link
-                  href={finalCta.href}
-                  className="mt-4 inline-flex items-center justify-center rounded-lg bg-primary px-6 py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-                >
-                  {finalCta.buttonText}
-                </Link>
-              </div>
+            </div>
+
+            {/* CTA — FAQ 바로 아래, blog-prose 밖 */}
+            <div className="blog-cta mt-10">
+              <p className="text-lg font-semibold">{finalCta.title}</p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                {finalCta.description}
+              </p>
+              <Link
+                href={finalCta.href}
+                className="mt-4 inline-flex items-center justify-center rounded-lg bg-primary px-6 py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 no-underline"
+              >
+                {finalCta.buttonText}
+              </Link>
             </div>
 
             {/* 저자 */}
