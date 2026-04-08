@@ -56,30 +56,59 @@ export function RelatedTools({ currentTool }: { currentTool: string }) {
   if (!tools) return null;
 
   return (
-    <div className="rounded-2xl bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100 p-8">
-      <div className="text-center mb-6">
-        <h3 className="text-xl font-bold text-gray-900">다른 무료 SEO 도구도 사용해보세요</h3>
-        <p className="text-sm text-gray-600 mt-1">SEO 최적화에 필요한 모든 도구를 무료로 제공합니다</p>
+    <div className="space-y-6">
+      {/* 유료 서비스 전환 CTA */}
+      <div className="rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 p-8 text-white shadow-lg">
+        <div className="text-center">
+          <p className="text-sm font-medium text-blue-200 mb-2">무료 분석을 넘어서</p>
+          <h3 className="text-2xl font-bold mb-3">구글 상위노출, 전문가에게 맡기세요</h3>
+          <p className="text-blue-100 text-sm leading-relaxed mb-6 max-w-md mx-auto">
+            SEO 분석은 시작일 뿐입니다. 백링크 구축, 콘텐츠 최적화, 기술 SEO까지
+            전문 팀이 여러분의 사이트를 검색 1페이지로 올려드립니다.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <Link
+              href="/services/backlinks"
+              className="inline-flex items-center justify-center gap-2 rounded-lg bg-white text-blue-700 font-bold px-6 py-3 text-sm hover:bg-blue-50 transition-colors shadow-md"
+            >
+              백링크 서비스 알아보기
+            </Link>
+            <Link
+              href="/contact"
+              className="inline-flex items-center justify-center gap-2 rounded-lg bg-white/15 text-white font-semibold px-6 py-3 text-sm hover:bg-white/25 transition-colors border border-white/30"
+            >
+              무료 상담 신청
+            </Link>
+          </div>
+        </div>
       </div>
-      <div className="space-y-3">
-        {tools.map((tool) => (
-          <Link
-            key={tool.href}
-            href={tool.href}
-            className="flex items-center gap-4 rounded-xl border border-blue-100 bg-white p-4 hover:border-blue-300 hover:shadow-md transition-all group"
-          >
-            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-50 text-2xl shrink-0 group-hover:bg-blue-100 transition-colors">
-              {tool.icon}
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-base font-semibold text-gray-900">{tool.name}</p>
-              <p className="text-sm text-gray-500">{tool.desc}</p>
-            </div>
-            <Button variant="outline" size="sm" className="shrink-0 border-blue-200 text-blue-700 hover:bg-blue-50 group-hover:bg-blue-600 group-hover:text-white group-hover:border-blue-600 transition-colors">
-              사용하기
-            </Button>
-          </Link>
-        ))}
+
+      {/* 다른 무료 도구 */}
+      <div className="rounded-2xl bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100 p-8">
+        <div className="text-center mb-6">
+          <h3 className="text-xl font-bold text-gray-900">다른 무료 SEO 도구도 사용해보세요</h3>
+          <p className="text-sm text-gray-600 mt-1">SEO 최적화에 필요한 모든 도구를 무료로 제공합니다</p>
+        </div>
+        <div className="space-y-3">
+          {tools.map((tool) => (
+            <Link
+              key={tool.href}
+              href={tool.href}
+              className="flex items-center gap-4 rounded-xl border border-blue-100 bg-white p-4 hover:border-blue-300 hover:shadow-md transition-all group"
+            >
+              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-50 text-2xl shrink-0 group-hover:bg-blue-100 transition-colors">
+                {tool.icon}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-base font-semibold text-gray-900">{tool.name}</p>
+                <p className="text-sm text-gray-500">{tool.desc}</p>
+              </div>
+              <Button variant="outline" size="sm" className="shrink-0 border-blue-200 text-blue-700 hover:bg-blue-50 group-hover:bg-blue-600 group-hover:text-white group-hover:border-blue-600 transition-colors">
+                사용하기
+              </Button>
+            </Link>
+          ))}
+        </div>
       </div>
     </div>
   );
