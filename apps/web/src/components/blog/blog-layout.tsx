@@ -41,11 +41,11 @@ const CATEGORY_COLORS: Record<string, string> = {
 };
 
 const DEFAULT_CTA = {
-  title: "내 사이트의 SEO 점수를 확인해 보세요",
+  title: "SEO, 혼자 하기 어려우신가요?",
   description:
-    "URL을 입력하면 35개 항목을 자동 검사하고 개선 방안을 제시합니다. 회원가입 없이 완전 무료.",
-  buttonText: "무료로 SEO 분석하기",
-  href: "/tools",
+    "백링크 구축부터 기술 SEO까지, 전문 팀이 검색 순위를 올려드립니다. 텔레그램으로 편하게 문의하세요.",
+  buttonText: "무료 상담 문의하기",
+  href: "/contact",
 };
 
 interface FaqItem {
@@ -284,6 +284,20 @@ export function BlogLayout({
                   </div>
                 </section>
               )}
+
+              {/* CTA — FAQ 바로 아래 */}
+              <div className="blog-cta mt-10">
+                <p className="text-lg font-semibold">{finalCta.title}</p>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  {finalCta.description}
+                </p>
+                <Link
+                  href={finalCta.href}
+                  className="mt-4 inline-flex items-center justify-center rounded-lg bg-primary px-6 py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+                >
+                  {finalCta.buttonText}
+                </Link>
+              </div>
             </div>
 
             {/* 저자 */}
@@ -306,27 +320,6 @@ export function BlogLayout({
                 <h3 className="text-lg font-semibold mb-4">관련 글</h3>
                 <div className="grid gap-3 sm:grid-cols-2">
                   {relatedPosts.map((a) => (
-                    <Link
-                      key={a.slug}
-                      href={`/blog/${a.slug}`}
-                      className="blog-related-card"
-                    >
-                      <p className="font-medium text-sm">{a.title}</p>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        {a.excerpt}
-                      </p>
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* 최신 글 */}
-            {latestPosts.length > 0 && (
-              <div className="blog-related">
-                <h3 className="text-lg font-semibold mb-4">최신 글</h3>
-                <div className="grid gap-3 sm:grid-cols-2">
-                  {latestPosts.map((a) => (
                     <Link
                       key={a.slug}
                       href={`/blog/${a.slug}`}
@@ -376,19 +369,6 @@ export function BlogLayout({
               )}
             </div>
 
-            {/* CTA */}
-            <div className="blog-cta">
-              <p className="text-lg font-semibold">{finalCta.title}</p>
-              <p className="mt-1 text-sm text-muted-foreground">
-                {finalCta.description}
-              </p>
-              <Link
-                href={finalCta.href}
-                className="mt-4 inline-flex items-center justify-center rounded-lg bg-primary px-6 py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-              >
-                {finalCta.buttonText}
-              </Link>
-            </div>
           </article>
 
           {/* 사이드바 TOC — 데스크탑에서만 표시 */}
