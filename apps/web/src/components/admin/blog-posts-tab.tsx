@@ -12,7 +12,7 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table";
-import { Plus, FileText, Pencil } from "lucide-react";
+import { Plus, FileText, Pencil, ExternalLink } from "lucide-react";
 import { CATEGORY_COLORS, type BlogCategory } from "@/lib/blog";
 import type { Post } from "@/lib/db/posts";
 import { BlogEditor } from "./blog-editor";
@@ -202,16 +202,34 @@ export function BlogPostsTab() {
                     {post.read_time}
                   </TableCell>
                   <TableCell>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleEdit(post);
-                      }}
-                    >
-                      <Pencil className="h-3.5 w-3.5" />
-                    </Button>
+                    <div className="flex items-center gap-1">
+                      {post.status === "published" && post.slug && (
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          asChild
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <a
+                            href={`/blog/${post.slug}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <ExternalLink className="h-3.5 w-3.5" />
+                          </a>
+                        </Button>
+                      )}
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleEdit(post);
+                        }}
+                      >
+                        <Pencil className="h-3.5 w-3.5" />
+                      </Button>
+                    </div>
                   </TableCell>
                 </TableRow>
               ))
