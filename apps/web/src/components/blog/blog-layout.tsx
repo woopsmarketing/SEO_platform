@@ -41,10 +41,10 @@ const CATEGORY_COLORS: Record<string, string> = {
 };
 
 const DEFAULT_CTA = {
-  title: "SEO, 혼자 하기 어려우신가요?",
+  title: "지금 이 순간에도 경쟁사는 상위노출되고 있습니다",
   description:
-    "백링크 구축부터 기술 SEO까지, 전문 팀이 검색 순위를 올려드립니다. 텔레그램으로 편하게 문의하세요.",
-  buttonText: "무료 상담 문의하기",
+    "검색 1페이지에 없으면 고객은 경쟁사를 선택합니다. 더 늦기 전에 전문가의 무료 진단을 받아보세요.",
+  buttonText: "무료 SEO 진단 받기",
   href: "/contact",
 };
 
@@ -288,14 +288,16 @@ export function BlogLayout({
             </div>
 
             {/* CTA — FAQ 바로 아래, blog-prose 밖 */}
-            <div className="blog-cta mt-10">
-              <p className="text-lg font-semibold">{finalCta.title}</p>
-              <p className="mt-1 text-sm text-muted-foreground">
+            <div className="mt-12 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 p-10 text-center shadow-lg">
+              <p className="text-2xl sm:text-3xl font-bold text-white leading-tight">
+                {finalCta.title}
+              </p>
+              <p className="mt-3 text-base text-blue-100 max-w-lg mx-auto leading-relaxed">
                 {finalCta.description}
               </p>
               <Link
                 href={finalCta.href}
-                className="mt-4 inline-flex items-center justify-center rounded-lg bg-primary px-6 py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 no-underline"
+                className="mt-6 inline-flex items-center justify-center rounded-xl bg-white px-8 py-4 text-base font-bold text-blue-700 shadow-md transition-all hover:bg-blue-50 hover:shadow-lg hover:-translate-y-0.5 no-underline"
               >
                 {finalCta.buttonText}
               </Link>
