@@ -8,7 +8,6 @@ import { SignupModal } from "@/components/signup-modal";
 import { SignupBanner } from "@/components/signup-banner";
 import Link from "next/link";
 import { RelatedTools } from "@/components/related-tools";
-import { InquiryCTABanner } from "@/components/inquiry-cta-banner";
 import {
   Card,
   CardContent,
@@ -352,7 +351,6 @@ export function BacklinkForm() {
           </Card>
         </>
       )}
-      <InquiryCTABanner />
       <RelatedTools currentTool="backlink-checker" />
     </div>
   );

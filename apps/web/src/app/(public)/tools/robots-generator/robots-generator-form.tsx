@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { trackToolUsage } from "@/lib/gtag";
 import { RelatedTools } from "@/components/related-tools";
-import { InquiryCTABanner } from "@/components/inquiry-cta-banner";
 
 interface CrawlerOption {
   name: string;
@@ -301,7 +300,6 @@ export function RobotsGeneratorForm() {
         </Card>
       </div>
     </div>
-    <InquiryCTABanner />
     <RelatedTools currentTool="robots-generator" />
   </>
   );
