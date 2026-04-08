@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { trackToolUsage } from "@/lib/gtag";
 import { RelatedTools } from "@/components/related-tools";
+import { InquiryCTABanner } from "@/components/inquiry-cta-banner";
 
 interface SitemapUrl {
   id: string;
@@ -391,6 +392,7 @@ export function SitemapGeneratorForm() {
         </Card>
       </div>
     </div>
+    <InquiryCTABanner />
     <RelatedTools currentTool="sitemap-generator" />
   </>);
 }

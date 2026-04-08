@@ -8,6 +8,7 @@ import { SignupModal } from "@/components/signup-modal";
 import { SignupBanner } from "@/components/signup-banner";
 import { BacklinkCta } from "@/components/backlink-cta";
 import { RelatedTools } from "@/components/related-tools";
+import { InquiryCTABanner } from "@/components/inquiry-cta-banner";
 import {
   Card,
   CardContent,
@@ -315,6 +316,7 @@ export function KeywordForm() {
           <BacklinkCta variant="general" />
         </>
       )}
+      <InquiryCTABanner />
       <RelatedTools currentTool="keyword-research" />
     </div>
   );

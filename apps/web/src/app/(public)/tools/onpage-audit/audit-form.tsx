@@ -10,6 +10,7 @@ import { SignupModal } from "@/components/signup-modal";
 import { SignupBanner } from "@/components/signup-banner";
 import { SmartServiceCta } from "@/components/smart-service-cta";
 import { RelatedTools } from "@/components/related-tools";
+import { InquiryCTABanner } from "@/components/inquiry-cta-banner";
 
 interface ParsedSeo {
   url: string;
@@ -215,6 +216,7 @@ export function AuditForm() {
           </div>
         </>
       )}
+      <InquiryCTABanner />
       <RelatedTools currentTool="onpage-audit" />
     </div>
   );

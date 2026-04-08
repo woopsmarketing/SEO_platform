@@ -10,6 +10,7 @@ import { SignupModal } from "@/components/signup-modal";
 import { SignupBanner } from "@/components/signup-banner";
 import { BacklinkCta } from "@/components/backlink-cta";
 import { RelatedTools } from "@/components/related-tools";
+import { InquiryCTABanner } from "@/components/inquiry-cta-banner";
 
 interface ParsedMeta {
   url: string;
@@ -580,6 +581,7 @@ export function MetaGeneratorForm() {
           <BacklinkCta variant="general" />
         </>
       )}
+      <InquiryCTABanner />
       <RelatedTools currentTool="meta-generator" />
     </div>
   );
