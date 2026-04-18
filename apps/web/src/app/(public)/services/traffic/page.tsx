@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { InquiryForm } from "@/components/inquiry-form";
+import { TelegramCTAButton } from "@/components/telegram-cta-button";
 
 export const metadata: Metadata = {
   title: "트래픽 서비스 — 오가닉 트래픽 유입 · 검색 순위 상승",
@@ -41,7 +41,13 @@ export default function TrafficServicePage() {
             </CardContent>
           </Card>
         </div>
-        <InquiryForm serviceType="traffic" serviceLabel="트래픽" />
+        <div className="space-y-6">
+          <div className="rounded-xl border bg-card p-8 text-center">
+            <h3 className="text-lg font-bold mb-2">무료 상담 신청</h3>
+            <p className="text-muted-foreground mb-6">텔레그램으로 간편하게 문의하세요. 빠르게 답변드립니다.</p>
+            <TelegramCTAButton source="service_page" tool="traffic" />
+          </div>
+        </div>
       </div>
     </div>
   );

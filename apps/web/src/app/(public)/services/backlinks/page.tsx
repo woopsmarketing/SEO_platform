@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { InquiryForm } from "@/components/inquiry-form";
+import { TelegramCTAButton } from "@/components/telegram-cta-button";
 
 export const metadata: Metadata = {
   title: "백링크 서비스 — 오프페이지 SEO 전문 링크빌딩",
@@ -148,9 +148,7 @@ export default function BacklinksServicePage() {
           구글 검색 상위 노출을 달성하세요.
         </p>
         <div className="mt-6">
-          <a href="#inquiry">
-            <Button size="lg">무료 상담 신청하기</Button>
-          </a>
+          <TelegramCTAButton source="service_page" tool="backlinks" label="무료 상담 신청하기" />
         </div>
       </section>
 
@@ -226,14 +224,13 @@ export default function BacklinksServicePage() {
                 </ul>
               </CardContent>
               <CardFooter className="justify-center">
-                <a href="#inquiry" className="w-full">
-                  <Button
-                    variant={pkg.highlighted ? "default" : "outline"}
-                    className="w-full"
-                  >
-                    문의하기
-                  </Button>
-                </a>
+                <TelegramCTAButton
+                  source="service_page"
+                  tool="backlinks"
+                  label="문의하기"
+                  variant={pkg.highlighted ? "primary" : "outline"}
+                  className="w-full"
+                />
               </CardFooter>
             </Card>
           ))}
@@ -270,9 +267,7 @@ export default function BacklinksServicePage() {
           이번 달 스타터 패키지 잔여: 5자리
         </p>
         <div className="mt-4">
-          <a href="#inquiry">
-            <Button size="lg">지금 상담 신청하기</Button>
-          </a>
+          <TelegramCTAButton source="service_page" tool="backlinks" label="지금 상담 신청하기" />
         </div>
       </section>
 
@@ -294,11 +289,12 @@ export default function BacklinksServicePage() {
         </div>
       </section>
 
-      {/* ── 문의 폼 ── */}
+      {/* ── 문의 CTA ── */}
       <section id="inquiry" className="mb-16 scroll-mt-20">
         <h2 className="mb-8 text-center text-2xl font-bold">무료 상담 신청</h2>
-        <div className="mx-auto max-w-lg">
-          <InquiryForm serviceType="backlinks" serviceLabel="백링크" />
+        <div className="mx-auto max-w-lg text-center">
+          <p className="text-muted-foreground mb-6">텔레그램으로 간편하게 문의하세요. 빠르게 답변드립니다.</p>
+          <TelegramCTAButton source="service_page" tool="backlinks" label="텔레그램으로 무료 문의하기" />
         </div>
       </section>
 

@@ -46,7 +46,7 @@ node node_modules/next/dist/bin/next start   # 프로덕션 모드 시작
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase 익명 키 | O |
 | `SUPABASE_SERVICE_ROLE_KEY` | Supabase 서비스 롤 키 (서버만) | O |
 | `NEXT_PUBLIC_SITE_URL` | 사이트 URL | O |
-| `ANTHROPIC_API_KEY` | Claude AI (On-page Audit) | 선택 (없으면 파싱만) |
+| `OPENAI_API_KEY` | OpenAI API (On-page Audit + 메타태그 분석) | 선택 (없으면 파싱만) |
 | `NEXT_PUBLIC_GOOGLE_VERIFICATION` | Google Search Console 인증 | 선택 |
 | `NEXT_PUBLIC_NAVER_VERIFICATION` | Naver Search Advisor 인증 | 선택 |
 | `RESEND_API_KEY` | Resend 이메일 API 키 | 미구현 |
@@ -120,7 +120,8 @@ src/lib/supabase/
 | `/api/inquiries` | POST | 불필요 | 서비스 문의 생성 (service_role, 입력값 검증) |
 | `/api/inquiries/[id]` | PATCH | admin | 문의 상태/메모 변경 |
 | `/api/tool-usage` | POST | 불필요 | 툴 사용 로그 기록 (IP, UA 포함) |
-| `/api/audit` | POST | 불필요 | HTML 파싱 + Claude AI SEO 분석 (ANTHROPIC_API_KEY 필요) |
+| `/api/audit` | POST | 불필요 | HTML 파싱 + OpenAI SEO 분석 (gpt-4o-mini, OPENAI_API_KEY 필요) |
+| `/api/meta-analyze` | POST | 불필요 | URL의 head 파싱 + AI 메타태그 추천 (gpt-4o-mini, 한글/영문 자동 감지) |
 | `/api/crawl` | POST | 불필요 | robots.txt + sitemap 파싱 + 내부 링크 크롤링 |
 | `/api/posts` | POST | admin | 게시글 생성 |
 | `/api/posts/[id]` | PATCH | admin | 게시글 수정 |

@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { getTelegramUrl } from "@/lib/telegram";
+import { trackTelegramClick } from "@/lib/analytics";
 
 interface Tool {
   name: string;
@@ -14,12 +16,10 @@ interface Tool {
 const TOOL_MAP: Record<string, Tool[]> = {
   "onpage-audit": [
     { icon: "🏷️", name: "메타태그 분석기", desc: "메타태그도 상세하게 점검해보세요", href: "/tools/meta-generator" },
-    { icon: "🔗", name: "백링크 조회", desc: "외부 링크 현황을 확인하세요", href: "/tools/backlink-checker" },
-    { icon: "🔍", name: "키워드 분석", desc: "타겟 키워드를 찾아보세요", href: "/tools/keyword-research" },
+    { icon: "🔗", name: "백링크 서비스", desc: "검색 순위를 높이는 고품질 백링크 구축", href: "/services/backlinks" },
   ],
   "meta-generator": [
     { icon: "📊", name: "온페이지 SEO 분석", desc: "사이트 전체를 35개 항목으로 점검", href: "/tools/onpage-audit" },
-    { icon: "🔍", name: "키워드 분석", desc: "타겟 키워드를 찾아보세요", href: "/tools/keyword-research" },
     { icon: "🗺️", name: "사이트맵 생성기", desc: "검색엔진 색인을 위한 사이트맵", href: "/tools/sitemap-generator" },
   ],
   "keyword-research": [
@@ -45,12 +45,10 @@ const TOOL_MAP: Record<string, Tool[]> = {
   "robots-generator": [
     { icon: "🗺️", name: "사이트맵 생성기", desc: "사이트맵도 함께 만들어보세요", href: "/tools/sitemap-generator" },
     { icon: "📊", name: "온페이지 SEO 분석", desc: "사이트 전체 SEO를 점검하세요", href: "/tools/onpage-audit" },
-    { icon: "🏷️", name: "메타태그 분석기", desc: "메타태그도 확인해보세요", href: "/tools/meta-generator" },
   ],
   "sitemap-generator": [
-    { icon: "🤖", name: "Robots.txt 생성기", desc: "robots.txt도 함께 만들어보세요", href: "/tools/robots-generator" },
     { icon: "📊", name: "온페이지 SEO 분석", desc: "사이트 전체 SEO를 점검하세요", href: "/tools/onpage-audit" },
-    { icon: "🔗", name: "백링크 조회", desc: "백링크 현황을 확인하세요", href: "/tools/backlink-checker" },
+    { icon: "🤖", name: "Robots.txt 생성기", desc: "robots.txt도 함께 만들어보세요", href: "/tools/robots-generator" },
   ],
 };
 
@@ -66,6 +64,12 @@ export function RelatedTools({ currentTool }: { currentTool: string }) {
   }, []);
 
   if (!tools) return null;
+
+  const telegramUrl = getTelegramUrl("general");
+
+  function handleTelegramClick() {
+    trackTelegramClick({ source: "tool_result" });
+  }
 
   return (
     <div className="space-y-6">
@@ -84,12 +88,15 @@ export function RelatedTools({ currentTool }: { currentTool: string }) {
             백링크 구축부터 기술 SEO까지, 전문 팀이 검색 1페이지로 올려드립니다.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Link
-              href="/contact"
+            <a
+              href={telegramUrl}
+              target="_blank"
+              rel="nofollow noopener noreferrer"
+              onClick={handleTelegramClick}
               className="inline-flex items-center justify-center gap-2 rounded-lg bg-white text-blue-700 font-bold px-6 py-3 text-sm hover:bg-blue-50 transition-colors shadow-md"
             >
-              무료 SEO 진단 받기
-            </Link>
+              텔레그램으로 무료 문의하기
+            </a>
             <Link
               href="/services/backlinks"
               className="inline-flex items-center justify-center gap-2 rounded-lg bg-white/15 text-white font-semibold px-6 py-3 text-sm hover:bg-white/25 transition-colors border border-white/30"

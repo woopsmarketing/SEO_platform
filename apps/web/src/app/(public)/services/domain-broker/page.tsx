@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { InquiryForm } from "@/components/inquiry-form";
+import { TelegramCTAButton } from "@/components/telegram-cta-button";
 
 export const metadata: Metadata = {
   title: "도메인 브로커 서비스 — 프리미엄 도메인 매입 · 매각 중개",
@@ -42,7 +42,13 @@ export default function DomainBrokerServicePage() {
             </CardContent>
           </Card>
         </div>
-        <InquiryForm serviceType="domain-broker" serviceLabel="도메인 브로커" />
+        <div className="space-y-6">
+          <div className="rounded-xl border bg-card p-8 text-center">
+            <h3 className="text-lg font-bold mb-2">무료 상담 신청</h3>
+            <p className="text-muted-foreground mb-6">텔레그램으로 간편하게 문의하세요. 빠르게 답변드립니다.</p>
+            <TelegramCTAButton source="service_page" tool="domain-broker" />
+          </div>
+        </div>
       </div>
     </div>
   );

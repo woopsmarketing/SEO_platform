@@ -6,6 +6,7 @@ import { SITE_NAME, SITE_DESCRIPTION, SITE_URL } from "@/lib/constants";
 import { homeTools } from "@/lib/data";
 import { PricingCards } from "@/components/pricing-cards";
 import { HeroAnalyzer } from "@/components/hero-analyzer";
+import { TelegramCTAButton } from "@/components/telegram-cta-button";
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -539,11 +540,7 @@ export default function HomePage() {
                 무료 분석 도구 사용하기
               </Button>
             </Link>
-            <Link href="/services/backlinks">
-              <Button size="lg" variant="outline" className="w-full text-base px-8 sm:w-auto">
-                백링크 서비스 문의
-              </Button>
-            </Link>
+            <TelegramCTAButton source="home" label="백링크 서비스 문의" variant="outline" />
           </div>
         </div>
       </section>
