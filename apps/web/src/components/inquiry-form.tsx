@@ -6,6 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { trackInquirySubmit } from "@/lib/gtag";
+import { trackTelegramClick } from "@/lib/analytics";
 import Link from "next/link";
 
 interface InquiryFormProps {
@@ -109,7 +110,8 @@ export function InquiryForm({ serviceType, serviceLabel }: InquiryFormProps) {
             <a
               href="https://t.me/goat82"
               target="_blank"
-              rel="noopener noreferrer"
+              rel="nofollow noopener noreferrer"
+              onClick={() => trackTelegramClick({ source: "service_page", tool: serviceType })}
               className="mt-3 inline-flex items-center gap-2 rounded-lg bg-[#2AABEE] px-6 py-2.5 text-sm font-medium text-white hover:bg-[#229ED9] transition-colors"
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">

@@ -1,10 +1,18 @@
-import { redirect } from "next/navigation";
-import type { Metadata } from "next";
+"use client";
 
-export const metadata: Metadata = {
-  robots: { index: false, follow: false },
-};
+import { useEffect } from "react";
+import { getTelegramUrl } from "@/lib/telegram";
+import { trackTelegramClick } from "@/lib/analytics";
 
 export default function ContactPage() {
-  redirect("https://t.me/goat82");
+  useEffect(() => {
+    trackTelegramClick({ source: "home" });
+    window.location.href = getTelegramUrl("general");
+  }, []);
+
+  return (
+    <div className="flex min-h-screen items-center justify-center">
+      <p className="text-muted-foreground text-sm">텔레그램으로 연결 중...</p>
+    </div>
+  );
 }
