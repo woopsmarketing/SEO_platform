@@ -1,10 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { getTelegramUrl } from "@/lib/telegram";
-import { trackTelegramClick } from "@/lib/analytics";
 
 interface Tool {
   name: string;
@@ -54,59 +51,11 @@ const TOOL_MAP: Record<string, Tool[]> = {
 
 export function RelatedTools({ currentTool }: { currentTool: string }) {
   const tools = TOOL_MAP[currentTool];
-  const [totalCount, setTotalCount] = useState<number | null>(null);
-
-  useEffect(() => {
-    fetch("/api/tool-usage")
-      .then((r) => r.json())
-      .then((d) => setTotalCount(d.totalAnalyses ?? null))
-      .catch(() => {});
-  }, []);
 
   if (!tools) return null;
 
-  const telegramUrl = getTelegramUrl("general");
-
-  function handleTelegramClick() {
-    trackTelegramClick({ source: "tool_result" });
-  }
-
   return (
     <div className="space-y-6">
-      {/* 통합 CTA: 소셜 프루프 + 서비스 안내 + 문의 */}
-      <div className="rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 p-8 text-white shadow-lg">
-        <div className="text-center">
-          {totalCount !== null && totalCount > 0 && (
-            <p className="text-xs font-medium text-blue-200 mb-3">
-              지금까지 {totalCount.toLocaleString()}건의 SEO 분석이 완료되었습니다
-            </p>
-          )}
-          <h3 className="text-xl sm:text-2xl font-bold mb-2">
-            분석은 끝났습니다. 이제 순위를 올릴 차례입니다.
-          </h3>
-          <p className="text-blue-100 text-sm leading-relaxed mb-6 max-w-md mx-auto">
-            백링크 구축부터 기술 SEO까지, 전문 팀이 검색 1페이지로 올려드립니다.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <a
-              href={telegramUrl}
-              target="_blank"
-              rel="nofollow noopener noreferrer"
-              onClick={handleTelegramClick}
-              className="inline-flex items-center justify-center gap-2 rounded-lg bg-white text-blue-700 font-bold px-6 py-3 text-sm hover:bg-blue-50 transition-colors shadow-md"
-            >
-              텔레그램으로 무료 문의하기
-            </a>
-            <Link
-              href="/services/backlinks"
-              className="inline-flex items-center justify-center gap-2 rounded-lg bg-white/15 text-white font-semibold px-6 py-3 text-sm hover:bg-white/25 transition-colors border border-white/30"
-            >
-              백링크 서비스 알아보기
-            </Link>
-          </div>
-        </div>
-      </div>
-
       {/* 다른 무료 도구 */}
       <div className="rounded-2xl bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100 p-8">
         <div className="text-center mb-6">

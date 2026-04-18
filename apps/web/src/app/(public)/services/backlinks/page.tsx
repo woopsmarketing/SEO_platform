@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TelegramCTAButton } from "@/components/telegram-cta-button";
 
 export const metadata: Metadata = {
@@ -20,48 +19,36 @@ const STATS = [
   { value: "96%", label: "고객 만족도" },
 ];
 
-const PACKAGES = [
+const FEATURES = [
   {
-    name: "프리미엄",
-    price: "120만원",
-    period: "/월",
-    description: "전담 매니저와 맞춤 전략이 필요한 기업",
-    features: [
-      "고품질 백링크 50개+",
-      "전담 SEO 매니저 배정",
-      "맞춤형 링크빌딩 전략",
-      "스팸 링크 제거(Disavow) 포함",
-      "주간 리포트 + 월간 심층 분석",
-      "앵커 텍스트 최적화",
-    ],
-    highlighted: false,
+    icon: "🔗",
+    title: "고품질 백링크 구축",
+    description: "DA/DR 높은 권위 있는 사이트에서 자연스러운 에디토리얼 링크를 확보합니다. 스팸 링크 없이 안전하게 진행합니다.",
   },
   {
-    name: "프로",
-    price: "60만원",
-    period: "/월",
-    description: "본격적인 SEO 성장을 원하는 기업에 추천",
-    features: [
-      "고품질 백링크 30개",
-      "경쟁사 심층 분석",
-      "주간 성과 리포트",
-      "앵커 텍스트 최적화",
-      "링크 품질 모니터링",
-    ],
-    highlighted: true,
+    icon: "📊",
+    title: "경쟁사 분석 및 전략 수립",
+    description: "상위 경쟁사의 백링크 프로필을 분석하고, 실제 효과 있는 링크 전략을 맞춤 설계합니다.",
   },
   {
-    name: "스타터",
-    price: "30만원",
-    period: "/월",
-    description: "SEO를 처음 시작하는 소규모 사이트",
-    features: [
-      "고품질 백링크 10개",
-      "월간 리포트",
-      "기본 경쟁사 분석",
-      "링크 품질 확인",
-    ],
-    highlighted: false,
+    icon: "📈",
+    title: "월간 성과 리포트",
+    description: "매월 백링크 현황, DA/DR 변화, 검색 순위 추이를 한눈에 보여드립니다. 투명한 결과 보고가 기본입니다.",
+  },
+  {
+    icon: "🛡️",
+    title: "구글 가이드라인 완전 준수",
+    description: "PBN, 링크 팜 등 위험한 방식은 사용하지 않습니다. 구글 패널티 없이 장기적으로 안전한 SEO를 추구합니다.",
+  },
+  {
+    icon: "💬",
+    title: "예산 맞춤 진행",
+    description: "정해진 요금표 없이 사이트 현황과 목표, 예산에 맞게 최적의 플랜을 제안해드립니다. 부담 없이 문의하세요.",
+  },
+  {
+    icon: "⚡",
+    title: "앵커 텍스트 최적화",
+    description: "자연스러운 앵커 텍스트 분포로 구글 알고리즘에 최적화된 링크 프로필을 구성합니다.",
   },
 ];
 
@@ -167,73 +154,29 @@ export default function BacklinksServicePage() {
         ))}
       </section>
 
-      {/* ── 가격 패키지 ── */}
+      {/* ── 서비스 특징 ── */}
       <section className="mb-16">
-        <h2 className="mb-2 text-center text-2xl font-bold">서비스 패키지</h2>
+        <h2 className="mb-2 text-center text-2xl font-bold">서비스 특징</h2>
         <p className="mb-8 text-center text-muted-foreground">
-          사이트 규모와 목표에 맞는 패키지를 선택하세요
+          예산과 목표에 맞게 맞춤 설계해드립니다. 부담 없이 문의하세요.
         </p>
-        <div className="grid gap-6 md:grid-cols-3">
-          {PACKAGES.map((pkg) => (
-            <Card
-              key={pkg.name}
-              className={
-                pkg.highlighted
-                  ? "relative border-primary shadow-lg ring-2 ring-primary/20"
-                  : ""
-              }
-            >
-              {pkg.highlighted && (
-                <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-primary px-4 py-1 text-xs font-semibold text-primary-foreground">
-                  추천
-                </span>
-              )}
-              <CardHeader className="text-center">
-                <CardTitle className="text-lg">{pkg.name}</CardTitle>
-                <div className="mt-2">
-                  <span className="text-3xl font-bold">{pkg.price}</span>
-                  <span className="text-muted-foreground">{pkg.period}</span>
-                </div>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  {pkg.description}
-                </p>
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {FEATURES.map((f) => (
+            <Card key={f.title}>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-lg">
+                  <span className="text-2xl">{f.icon}</span>
+                  {f.title}
+                </CardTitle>
               </CardHeader>
               <CardContent>
-                <ul className="space-y-2">
-                  {pkg.features.map((f) => (
-                    <li
-                      key={f}
-                      className="flex items-start gap-2 text-sm text-muted-foreground"
-                    >
-                      <svg
-                        className="mt-0.5 h-4 w-4 shrink-0 text-primary"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth={2}
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M5 13l4 4L19 7"
-                        />
-                      </svg>
-                      {f}
-                    </li>
-                  ))}
-                </ul>
+                <p className="text-sm text-muted-foreground leading-relaxed">{f.description}</p>
               </CardContent>
-              <CardFooter className="justify-center">
-                <TelegramCTAButton
-                  source="service_page"
-                  tool="backlinks"
-                  label="문의하기"
-                  variant={pkg.highlighted ? "primary" : "outline"}
-                  className="w-full"
-                />
-              </CardFooter>
             </Card>
           ))}
+        </div>
+        <div className="mt-8 text-center">
+          <TelegramCTAButton source="service_page" tool="backlinks" label="맞춤 플랜 문의하기" />
         </div>
       </section>
 
@@ -264,7 +207,7 @@ export default function BacklinksServicePage() {
           지금 행동하지 않으면 검색 순위는 계속 밀려납니다.
         </p>
         <p className="mt-4 text-sm font-medium text-destructive">
-          이번 달 스타터 패키지 잔여: 5자리
+          이번 달 신규 문의 마감이 임박했습니다
         </p>
         <div className="mt-4">
           <TelegramCTAButton source="service_page" tool="backlinks" label="지금 상담 신청하기" />
