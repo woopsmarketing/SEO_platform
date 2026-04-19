@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { getTelegramUrl } from "@/lib/telegram";
 import { trackTelegramClick } from "@/lib/analytics";
+import { QuickContactForm } from "@/components/quick-contact-form";
 
 interface InquiryCTABannerProps {
   score?: number;
@@ -68,29 +69,45 @@ export function InquiryCTABanner({ score, issueCount = 0, url, topIssues = [] }:
   }
 
   return (
-    <div className="rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 p-6 sm:p-8 text-center shadow-md mt-6">
+    <div className="rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 p-6 sm:p-8 shadow-md mt-6">
       {/* 소셜 프루프 */}
       {totalCount !== null && totalCount > 0 && (
-        <p className="text-xs font-medium text-blue-200 mb-3">
+        <p className="text-xs font-medium text-blue-200 mb-3 text-center">
           지금까지 {totalCount.toLocaleString()}건의 SEO 분석이 완료되었습니다
         </p>
       )}
 
-      <p className="text-lg sm:text-xl font-bold text-white leading-tight">
-        {msg.title}
-      </p>
-      <p className="mt-2 text-sm text-blue-100 max-w-md mx-auto">
-        {msg.subtitle}
-      </p>
-      <a
-        href={telegramUrl}
-        target="_blank"
-        rel="nofollow noopener noreferrer"
-        onClick={handleClick}
-        className="mt-5 inline-flex items-center justify-center rounded-lg bg-white px-7 py-3.5 text-sm font-bold text-blue-700 shadow transition-all hover:bg-blue-50 hover:-translate-y-0.5 hover:shadow-lg no-underline"
-      >
-        텔레그램으로 무료 문의하기
-      </a>
+      <div className="grid gap-6 lg:grid-cols-2 lg:items-center">
+        {/* 왼쪽: 헤드라인 + 텔레그램 */}
+        <div className="text-center lg:text-left">
+          <p className="text-lg sm:text-xl font-bold text-white leading-tight">
+            {msg.title}
+          </p>
+          <p className="mt-2 text-sm text-blue-100">
+            {msg.subtitle}
+          </p>
+          <a
+            href={telegramUrl}
+            target="_blank"
+            rel="nofollow noopener noreferrer"
+            onClick={handleClick}
+            className="mt-4 inline-flex items-center gap-2 rounded-lg bg-white/20 border border-white/40 px-5 py-2.5 text-sm font-medium text-white hover:bg-white/30 transition-colors no-underline"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+            </svg>
+            텔레그램으로 문의
+          </a>
+        </div>
+
+        {/* 오른쪽: 인라인 문의 폼 */}
+        <div className="rounded-xl bg-white/10 border border-white/20 p-4">
+          <p className="text-sm font-semibold text-white mb-3 text-center">
+            이메일로 바로 문의하기 <span className="text-blue-200 font-normal">(24시간 내 답변)</span>
+          </p>
+          <QuickContactForm toolName={url ? "onpage-audit" : undefined} siteUrl={url} />
+        </div>
+      </div>
     </div>
   );
 }
