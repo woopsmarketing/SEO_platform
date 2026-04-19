@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { trackToolUsage } from "@/lib/gtag";
+import { trackToolUsage, trackToolAttempt, trackRateLimit, trackToolError } from "@/lib/gtag";
 import { SignupModal } from "@/components/signup-modal";
 import { SignupBanner } from "@/components/signup-banner";
 import { BacklinkCta } from "@/components/backlink-cta";
@@ -31,6 +31,7 @@ export function RelatedKeywordForm() {
     setError("");
     setResult(null);
 
+    trackToolAttempt("keyword-related");
     try {
       const res = await fetch("/api/related-keywords", {
         method: "POST",
@@ -41,14 +42,17 @@ export function RelatedKeywordForm() {
       if (res.status === 429) {
         setShowUpgrade(true);
         setError(data.error || "일일 무료 사용량을 초과했습니다.");
+        trackRateLimit("keyword-related", "guest");
       } else if (!res.ok) {
         setError(data.error || "분석에 실패했습니다.");
+        trackToolError("keyword-related", data.error || "api_error");
       } else {
         trackToolUsage("keyword-related");
         setResult(data);
       }
     } catch {
       setError("네트워크 오류가 발생했습니다.");
+      trackToolError("keyword-related", "network_error");
     }
     setLoading(false);
   }

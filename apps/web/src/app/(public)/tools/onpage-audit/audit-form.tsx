@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { trackToolUsage } from "@/lib/gtag";
+import { trackToolUsage, trackToolAttempt, trackRateLimit, trackToolError } from "@/lib/gtag";
 import { SignupModal } from "@/components/signup-modal";
 import { SignupBanner } from "@/components/signup-banner";
 import { SmartServiceCta } from "@/components/smart-service-cta";
@@ -147,6 +147,7 @@ async function handleAuditWithUrl(targetUrl: string) {
     setShowUpgrade(false);
     setResult(null);
 
+    trackToolAttempt("onpage-audit");
     try {
       const res = await fetch("/api/audit", {
         method: "POST",
@@ -157,7 +158,12 @@ async function handleAuditWithUrl(targetUrl: string) {
       const data = await res.json();
       if (!res.ok) {
         setError(data.error || "분석에 실패했습니다.");
-        if (data.upgrade) setShowUpgrade(true);
+        if (data.upgrade) {
+          setShowUpgrade(true);
+          trackRateLimit("onpage-audit", "guest");
+        } else {
+          trackToolError("onpage-audit", data.error || "api_error");
+        }
       } else {
         if (data.parsed?.statusCode === 403) {
           setError("대상 사이트가 서버에서의 접근을 차단하고 있습니다(403 Forbidden). 일부 사이트는 클라우드 서버 IP를 차단하여 분석이 제한될 수 있습니다.");
@@ -167,6 +173,7 @@ async function handleAuditWithUrl(targetUrl: string) {
       }
     } catch {
       setError("네트워크 오류가 발생했습니다.");
+      trackToolError("onpage-audit", "network_error");
     }
     setLoading(false);
   }
@@ -178,6 +185,7 @@ async function handleAuditWithUrl(targetUrl: string) {
     setShowUpgrade(false);
     setResult(null);
 
+    trackToolAttempt("onpage-audit");
     try {
       const res = await fetch("/api/audit", {
         method: "POST",
@@ -188,9 +196,13 @@ async function handleAuditWithUrl(targetUrl: string) {
       const data = await res.json();
       if (!res.ok) {
         setError(data.error || "분석에 실패했습니다.");
-        if (data.upgrade) setShowUpgrade(true);
+        if (data.upgrade) {
+          setShowUpgrade(true);
+          trackRateLimit("onpage-audit", "guest");
+        } else {
+          trackToolError("onpage-audit", data.error || "api_error");
+        }
       } else {
-        // 403 상태코드 감지 시 안내
         if (data.parsed?.statusCode === 403) {
           setError("대상 사이트가 서버에서의 접근을 차단하고 있습니다(403 Forbidden). 일부 사이트는 클라우드 서버 IP를 차단하여 분석이 제한될 수 있습니다.");
         }
@@ -199,6 +211,7 @@ async function handleAuditWithUrl(targetUrl: string) {
       }
     } catch {
       setError("네트워크 오류가 발생했습니다.");
+      trackToolError("onpage-audit", "network_error");
     }
     setLoading(false);
   }

@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { trackToolUsage } from "@/lib/gtag";
+import { trackToolUsage, trackToolAttempt, trackRateLimit, trackToolError } from "@/lib/gtag";
 import { SignupModal } from "@/components/signup-modal";
 import { SignupBanner } from "@/components/signup-banner";
 import { BacklinkCta } from "@/components/backlink-cta";
@@ -46,17 +46,27 @@ const COUNTRIES = [
 type SortKey = "text" | "vol" | "cpc" | "competition" | "score";
 type SortDir = "asc" | "desc";
 
+function normalizeCompetition(c: string): string {
+  const lower = (c || "").toLowerCase();
+  if (lower === "low") return "Low";
+  if (lower === "medium") return "Medium";
+  if (lower === "high") return "High";
+  return c;
+}
+
 function getCompetitionOrder(c: string): number {
-  if (c === "Low") return 0;
-  if (c === "Medium") return 1;
-  if (c === "High") return 2;
+  const n = normalizeCompetition(c);
+  if (n === "Low") return 0;
+  if (n === "Medium") return 1;
+  if (n === "High") return 2;
   return 3;
 }
 
 function getCompetitionBadge(c: string): string {
-  if (c === "Low") return "bg-green-100 text-green-700";
-  if (c === "Medium") return "bg-yellow-100 text-yellow-700";
-  if (c === "High") return "bg-red-100 text-red-700";
+  const n = normalizeCompetition(c);
+  if (n === "Low") return "bg-green-100 text-green-700";
+  if (n === "Medium") return "bg-yellow-100 text-yellow-700";
+  if (n === "High") return "bg-red-100 text-red-700";
   return "bg-gray-100 text-gray-600";
 }
 
@@ -77,6 +87,7 @@ export function KeywordForm() {
     setShowUpgrade(false);
     setResult(null);
 
+    trackToolAttempt("keyword-research");
     try {
       const res = await fetch("/api/keyword-research", {
         method: "POST",
@@ -86,13 +97,19 @@ export function KeywordForm() {
       const data = await res.json();
       if (!res.ok) {
         setError(data.error || "분석에 실패했습니다.");
-        if (data.upgrade) setShowUpgrade(true);
+        if (data.upgrade) {
+          setShowUpgrade(true);
+          trackRateLimit("keyword-research", "guest");
+        } else {
+          trackToolError("keyword-research", data.error || "api_error");
+        }
       } else {
         trackToolUsage("keyword-research");
         setResult(data);
       }
     } catch {
       setError("네트워크 오류가 발생했습니다.");
+      trackToolError("keyword-research", "network_error");
     }
     setLoading(false);
   }
@@ -294,7 +311,7 @@ export function KeywordForm() {
                             <span
                               className={`rounded px-1.5 py-0.5 text-xs font-medium ${getCompetitionBadge(kw.competition)}`}
                             >
-                              {kw.competition || "-"}
+                              {normalizeCompetition(kw.competition) || "-"}
                             </span>
                           </td>
                           <td className="py-2.5 text-right tabular-nums">

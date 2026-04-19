@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { trackToolUsage } from "@/lib/gtag";
+import { trackToolUsage, trackToolAttempt, trackRateLimit, trackToolError } from "@/lib/gtag";
 import { SignupModal } from "@/components/signup-modal";
 import { SignupBanner } from "@/components/signup-banner";
 import Link from "next/link";
@@ -96,6 +96,7 @@ export function BacklinkForm() {
     setShowUpgrade(false);
     setResult(null);
 
+    trackToolAttempt("backlink-checker");
     try {
       const res = await fetch("/api/backlink-check", {
         method: "POST",
@@ -105,13 +106,19 @@ export function BacklinkForm() {
       const data = await res.json();
       if (!res.ok) {
         setError(data.error || "분석에 실패했습니다.");
-        if (data.upgrade) setShowUpgrade(true);
+        if (data.upgrade) {
+          setShowUpgrade(true);
+          trackRateLimit("backlink-checker", "guest");
+        } else {
+          trackToolError("backlink-checker", data.error || "api_error");
+        }
       } else {
         trackToolUsage("backlink-checker");
         setResult(data);
       }
     } catch {
       setError("네트워크 오류가 발생했습니다.");
+      trackToolError("backlink-checker", "network_error");
     }
     setLoading(false);
   }

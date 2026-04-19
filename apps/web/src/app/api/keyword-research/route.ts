@@ -5,17 +5,16 @@ export const maxDuration = 30;
 
 export async function POST(request: Request) {
   try {
-    // 로그인 유저는 무제한, 비로그인은 IP당 하루 2회
+    // 비로그인 하루 2회, 로그인 하루 10회
     const ip = getClientIp(request);
     const loggedIn = await isAuthenticated(request);
-    if (!loggedIn) {
-      const rateLimit = await checkRateLimit(ip, "keyword-research", 2, 1440);
-      if (!rateLimit.allowed) {
-        return NextResponse.json(
-          { error: "일일 무료 분석 횟수(2회)를 초과했습니다.", upgrade: true, remaining: 0 },
-          { status: 429 }
-        );
-      }
+    const limit = loggedIn ? 10 : 2;
+    const rateLimit = await checkRateLimit(ip, "keyword-research", limit, 1440);
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        { error: `일일 분석 횟수(${limit}회)를 초과했습니다.`, upgrade: true, remaining: 0 },
+        { status: 429 }
+      );
     }
 
     const { keyword, country = "kr" } = await request.json();

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { trackToolUsage } from "@/lib/gtag";
+import { trackToolUsage, trackToolAttempt, trackRateLimit, trackToolError } from "@/lib/gtag";
 import { SignupModal } from "@/components/signup-modal";
 import { SignupBanner } from "@/components/signup-banner";
 import { BacklinkCta } from "@/components/backlink-cta";
@@ -64,6 +64,7 @@ export function KeywordDensityForm() {
     setShowUpgrade(false);
     setResult(null);
 
+    trackToolAttempt("keyword-density");
     try {
       const res = await fetch("/api/keyword-density", {
         method: "POST",
@@ -73,13 +74,19 @@ export function KeywordDensityForm() {
       const data = await res.json();
       if (!res.ok) {
         setError(data.error || "분석에 실패했습니다.");
-        if (data.upgrade) setShowUpgrade(true);
+        if (data.upgrade) {
+          setShowUpgrade(true);
+          trackRateLimit("keyword-density", "guest");
+        } else {
+          trackToolError("keyword-density", data.error || "api_error");
+        }
       } else {
         trackToolUsage("keyword-density");
         setResult(data);
       }
     } catch {
       setError("네트워크 오류가 발생했습니다.");
+      trackToolError("keyword-density", "network_error");
     }
     setLoading(false);
   }

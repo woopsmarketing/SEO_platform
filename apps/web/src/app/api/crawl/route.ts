@@ -3,17 +3,16 @@ import { checkRateLimit, getClientIp, isAuthenticated } from "@/lib/rate-limit";
 
 export async function POST(request: Request) {
   try {
-    // 로그인 유저는 무제한, 비로그인은 IP당 하루 2회
+    // 비로그인 하루 2회, 로그인 하루 10회
+    const ip = getClientIp(request);
     const loggedIn = await isAuthenticated(request);
-    if (!loggedIn) {
-      const ip = getClientIp(request);
-      const rateLimit = await checkRateLimit(ip, "crawl", 2, 1440);
-      if (!rateLimit.allowed) {
-        return NextResponse.json(
-          { error: "일일 무료 사용 횟수(2회)를 초과했습니다.", upgrade: true, remaining: 0 },
-          { status: 429, headers: { "Retry-After": String(rateLimit.resetIn) } }
-        );
-      }
+    const limit = loggedIn ? 10 : 2;
+    const rateLimit = await checkRateLimit(ip, "crawl", limit, 1440);
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        { error: `일일 사용 횟수(${limit}회)를 초과했습니다.`, upgrade: true, remaining: 0 },
+        { status: 429, headers: { "Retry-After": String(rateLimit.resetIn) } }
+      );
     }
 
     let { url, maxPages = 30 } = await request.json();
