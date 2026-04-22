@@ -6,6 +6,8 @@
  * 3. OpenAI로 비교 분석 리포트 생성
  */
 
+import { fetchWithCache, saveToCache } from "./cache-api";
+
 interface SerpResult {
   title: string;
   link: string;
@@ -49,8 +51,26 @@ export interface CompetitorAnalysisResult {
   analyzedAt: string;
 }
 
-/** Serper.dev API로 구글 검색 결과 가져오기 */
+/**
+ * Serper.dev API로 구글 검색 결과 가져오기.
+ * 백링크샵 공용 캐시 → HIT이면 캐시 데이터, MISS이면 Serper 직접 호출 후 캐시 저장.
+ * 캐시 스펙상 snippet/position은 저장되지 않으므로 HIT 시 빈 값/index로 채운다.
+ * (snippet/position은 현재 AI 리포트·크롤링에 쓰이지 않아 기능 영향 없음)
+ */
 async function fetchSerpResults(keyword: string): Promise<SerpResult[]> {
+  const cached = await fetchWithCache<Array<{ url: string; title: string }>>(
+    "serp",
+    { keyword },
+  );
+  if (cached && cached.length > 0) {
+    return cached.map((item, i) => ({
+      title: item.title,
+      link: item.url,
+      snippet: "",
+      position: i + 1,
+    }));
+  }
+
   const apiKey = process.env.SERPER_API_KEY;
   if (!apiKey) throw new Error("SERPER_API_KEY not set");
 
@@ -75,12 +95,23 @@ async function fetchSerpResults(keyword: string): Promise<SerpResult[]> {
   const data = await response.json();
   const organic = data.organic || [];
 
-  return organic.map((item: { title: string; link: string; snippet: string; position: number }, i: number) => ({
-    title: item.title,
-    link: item.link,
-    snippet: item.snippet || "",
-    position: item.position || i + 1,
-  }));
+  const results: SerpResult[] = organic.map(
+    (item: { title: string; link: string; snippet: string; position: number }, i: number) => ({
+      title: item.title,
+      link: item.link,
+      snippet: item.snippet || "",
+      position: item.position || i + 1,
+    }),
+  );
+
+  if (results.length > 0) {
+    await saveToCache("serp", {
+      keyword,
+      results: results.map((r) => ({ url: r.link, title: r.title })),
+    });
+  }
+
+  return results;
 }
 
 /** URL에서 도메인 추출 */
