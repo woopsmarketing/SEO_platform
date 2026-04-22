@@ -8,6 +8,7 @@ import { SignupModal } from "@/components/signup-modal";
 import { SignupBanner } from "@/components/signup-banner";
 import { BacklinkCta } from "@/components/backlink-cta";
 import { RelatedTools } from "@/components/related-tools";
+import { CompetitorAnalysisCTA } from "@/components/competitor-analysis-cta";
 import {
   Card,
   CardContent,
@@ -302,6 +303,10 @@ export function KeywordDensityForm() {
             </CardContent>
           </Card>
           <BacklinkCta variant="general" />
+          <CompetitorAnalysisCTA
+            siteUrl={url.startsWith("http") ? url : `https://${url}`}
+            toolName="keyword-density"
+          />
         </>
       )}
       <RelatedTools currentTool="keyword-density" />

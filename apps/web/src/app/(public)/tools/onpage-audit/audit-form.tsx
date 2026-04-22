@@ -11,6 +11,7 @@ import { SignupBanner } from "@/components/signup-banner";
 import { SmartServiceCta } from "@/components/smart-service-cta";
 import { RelatedTools } from "@/components/related-tools";
 import { InquiryCTABanner } from "@/components/inquiry-cta-banner";
+import { CompetitorAnalysisCTA } from "@/components/competitor-analysis-cta";
 
 interface ParsedSeo {
   url: string;
@@ -291,6 +292,10 @@ async function handleAuditWithUrl(targetUrl: string) {
             issueCount={failedItems.length}
             url={result.parsed.url}
             topIssues={topIssues}
+          />
+          <CompetitorAnalysisCTA
+            siteUrl={result.parsed.url}
+            toolName="onpage-audit"
           />
         </>
       )}

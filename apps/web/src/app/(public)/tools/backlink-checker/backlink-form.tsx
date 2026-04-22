@@ -8,6 +8,7 @@ import { SignupModal } from "@/components/signup-modal";
 import { SignupBanner } from "@/components/signup-banner";
 import Link from "next/link";
 import { RelatedTools } from "@/components/related-tools";
+import { CompetitorAnalysisCTA } from "@/components/competitor-analysis-cta";
 import {
   Card,
   CardContent,
@@ -356,6 +357,10 @@ export function BacklinkForm() {
               )}
             </CardContent>
           </Card>
+        <CompetitorAnalysisCTA
+          siteUrl={url.startsWith("http") ? url : `https://${url}`}
+          toolName="backlink-checker"
+        />
         </>
       )}
       <RelatedTools currentTool="backlink-checker" />
