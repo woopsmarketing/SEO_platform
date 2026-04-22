@@ -171,6 +171,13 @@ export function BacklinkForm() {
         </CardContent>
       </Card>
 
+      {result && (
+        <CompetitorAnalysisCTA
+          siteUrl={url.startsWith("http") ? url : `https://${url}`}
+          toolName="backlink-checker"
+        />
+      )}
+
       <SignupBanner />
       {result && (
         <>
@@ -357,10 +364,6 @@ export function BacklinkForm() {
               )}
             </CardContent>
           </Card>
-        <CompetitorAnalysisCTA
-          siteUrl={url.startsWith("http") ? url : `https://${url}`}
-          toolName="backlink-checker"
-        />
         </>
       )}
       <RelatedTools currentTool="backlink-checker" />

@@ -144,6 +144,13 @@ export function KeywordDensityForm() {
         </CardContent>
       </Card>
 
+      {result && (
+        <CompetitorAnalysisCTA
+          siteUrl={url.startsWith("http") ? url : `https://${url}`}
+          toolName="keyword-density"
+        />
+      )}
+
       <SignupBanner />
       {result && (
         <>
@@ -303,10 +310,6 @@ export function KeywordDensityForm() {
             </CardContent>
           </Card>
           <BacklinkCta variant="general" />
-          <CompetitorAnalysisCTA
-            siteUrl={url.startsWith("http") ? url : `https://${url}`}
-            toolName="keyword-density"
-          />
         </>
       )}
       <RelatedTools currentTool="keyword-density" />

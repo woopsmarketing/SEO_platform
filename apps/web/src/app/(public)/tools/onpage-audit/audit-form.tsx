@@ -253,6 +253,13 @@ async function handleAuditWithUrl(targetUrl: string) {
         </CardContent>
       </Card>
 
+      {result && (
+        <CompetitorAnalysisCTA
+          siteUrl={result.parsed.url}
+          toolName="onpage-audit"
+        />
+      )}
+
       <SignupBanner />
       {result && (
         <>
@@ -292,10 +299,6 @@ async function handleAuditWithUrl(targetUrl: string) {
             issueCount={failedItems.length}
             url={result.parsed.url}
             topIssues={topIssues}
-          />
-          <CompetitorAnalysisCTA
-            siteUrl={result.parsed.url}
-            toolName="onpage-audit"
           />
         </>
       )}

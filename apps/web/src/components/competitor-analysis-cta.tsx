@@ -53,7 +53,7 @@ export function CompetitorAnalysisCTA({ siteUrl, toolName = "onpage-audit" }: Co
   // 성공 화면
   if (success) {
     return (
-      <div className="rounded-xl border-2 border-green-200 bg-green-50 p-6 text-center mt-6">
+      <div className="rounded-xl border-2 border-green-200 bg-green-50 p-6 text-center">
         <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
           <svg className="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -69,38 +69,50 @@ export function CompetitorAnalysisCTA({ siteUrl, toolName = "onpage-audit" }: Co
   }
 
   return (
-    <div className="mt-6">
-      {/* 토글 버튼 */}
+    <div>
+      {/* 토글 버튼 — 눈에 띄는 그라데이션 박스 */}
       {!isOpen && (
         <button
           type="button"
           onClick={() => setIsOpen(true)}
-          className="w-full rounded-xl border-2 border-dashed border-blue-300 bg-blue-50/50 p-5 text-center transition-all hover:border-blue-400 hover:bg-blue-50 group"
+          className="w-full rounded-xl bg-gradient-to-r from-indigo-600 via-blue-600 to-cyan-500 p-[2px] shadow-lg hover:shadow-xl transition-all group"
         >
-          <div className="flex items-center justify-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 group-hover:bg-blue-200 transition-colors">
-              <svg className="h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <div className="rounded-[10px] bg-white px-5 py-4 flex items-center gap-4 group-hover:bg-blue-50/50 transition-colors">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 shadow-md">
+              <svg className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
               </svg>
             </div>
-            <div className="text-left">
-              <p className="text-sm font-bold text-blue-800">경쟁사와 비교 분석하기</p>
-              <p className="text-xs text-blue-600">구글 상위 경쟁사와 내 사이트를 비교한 리포트를 이메일로 받아보세요</p>
+            <div className="flex-1 text-left">
+              <p className="text-[15px] font-bold text-gray-900">
+                경쟁사와 비교 분석하기
+                <span className="ml-2 inline-block rounded-full bg-orange-100 px-2 py-0.5 text-[11px] font-semibold text-orange-700">무료</span>
+              </p>
+              <p className="text-xs text-gray-500 mt-0.5">구글 상위 5개 경쟁사와 내 사이트를 비교한 SEO 리포트를 이메일로 받아보세요</p>
             </div>
-            <svg className="h-5 w-5 text-blue-400 ml-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-            </svg>
+            <div className="shrink-0 flex h-8 w-8 items-center justify-center rounded-full bg-blue-100 group-hover:bg-blue-200 transition-colors">
+              <svg className="h-4 w-4 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+            </div>
           </div>
         </button>
       )}
 
       {/* 폼 */}
       {isOpen && (
-        <div className="rounded-xl border border-blue-200 bg-white p-6 shadow-sm animate-in slide-in-from-top-2 duration-300">
+        <div className="rounded-xl border border-blue-200 bg-white p-6 shadow-lg">
           <div className="flex items-center justify-between mb-4">
-            <div>
-              <h3 className="text-base font-bold text-gray-900">경쟁사 비교 분석 요청</h3>
-              <p className="text-xs text-gray-500 mt-1">구글 상위 5개 경쟁사와 온페이지 SEO를 비교합니다</p>
+            <div className="flex items-center gap-3">
+              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-indigo-600">
+                <svg className="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="text-base font-bold text-gray-900">경쟁사 비교 분석</h3>
+                <p className="text-xs text-gray-500">구글 상위 5개 경쟁사와 온페이지 SEO를 비교합니다</p>
+              </div>
             </div>
             <button
               type="button"
@@ -115,14 +127,14 @@ export function CompetitorAnalysisCTA({ siteUrl, toolName = "onpage-audit" }: Co
 
           <form onSubmit={handleSubmit} className="space-y-3">
             {siteUrl && (
-              <div>
-                <label className="text-xs font-medium text-gray-500">분석 URL</label>
-                <p className="text-sm text-gray-800 mt-0.5 truncate">{siteUrl}</p>
+              <div className="rounded-lg bg-gray-50 px-3 py-2">
+                <span className="text-xs font-medium text-gray-400">분석 URL</span>
+                <p className="text-sm text-gray-800 truncate">{siteUrl}</p>
               </div>
             )}
 
             <div>
-              <label htmlFor="comp-keyword" className="text-xs font-medium text-gray-500">
+              <label htmlFor="comp-keyword" className="text-xs font-medium text-gray-600">
                 타겟 키워드 <span className="text-red-500">*</span>
               </label>
               <Input
@@ -137,7 +149,7 @@ export function CompetitorAnalysisCTA({ siteUrl, toolName = "onpage-audit" }: Co
             </div>
 
             <div>
-              <label htmlFor="comp-email" className="text-xs font-medium text-gray-500">
+              <label htmlFor="comp-email" className="text-xs font-medium text-gray-600">
                 이메일 <span className="text-red-500">*</span>
               </label>
               <Input
@@ -159,7 +171,7 @@ export function CompetitorAnalysisCTA({ siteUrl, toolName = "onpage-audit" }: Co
             <Button
               type="submit"
               disabled={loading || !keyword.trim() || !email.trim()}
-              className="w-full bg-blue-600 hover:bg-blue-700"
+              className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-md"
             >
               {loading ? (
                 <span className="flex items-center gap-2">
