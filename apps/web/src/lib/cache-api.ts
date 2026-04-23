@@ -14,6 +14,30 @@ export type CacheType = "metrics" | "serp" | "backlink";
 
 type CacheQueryParams = { domain: string } | { keyword: string };
 
+/**
+ * `/api/cache/metrics` 응답 data 필드 스키마 — RapidAPI Domain Metrics 원본을 그대로 반영.
+ * Moz/Ahrefs/Majestic 각 소스에서 받아오는 도메인 권위/백링크/트래픽 지표.
+ */
+export interface DomainMetrics {
+  mozDA?: number | string;
+  mozPA?: number | string;
+  mozRank?: number | string;
+  mozSpam?: number | string;
+  mozLinks?: number;
+  ahrefsDR?: number;
+  ahrefsRank?: number;
+  ahrefsBacklinks?: number;
+  ahrefsRefDomains?: number;
+  ahrefsTraffic?: number;
+  ahrefsTrafficValue?: number;
+  ahrefsOrganicKeywords?: number;
+  majesticTF?: number;
+  majesticCF?: number;
+  majesticLinks?: number;
+  majesticRefDomains?: number;
+  majesticRefGov?: number;
+}
+
 interface CacheGetResponse<T> {
   source: "cache" | "api";
   domain?: string;

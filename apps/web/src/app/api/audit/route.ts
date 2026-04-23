@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { checkRateLimit, getClientIp, isAuthenticated } from "@/lib/rate-limit";
+import { fetchWithCache, type DomainMetrics } from "@/lib/cache-api";
 
 export const maxDuration = 30;
 
@@ -60,7 +61,19 @@ export async function POST(request: Request) {
       return NextResponse.json({ parsed, analysis: null, error: "LLM 분석 키가 설정되지 않았습니다." });
     }
 
-    const analysis = await analyzeSeo(apiKey, parsed);
+    // LLM SEO 분석 + 공용 캐시에서 도메인 권위 지표(RapidAPI Domain Metrics) 병렬 조회
+    // 캐시 MISS 시 백링크샵이 RapidAPI를 대신 호출해준다(consumer에 RAPIDAPI_KEY 불필요)
+    let metricsDomain: string | null = null;
+    try {
+      metricsDomain = new URL(finalUrl).hostname.replace(/^www\./, "");
+    } catch {}
+
+    const [analysis, metrics] = await Promise.all([
+      analyzeSeo(apiKey, parsed),
+      metricsDomain
+        ? fetchWithCache<DomainMetrics>("metrics", { domain: metricsDomain })
+        : Promise.resolve<DomainMetrics | null>(null),
+    ]);
 
     // 툴 사용 로그
     const { createAdminClient } = await import("@/lib/supabase/admin");
@@ -117,7 +130,7 @@ export async function POST(request: Request) {
       // 세션 확인 실패 시 무시 (비로그인 사용자)
     }
 
-    return NextResponse.json({ parsed, analysis });
+    return NextResponse.json({ parsed, analysis, metrics });
   } catch {
     return NextResponse.json({ error: "분석 중 오류가 발생했습니다." }, { status: 500 });
   }
