@@ -74,6 +74,7 @@ interface CheckItem {
   label: string;
   value: string;
   ok: boolean;
+  note?: string;
 }
 
 function collectChecks(parsed: ParsedSeo): CheckItem[] {
@@ -82,7 +83,11 @@ function collectChecks(parsed: ParsedSeo): CheckItem[] {
   items.push({ label: "HTTPS", value: parsed.isHttps ? "적용됨" : "미적용", ok: parsed.isHttps });
   items.push({ label: "로딩 시간", value: parsed.loadTimeMs + "ms", ok: parsed.loadTimeMs < 3000 });
   items.push({ label: "단어 수", value: String(parsed.wordCount), ok: parsed.wordCount >= 300 });
-  items.push({ label: "텍스트/HTML 비율", value: parsed.textToHtmlRatio + "%", ok: parsed.textToHtmlRatio >= 10 });
+  const textRatioOk = parsed.textToHtmlRatio >= 10;
+  const textRatioNote = !textRatioOk && parsed.wordCount >= 300
+    ? "Next.js, React 등 프레임워크 사이트는 하이드레이션 스크립트(__NEXT_DATA__ 등)로 인해 HTML 크기가 커져 비율이 낮게 측정될 수 있습니다. 실제 콘텐츠가 충분하다면 SEO에 영향을 주지 않습니다."
+    : undefined;
+  items.push({ label: "텍스트/HTML 비율", value: parsed.textToHtmlRatio + "%", ok: textRatioOk, note: textRatioNote });
   items.push({ label: "URL 깊이", value: parsed.urlDepth + "단계 (" + parsed.urlLength + "자)", ok: parsed.urlDepth <= 3 });
   items.push({ label: "Title", value: parsed.title ? parsed.title + " (" + parsed.titleLength + "자)" : "없음", ok: !!parsed.title && parsed.titleLength >= 10 && parsed.titleLength <= 60 });
   if (parsed.duplicateDescription) {
@@ -107,7 +112,11 @@ function collectChecks(parsed: ParsedSeo): CheckItem[] {
   items.push({ label: "Gzip/Brotli", value: parsed.hasGzip ? "적용됨" : "미적용", ok: parsed.hasGzip });
   items.push({ label: "HSTS", value: parsed.hasHsts ? "적용됨" : "미적용", ok: parsed.hasHsts });
   items.push({ label: "인라인 CSS", value: (parsed.inlineCssSize / 1024).toFixed(1) + " KB", ok: parsed.inlineCssSize < 50000 });
-  items.push({ label: "인라인 JS", value: (parsed.inlineJsSize / 1024).toFixed(1) + " KB" + (parsed.inlineJsSize > 50000 ? " — 외부 파일로 분리 권장" : ""), ok: parsed.inlineJsSize < 50000 });
+  const inlineJsOk = parsed.inlineJsSize < 50000;
+  const inlineJsNote = !inlineJsOk && parsed.wordCount >= 200
+    ? "Next.js, Nuxt 등 SSR 프레임워크는 __NEXT_DATA__ 같은 하이드레이션 데이터를 인라인 스크립트로 포함합니다. 프레임워크 사이트라면 정상적인 수치이며, 성능이나 SEO에 부정적 영향은 없습니다."
+    : undefined;
+  items.push({ label: "인라인 JS", value: (parsed.inlineJsSize / 1024).toFixed(1) + " KB" + (!inlineJsOk ? " — 외부 파일로 분리 권장" : ""), ok: inlineJsOk, note: inlineJsNote });
   if (parsed.hasDeprecatedTags.length > 0) {
     items.push({ label: "Deprecated 태그", value: parsed.hasDeprecatedTags.join(", "), ok: false });
   }
@@ -341,11 +350,18 @@ function ParsedDataCards({
           </CardHeader>
           <CardContent className="space-y-2 text-sm">
             {failedItems.map((item, i) => (
-              <div key={"fail-" + i} className="flex items-start justify-between gap-4 rounded-md bg-red-100/60 px-3 py-2">
-                <span className="shrink-0 font-semibold text-red-800">{item.label}</span>
-                <span className="text-right text-red-700 font-medium">
-                  ✘ {item.value}
-                </span>
+              <div key={"fail-" + i} className="rounded-md bg-red-100/60 px-3 py-2">
+                <div className="flex items-start justify-between gap-4">
+                  <span className="shrink-0 font-semibold text-red-800">{item.label}</span>
+                  <span className="text-right text-red-700 font-medium">
+                    ✘ {item.value}
+                  </span>
+                </div>
+                {item.note && (
+                  <p className="mt-1.5 text-xs text-amber-700 bg-amber-50 rounded px-2 py-1.5 leading-relaxed">
+                    💡 {item.note}
+                  </p>
+                )}
               </div>
             ))}
           </CardContent>
