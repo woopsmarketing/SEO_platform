@@ -7,6 +7,7 @@ import { homeTools } from "@/lib/data";
 import { PricingCards } from "@/components/pricing-cards";
 import { HeroAnalyzer } from "@/components/hero-analyzer";
 import { TelegramCTAButton } from "@/components/telegram-cta-button";
+import { ChangelogBanner } from "@/components/changelog-banner";
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -40,6 +41,11 @@ export default function HomePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
       />
+
+      {/* ====== 0. Changelog Banner ====== */}
+      <div className="mx-auto max-w-7xl px-4 pt-4">
+        <ChangelogBanner />
+      </div>
 
       {/* ====== 1. Hero ====== */}
       <section className="relative overflow-hidden bg-white py-24 md:py-32">

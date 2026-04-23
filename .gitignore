@@ -6,3 +6,11 @@ node_modules/
 supabasemcp.md
 .DS_Store
 *.tsbuildinfo
+
+# Supabase CLI local state (contains project ref, pooler URL)
+supabase/.temp/
+apps/web/supabase/.temp/
+
+# Claude Code local state
+.claude/scheduled_tasks.lock
+.claude/scripts/

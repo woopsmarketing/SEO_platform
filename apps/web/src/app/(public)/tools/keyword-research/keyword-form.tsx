@@ -22,6 +22,7 @@ interface KeywordItem {
   cpc: string;
   competition: string;
   score?: number;
+  avgDA?: number | null;
 }
 
 interface KeywordResult {
@@ -43,7 +44,7 @@ const COUNTRIES = [
   { code: "in", label: "인도" },
 ];
 
-type SortKey = "text" | "vol" | "cpc" | "competition" | "score";
+type SortKey = "text" | "vol" | "cpc" | "competition" | "score" | "avgDA";
 type SortDir = "asc" | "desc";
 
 function normalizeCompetition(c: string): string {
@@ -145,6 +146,9 @@ export function KeywordForm() {
           break;
         case "score":
           cmp = (a.score || 0) - (b.score || 0);
+          break;
+        case "avgDA":
+          cmp = (a.avgDA ?? -1) - (b.avgDA ?? -1);
           break;
       }
       return sortDir === "asc" ? cmp : -cmp;
@@ -285,10 +289,17 @@ export function KeywordForm() {
                           경쟁도{sortArrow("competition")}
                         </th>
                         <th
-                          className="pb-2 font-medium cursor-pointer hover:text-foreground select-none text-right"
+                          className="pb-2 pr-3 font-medium cursor-pointer hover:text-foreground select-none text-right"
                           onClick={() => handleSort("score")}
                         >
                           점수{sortArrow("score")}
+                        </th>
+                        <th
+                          className="pb-2 font-medium cursor-pointer hover:text-foreground select-none text-right"
+                          onClick={() => handleSort("avgDA")}
+                          title="상위 3개 도메인의 Moz DA 평균 — 상위 10개 키워드만 계산합니다"
+                        >
+                          경쟁도(DA){sortArrow("avgDA")}
                         </th>
                       </tr>
                     </thead>
@@ -314,8 +325,26 @@ export function KeywordForm() {
                               {normalizeCompetition(kw.competition) || "-"}
                             </span>
                           </td>
-                          <td className="py-2.5 text-right tabular-nums">
+                          <td className="py-2.5 pr-3 text-right tabular-nums">
                             {kw.score ?? "-"}
+                          </td>
+                          <td className="py-2.5 text-right tabular-nums">
+                            {typeof kw.avgDA === "number" ? (
+                              <span
+                                className={`rounded px-1.5 py-0.5 text-xs font-medium ${
+                                  kw.avgDA >= 70
+                                    ? "bg-red-100 text-red-700"
+                                    : kw.avgDA >= 40
+                                      ? "bg-yellow-100 text-yellow-700"
+                                      : "bg-green-100 text-green-700"
+                                }`}
+                                title="상위 3개 도메인 Moz DA 평균"
+                              >
+                                {kw.avgDA}
+                              </span>
+                            ) : (
+                              <span className="text-muted-foreground">-</span>
+                            )}
                           </td>
                         </tr>
                       ))}

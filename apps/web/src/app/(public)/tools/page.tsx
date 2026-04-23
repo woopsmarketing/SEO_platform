@@ -56,7 +56,7 @@ export default function ToolsPage() {
           </div>
           <p className="mb-6 text-sm text-muted-foreground">웹사이트 내부 SEO 요소를 검사하고 최적화하는 도구입니다.</p>
           <div className="grid gap-4 sm:grid-cols-2">
-            <ToolCard href="/tools/onpage-audit" icon="📊" title="온페이지 SEO 분석" desc="테크니컬 SEO부터 메타태그까지 35개 항목을 자동 검사하고 AI가 점수와 개선안을 제시합니다." />
+            <ToolCard href="/tools/onpage-audit" icon="📊" title="온페이지 SEO 분석" desc="테크니컬 SEO부터 메타태그까지 35개 항목을 자동 검사하고 AI가 점수와 개선안을 제시합니다." badge="HOT" />
             <ToolCard href="/tools/meta-generator" icon="🏷️" title="메타태그 분석기" desc="URL을 입력하면 메타태그를 파싱하여 점검하고, 제목 태그 최적화와 메타 설명 최적화를 추천합니다." />
             <ToolCard href="/tools/keyword-density" icon="📝" title="사이트 키워드 분석기" desc="웹페이지의 키워드 사용 빈도, 밀도, 제목/설명 포함 여부를 분석합니다." />
           </div>
@@ -81,9 +81,43 @@ export default function ToolsPage() {
             <span className="text-2xl">🔗</span>
             <h2 className="text-xl font-bold">백링크 분석 도구</h2>
           </div>
-          <p className="mb-6 text-sm text-muted-foreground">사이트의 백링크 프로필을 분석하여 오프페이지 SEO를 점검하는 도구입니다.</p>
+          <p className="mb-6 text-sm text-muted-foreground">사이트의 백링크 프로필, 품질, 갭을 다각도로 분석하는 도구입니다.</p>
           <div className="grid gap-4 sm:grid-cols-2">
-            <ToolCard href="/tools/backlink-checker" icon="🔗" title="백링크 분석기" desc="도메인의 백링크 목록, 참조 도메인, doFollow 비율, 앵커 텍스트를 분석합니다." />
+            <ToolCard href="/tools/backlink-checker" icon="🔗" title="백링크 분석기" desc="백링크 목록, 소스 DA, 품질 점수, 최근 30일 신규, 90일 성장 추세를 분석합니다." badge="HOT" />
+            <ToolCard href="/tools/backlink-gap" icon="🔀" title="백링크 갭 분석" desc="경쟁사만 가진 백링크 소스를 DA 순으로 찾아냅니다." badge="NEW" />
+            <ToolCard href="/tools/common-backlinks" icon="🔗" title="공통 백링크 도메인" desc="여러 경쟁사가 공통으로 받고 있는 백링크 소스를 추출합니다." badge="NEW" />
+            <ToolCard href="/tools/broken-backlink-recovery" icon="🔧" title="깨진 백링크 복구" desc="내 도메인으로 향하는 404 백링크를 찾아 복구 방법을 제시합니다." badge="NEW" />
+          </div>
+        </div>
+
+        {/* SERP 분석 */}
+        <div>
+          <div className="mb-4 flex items-center gap-2">
+            <span className="text-2xl">🎯</span>
+            <h2 className="text-xl font-bold">SERP 분석 도구</h2>
+          </div>
+          <p className="mb-6 text-sm text-muted-foreground">구글 검색 결과(SERP)에서 내 순위, 난이도, 연관 질문을 분석하는 도구입니다.</p>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <ToolCard href="/tools/serp-checker" icon="🎯" title="SERP 순위 체커" desc="키워드로 내 도메인의 구글 순위를 즉시 확인합니다." badge="NEW" />
+            <ToolCard href="/tools/local-serp" icon="🌏" title="지역 SERP 체커" desc="국가·언어별로 구글 검색 결과를 비교합니다." badge="NEW" />
+            <ToolCard href="/tools/people-also-ask" icon="❓" title="People Also Ask" desc="구글이 제안하는 연관 질문을 추출합니다." badge="NEW" />
+            <ToolCard href="/tools/serp-difficulty" icon="🗻" title="SERP 난이도 맵" desc="상위 10개 도메인 DA 평균으로 키워드 난이도를 평가합니다." badge="NEW" />
+            <ToolCard href="/tools/my-top-keywords" icon="🥇" title="내 노출 키워드 TOP 20" desc="내 도메인이 상위에 노출되는 키워드 20개를 추립니다." badge="NEW" />
+          </div>
+        </div>
+
+        {/* 경쟁사 & 갭 분석 */}
+        <div>
+          <div className="mb-4 flex items-center gap-2">
+            <span className="text-2xl">🧭</span>
+            <h2 className="text-xl font-bold">경쟁사 & 갭 분석 도구</h2>
+          </div>
+          <p className="mb-6 text-sm text-muted-foreground">경쟁 도메인을 발굴하고 내가 놓친 기회를 찾는 도구입니다.</p>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <ToolCard href="/tools/competitor-discovery" icon="🧭" title="경쟁사 도메인 발굴" desc="시드 키워드로 상위 노출 경쟁 도메인을 발굴합니다." badge="NEW" />
+            <ToolCard href="/tools/keyword-gap" icon="🎭" title="키워드 갭 분석" desc="경쟁사만 잡고 있는 키워드를 찾아냅니다." badge="NEW" />
+            <ToolCard href="/tools/content-gap" icon="📝" title="콘텐츠 갭 분석" desc="경쟁 콘텐츠가 다루지만 내가 놓친 토픽을 AI가 추려줍니다." badge="NEW" />
+            <ToolCard href="/tools/snippet-optimizer" icon="✨" title="스니펫 옵티마이저" desc="AI가 CTR이 높은 title/description을 제안합니다." badge="NEW" />
           </div>
         </div>
 
@@ -95,6 +129,8 @@ export default function ToolsPage() {
           </div>
           <p className="mb-6 text-sm text-muted-foreground">도메인의 SEO 지표와 WHOIS 정보를 확인하는 도구입니다.</p>
           <div className="grid gap-4 sm:grid-cols-2">
+            <ToolCard href="/tools/domain-authority" icon="🏆" title="도메인 권위 체커" desc="Moz DA, Ahrefs DR, Majestic TF 등 주요 권위 지표를 한 번에 조회합니다." badge="HOT" />
+            <ToolCard href="/tools/domain-compare" icon="⚖️" title="도메인 비교기" desc="두 도메인의 DA/DR/TF를 5축 레이더 차트로 나란히 비교합니다." badge="NEW" />
             <ToolCard href="/tools/domain-checker" icon="🌐" title="도메인 분석기" desc="도메인 점수, WHOIS 정보, DNS 데이터를 확인합니다." ready={false} />
           </div>
         </div>
@@ -107,8 +143,9 @@ export default function ToolsPage() {
           </div>
           <p className="mb-6 text-sm text-muted-foreground">타겟 키워드의 검색량, 경쟁도를 분석하고 관련 키워드를 추천하는 도구입니다.</p>
           <div className="grid gap-4 sm:grid-cols-2">
-            <ToolCard href="/tools/keyword-research" icon="🔍" title="키워드 조사" desc="키워드의 월간 검색량, CPC, 경쟁도를 조회합니다." />
+            <ToolCard href="/tools/keyword-research" icon="🔍" title="키워드 조사" desc="월간 검색량, CPC, 경쟁도(DA) 컬럼까지 한 번에 조회합니다." badge="HOT" />
             <ToolCard href="/tools/keyword-related" icon="💡" title="관련 키워드" desc="구글 연관 검색어 기반으로 관련 키워드와 롱테일 키워드를 추천합니다." />
+            <ToolCard href="/tools/longtail-keywords" icon="🌱" title="롱테일 키워드 발굴기" desc="시드 키워드에서 질문형·롱테일 키워드를 추출하고 난이도를 보여줍니다." badge="NEW" />
           </div>
         </div>
       </div>
@@ -276,9 +313,39 @@ export default function ToolsPage() {
   );
 }
 
-function ToolCard({ href, icon, title, desc, ready = true }: { href: string; icon: string; title: string; desc: string; ready?: boolean }) {
+function ToolCard({
+  href,
+  icon,
+  title,
+  desc,
+  ready = true,
+  badge,
+}: {
+  href: string;
+  icon: string;
+  title: string;
+  desc: string;
+  ready?: boolean;
+  badge?: "NEW" | "HOT" | null;
+}) {
+  // NEW 와 HOT 이 겹치면 NEW 우선 표시
+  const badgeLabel = badge === "NEW" ? "NEW" : badge === "HOT" ? "HOT" : null;
+  const badgeClass =
+    badgeLabel === "NEW"
+      ? "bg-blue-600 text-white"
+      : badgeLabel === "HOT"
+        ? "bg-red-500 text-white"
+        : "";
+
   const content = (
-    <Card className={`h-full transition-all ${ready ? "hover:shadow-lg hover:-translate-y-1" : "opacity-50 cursor-not-allowed"}`}>
+    <Card className={`relative h-full transition-all ${ready ? "hover:shadow-lg hover:-translate-y-1" : "opacity-50 cursor-not-allowed"}`}>
+      {badgeLabel && (
+        <span
+          className={`absolute right-3 top-3 inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-bold shadow-sm ${badgeClass}`}
+        >
+          {badgeLabel}
+        </span>
+      )}
       <CardHeader className="pb-2">
         <div className="text-2xl">{icon}</div>
         <CardTitle className="text-base">

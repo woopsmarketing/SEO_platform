@@ -6,7 +6,7 @@
  * 3. OpenAI로 비교 분석 리포트 생성
  */
 
-import { fetchWithCache, saveToCache } from "./cache-api";
+import { fetchWithCache, saveToCache, type DomainMetrics } from "./cache-api";
 
 interface SerpResult {
   title: string;
@@ -39,6 +39,7 @@ interface OnPageSummary {
   hasJsonLd: boolean;
   hasGzip: boolean;
   textToHtmlRatio: number;
+  metrics?: DomainMetrics | null;
   error?: string;
 }
 
@@ -258,10 +259,16 @@ async function generateAiReport(
 
   const validCompetitors = competitors.filter((c) => !c.error && c.statusCode === 200);
 
+  const fmtMetric = (v: number | string | undefined | null): string => {
+    if (v == null) return "-";
+    const n = typeof v === "string" ? parseFloat(v) : v;
+    return Number.isFinite(n) ? String(Math.round(n)) : "-";
+  };
+
   const competitorRows = validCompetitors
     .map(
       (c, i) =>
-        `| ${i + 1} | ${c.domain} | ${c.title?.slice(0, 30) || "-"} | ${c.wordCount} | ${c.h1.length > 0 ? "O" : "X"} | ${c.h2Count} | ${c.isHttps ? "O" : "X"} | ${c.hasOgTags ? "O" : "X"} | ${c.hasJsonLd ? "O" : "X"} | ${c.loadTimeMs}ms |`,
+        `| ${i + 1} | ${c.domain} | ${c.title?.slice(0, 30) || "-"} | ${fmtMetric(c.metrics?.mozDA)} | ${fmtMetric(c.metrics?.ahrefsDR)} | ${c.wordCount} | ${c.h1.length > 0 ? "O" : "X"} | ${c.h2Count} | ${c.isHttps ? "O" : "X"} | ${c.hasOgTags ? "O" : "X"} | ${c.hasJsonLd ? "O" : "X"} | ${c.loadTimeMs}ms |`,
     )
     .join("\n");
 
@@ -280,6 +287,7 @@ async function generateAiReport(
 | 항목 | 값 |
 |------|-----|
 | URL | ${customer.url} |
+| Moz DA / Ahrefs DR | ${fmtMetric(customer.metrics?.mozDA)} / ${fmtMetric(customer.metrics?.ahrefsDR)} |
 | Title | ${customer.title || "없음"} (${customer.titleLength}자) |
 | Description | ${customer.metaDescription?.slice(0, 60) || "없음"} (${customer.descriptionLength}자) |
 | H1 | ${customer.h1.length}개${customer.h1[0] ? ` — "${customer.h1[0]}"` : ""} |
@@ -295,8 +303,8 @@ async function generateAiReport(
 | 내부링크 | ${customer.internalLinks}개, 외부링크 | ${customer.externalLinks}개 |
 
 ## 경쟁사 TOP ${validCompetitors.length} (구글 "${keyword}" 검색 상위)
-| # | 도메인 | Title(30자) | 단어수 | H1 | H2 | HTTPS | OG | JSON-LD | 속도 |
-|---|--------|------------|--------|----|----|-------|-----|---------|------|
+| # | 도메인 | Title(30자) | Moz DA | Ahrefs DR | 단어수 | H1 | H2 | HTTPS | OG | JSON-LD | 속도 |
+|---|--------|------------|--------|-----------|--------|----|----|-------|-----|---------|------|
 ${competitorRows}
 
 ## 요청
@@ -363,6 +371,19 @@ export async function analyzeCompetitors(
     fetchOnPageSummary(siteUrl),
     ...competitorUrls.map((url) => fetchOnPageSummary(url)),
   ]);
+
+  // 3-1. 도메인 권위 지표 병렬 조회 (공용 캐시 GET-only)
+  const allSites = [customerSite, ...competitors];
+  const metricsList = await Promise.all(
+    allSites.map((s) =>
+      s.domain
+        ? fetchWithCache<DomainMetrics>("metrics", { domain: s.domain })
+        : Promise.resolve<DomainMetrics | null>(null),
+    ),
+  );
+  allSites.forEach((s, i) => {
+    s.metrics = metricsList[i];
+  });
 
   // 4. AI 비교 분석
   const aiReport = await generateAiReport(keyword, customerSite, competitors);

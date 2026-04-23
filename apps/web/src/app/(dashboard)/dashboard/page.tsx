@@ -99,6 +99,19 @@ export default async function DashboardPage() {
         </Card>
       </div>
 
+      {/* SEO 추적 바로가기 */}
+      <Card>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-base">SEO 추적 대시보드</CardTitle>
+          <CardDescription>추적 키워드 순위 변화 + 깨진 백링크를 한 곳에서 관리합니다.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Link href="/dashboard/seo">
+            <Button size="sm">SEO 대시보드 열기</Button>
+          </Link>
+        </CardContent>
+      </Card>
+
       {/* 최근 분석 + 최근 문의 */}
       <div className="grid gap-6 lg:grid-cols-2">
         <Card>

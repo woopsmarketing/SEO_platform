@@ -24,13 +24,14 @@ const PYTHON_SCRIPT = join(__dirname, "image_overlay.py");
  * @param {Buffer} imageBuffer - 원본 이미지 (PNG/JPEG/WebP)
  * @param {string} text - 삽입할 텍스트 (제목 또는 H2)
  * @param {object} options
- * @param {number} [options.fontSize=40] - 폰트 크기
+ * @param {number} [options.fontSize=64] - 폰트 크기
  * @param {number} [options.brightness=0.85] - 밝기 (0.85 = 15% 어둡게)
  * @param {string} [options.position="bottom"] - "bottom" | "top"
+ * @param {string} [options.color="random"] - "random" | "white" | "R,G,B"
  * @returns {Promise<Buffer>} - WebP 이미지 버퍼
  */
 export async function applyImageOverlay(imageBuffer, text, options = {}) {
-  const { fontSize = 40, brightness = 0.85, position = "bottom" } = options;
+  const { fontSize = 64, brightness = 0.85, position = "bottom", color = "random" } = options;
 
   const ts = Date.now();
   const inputPath = join(tmpdir(), `blog_img_in_${ts}.png`);
@@ -48,6 +49,7 @@ export async function applyImageOverlay(imageBuffer, text, options = {}) {
       `--font-size=${fontSize}`,
       `--brightness=${brightness}`,
       `--position=${position}`,
+      `--color=${color}`,
     ]);
 
     const result = await readFile(outputPath);

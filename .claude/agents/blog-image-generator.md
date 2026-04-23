@@ -102,17 +102,6 @@ node /mnt/d/Documents/SEO_platform/.claude/scripts/optimize-image.js /tmp/cover.
 node /mnt/d/Documents/SEO_platform/.claude/scripts/optimize-image.js /tmp/section-1.png /tmp/section-1.webp --format=webp --quality=75 --width=800
 ```
 
-**흐름:**
-```
-OpenAI API → PNG 원본 (1024x1024)
-  ↓ /tmp/{slug}-cover.png 저장
-optimize-image.js 실행
-  ↓ /tmp/{slug}-cover.webp (약 60~70% 감소)
-Supabase Storage 업로드
-  ↓ blog-images/{slug}/cover.webp
-임시 파일 삭제
-```
-
 **압축 설정:**
 | 이미지 유형 | 최대 폭 | 품질 | 예상 크기 |
 |---|---|---|---|
@@ -120,6 +109,48 @@ Supabase Storage 업로드
 | 섹션 이미지 | 800px | 75 | 40~80KB |
 
 **압축 실패 시:** 원본 PNG를 그대로 업로드 (글 발행은 중단하지 않음)
+
+### 텍스트 오버레이 (필수 — 압축 후, 업로드 전에 실행)
+
+압축된 WebP 이미지에 **제목/H2 텍스트를 오버레이**한다. Pillow 기반 Python 스크립트.
+
+오버레이 스크립트: `/mnt/d/Documents/SEO_platform/apps/web/scripts/image_overlay.py`
+
+```bash
+# 커버 이미지: 글 제목 오버레이 (랜덤 색상)
+python /mnt/d/Documents/SEO_platform/apps/web/scripts/image_overlay.py /tmp/{slug}-cover.webp /tmp/{slug}-cover-final.webp "글 제목 텍스트"
+
+# 섹션 이미지: H2 제목 오버레이 (같은 색상 유지하려면 --color 지정)
+python /mnt/d/Documents/SEO_platform/apps/web/scripts/image_overlay.py /tmp/{slug}-section-1.webp /tmp/{slug}-section-1-final.webp "H2 제목 텍스트"
+```
+
+**오버레이 옵션:**
+| 옵션 | 기본값 | 설명 |
+|---|---|---|
+| `--font-size` | 64 | 폰트 크기 (px) |
+| `--brightness` | 0.85 | 밝기 (0.85 = 15% 어둡게) |
+| `--color` | random | 텍스트 색상 (random/white/R,G,B) |
+
+**오버레이 효과:**
+- 전체 이미지 밝기 15% 감소 + 반투명 어두운 레이어 (배경화)
+- 텍스트 블록 주변 집중 어둠 (vignette)
+- 큰 글씨 + 2~3줄 줄바꿈 + 수평·수직 중앙 정렬
+- 매 실행마다 8가지 팔레트에서 랜덤 색상 선택
+
+**오버레이 실패 시:** 압축만 된 WebP를 그대로 업로드 (글 발행은 중단하지 않음)
+
+**전체 흐름:**
+```
+OpenAI API → PNG 원본 (1024x1024)
+  ↓ /tmp/{slug}-cover.png 저장
+optimize-image.js 실행 (압축)
+  ↓ /tmp/{slug}-cover.webp (약 60~70% 감소)
+image_overlay.py 실행 (텍스트 오버레이)
+  ↓ /tmp/{slug}-cover-final.webp
+Supabase Storage 업로드
+  ↓ blog-images/{slug}/cover.webp
+임시 파일 삭제
+```
 
 ### Supabase Storage 업로드
 

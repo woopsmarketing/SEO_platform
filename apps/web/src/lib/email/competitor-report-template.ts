@@ -48,6 +48,12 @@ export function renderCompetitorReportEmail(result: CompetitorAnalysisResult): s
     day: "numeric",
   });
 
+  const fmtMetric = (v: number | string | undefined | null): string => {
+    if (v == null) return "-";
+    const n = typeof v === "string" ? parseFloat(v) : v;
+    return Number.isFinite(n) ? String(Math.round(n)) : "-";
+  };
+
   const competitorRows = validCompetitors
     .map(
       (c, i) => `
@@ -55,8 +61,9 @@ export function renderCompetitorReportEmail(result: CompetitorAnalysisResult): s
         <td style="padding:8px 12px;font-size:13px;">${i + 1}</td>
         <td style="padding:8px 12px;font-size:13px;font-weight:600;">${escHtml(c.domain)}</td>
         <td style="padding:8px 12px;font-size:13px;">${escHtml(c.title?.slice(0, 25) || "-")}${(c.title?.length ?? 0) > 25 ? "..." : ""}</td>
+        <td style="padding:8px 12px;font-size:13px;text-align:center;">${fmtMetric(c.metrics?.mozDA)}</td>
+        <td style="padding:8px 12px;font-size:13px;text-align:center;">${fmtMetric(c.metrics?.ahrefsDR)}</td>
         <td style="padding:8px 12px;font-size:13px;text-align:center;">${c.wordCount}</td>
-        <td style="padding:8px 12px;font-size:13px;text-align:center;">${c.h2Count}</td>
         <td style="padding:8px 12px;font-size:13px;text-align:center;">${c.loadTimeMs}ms</td>
       </tr>`,
     )
@@ -119,8 +126,9 @@ export function renderCompetitorReportEmail(result: CompetitorAnalysisResult): s
               <th style="padding:8px 12px;font-size:12px;text-align:left;color:#6b7280;">#</th>
               <th style="padding:8px 12px;font-size:12px;text-align:left;color:#6b7280;">도메인</th>
               <th style="padding:8px 12px;font-size:12px;text-align:left;color:#6b7280;">Title</th>
+              <th style="padding:8px 12px;font-size:12px;text-align:center;color:#6b7280;">Moz DA</th>
+              <th style="padding:8px 12px;font-size:12px;text-align:center;color:#6b7280;">Ahrefs DR</th>
               <th style="padding:8px 12px;font-size:12px;text-align:center;color:#6b7280;">단어수</th>
-              <th style="padding:8px 12px;font-size:12px;text-align:center;color:#6b7280;">H2</th>
               <th style="padding:8px 12px;font-size:12px;text-align:center;color:#6b7280;">속도</th>
             </tr>
           </thead>
