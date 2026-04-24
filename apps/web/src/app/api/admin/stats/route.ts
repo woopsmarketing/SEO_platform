@@ -39,7 +39,7 @@ export async function GET() {
   const thirtyDaysAgoUtc = new Date(todayKstUtc.getTime() - 29 * 24 * 3600 * 1000);
   const sinceIso = thirtyDaysAgoUtc.toISOString();
 
-  const [logsRes, usersRes, totalsInquiry, totalsUsers, totalsToday, totalsPosts] = await Promise.all([
+  const [logsRes, usersRes, totalsUsers, totalsToday, totalsPosts] = await Promise.all([
     admin
       .from("tool_usage_logs")
       .select("tool_type, created_at")
@@ -50,7 +50,6 @@ export async function GET() {
       .select("created_at")
       .gte("created_at", sinceIso)
       .order("created_at", { ascending: true }),
-    admin.from("inquiries").select("*", { count: "exact", head: true }).eq("status", "pending"),
     admin.from("profiles").select("*", { count: "exact", head: true }),
     admin
       .from("tool_usage_logs")
@@ -98,7 +97,6 @@ export async function GET() {
   return NextResponse.json(
     {
       totals: {
-        inquiriesPending: totalsInquiry.count ?? 0,
         totalUsers: totalsUsers.count ?? 0,
         todayToolUsage: totalsToday.count ?? 0,
         totalPosts: totalsPosts.count ?? 0,

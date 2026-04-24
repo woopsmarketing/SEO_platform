@@ -7,7 +7,6 @@ export const metadata: Metadata = {
 
 const adminLinks = [
   { href: "/admin", label: "관리자 홈" },
-  { href: "/admin/inquiries", label: "문의 관리" },
   { href: "/admin/domain-data", label: "도메인 데이터" },
   { href: "/admin/tool-usage", label: "툴 사용량" },
   { href: "/admin/posts", label: "글 관리" },
