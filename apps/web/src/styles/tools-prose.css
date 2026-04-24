@@ -1,0 +1,375 @@
+/**
+ * tools-prose — /tools 하위 페이지의 가이드 article 타이포그래피.
+ * 적용: <article className="tools-prose max-w-4xl">...</article>
+ *
+ * 디자인 원칙
+ * - H2: 좌측 그라데이션 바 + 충분한 상단 여백
+ * - H3: 화살표 악센트로 소제목 구분
+ * - 본문: line-height 1.85로 호흡감 확보
+ * - 링크: 오렌지 계열 + 호버시 두꺼운 밑줄
+ * - 리스트: 커스텀 불릿(점/숫자) + 오렌지 악센트
+ */
+
+.tools-prose {
+  color: #334155; /* slate-700 */
+  --tp-accent: #ea580c; /* orange-600 */
+  --tp-accent-light: #fed7aa; /* orange-200 */
+  --tp-accent-lighter: #fff7ed; /* orange-50 */
+  --tp-accent-dark: #c2410c; /* orange-700 */
+  --tp-heading: #0f172a; /* slate-900 */
+  --tp-muted: #64748b; /* slate-500 */
+  --tp-border: #e2e8f0; /* slate-200 */
+}
+
+/* 섹션 간 충분한 여백 */
+.tools-prose > section,
+.tools-prose section {
+  scroll-margin-top: 5rem;
+}
+
+.tools-prose > section + section {
+  margin-top: 3.5rem;
+  padding-top: 2.5rem;
+  border-top: 1px dashed var(--tp-border);
+}
+
+/* ---------- H2 (섹션 제목) ---------- */
+.tools-prose h2 {
+  position: relative;
+  font-size: 1.5rem; /* 24px */
+  font-weight: 800;
+  line-height: 1.35;
+  color: var(--tp-heading);
+  padding-left: 1rem;
+  margin-top: 2.5rem;
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.01em;
+  scroll-margin-top: 5rem;
+}
+
+.tools-prose h2::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.3rem;
+  bottom: 0.3rem;
+  width: 5px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #fb923c 0%, #ea580c 55%, #c2410c 100%);
+  box-shadow: 0 0 0 1px rgba(234, 88, 12, 0.08);
+}
+
+.tools-prose section:first-child > h2,
+.tools-prose > h2:first-child {
+  margin-top: 0;
+}
+
+@media (min-width: 768px) {
+  .tools-prose h2 {
+    font-size: 1.75rem; /* 28px */
+    padding-left: 1.25rem;
+    margin-top: 3rem;
+    margin-bottom: 1.75rem;
+  }
+  .tools-prose h2::before {
+    width: 6px;
+  }
+}
+
+/* ---------- H3 (소제목) ---------- */
+.tools-prose h3 {
+  position: relative;
+  font-size: 1.0625rem; /* 17px */
+  font-weight: 700;
+  color: var(--tp-heading);
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  padding-left: 1.375rem;
+  line-height: 1.5;
+}
+
+.tools-prose h3::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.625rem;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  background: var(--tp-accent);
+  transform: rotate(45deg);
+}
+
+@media (min-width: 768px) {
+  .tools-prose h3 {
+    font-size: 1.125rem; /* 18px */
+  }
+}
+
+/* ---------- 본문 ---------- */
+.tools-prose p {
+  font-size: 0.9375rem; /* 15px */
+  line-height: 1.85;
+  color: #334155;
+  margin: 0 0 1.125rem;
+  word-break: keep-all; /* 한국어 가독성 */
+}
+
+@media (min-width: 768px) {
+  .tools-prose p {
+    font-size: 1rem; /* 16px */
+    line-height: 1.9;
+    margin-bottom: 1.25rem;
+  }
+}
+
+/* 섹션 첫 단락 리드 — 살짝 크고 강조 */
+.tools-prose section > p:first-of-type,
+.tools-prose > p:first-of-type {
+  font-size: 1rem;
+  color: #1f2937; /* gray-800 */
+  font-weight: 450;
+}
+
+@media (min-width: 768px) {
+  .tools-prose section > p:first-of-type,
+  .tools-prose > p:first-of-type {
+    font-size: 1.0625rem;
+  }
+}
+
+/* ---------- 강조 ---------- */
+.tools-prose strong,
+.tools-prose b {
+  color: var(--tp-heading);
+  font-weight: 700;
+}
+
+.tools-prose em {
+  color: var(--tp-accent-dark);
+  font-style: normal;
+  font-weight: 600;
+}
+
+.tools-prose mark {
+  background: linear-gradient(180deg, transparent 55%, rgba(251, 146, 60, 0.35) 55%);
+  color: inherit;
+  padding: 0 2px;
+  border-radius: 2px;
+}
+
+/* ---------- 링크 ---------- */
+.tools-prose a {
+  color: var(--tp-accent-dark);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+  text-decoration-color: var(--tp-accent-light);
+  font-weight: 600;
+  transition: color 0.15s ease, text-decoration-color 0.15s ease;
+}
+
+.tools-prose a:hover {
+  color: var(--tp-accent);
+  text-decoration-color: var(--tp-accent);
+  text-decoration-thickness: 2px;
+}
+
+/* ---------- 리스트 ---------- */
+.tools-prose ul,
+.tools-prose ol {
+  margin: 1rem 0 1.25rem;
+  padding-left: 1.5rem;
+  line-height: 1.8;
+}
+
+.tools-prose ul {
+  list-style: none;
+  padding-left: 1.25rem;
+}
+
+.tools-prose ul > li {
+  position: relative;
+  padding-left: 0.75rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.9375rem;
+  color: #334155;
+}
+
+.tools-prose ul > li::before {
+  content: "";
+  position: absolute;
+  left: -0.5rem;
+  top: 0.72rem;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--tp-accent);
+  box-shadow: 0 0 0 3px var(--tp-accent-lighter);
+}
+
+.tools-prose ol {
+  counter-reset: tp-counter;
+  list-style: none;
+  padding-left: 0;
+}
+
+.tools-prose ol > li {
+  counter-increment: tp-counter;
+  position: relative;
+  padding-left: 2.25rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.9375rem;
+  color: #334155;
+}
+
+.tools-prose ol > li::before {
+  content: counter(tp-counter);
+  position: absolute;
+  left: 0;
+  top: 0.125rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 999px;
+  background: var(--tp-accent-lighter);
+  color: var(--tp-accent-dark);
+  font-size: 0.75rem;
+  font-weight: 800;
+  line-height: 1;
+  box-shadow: inset 0 0 0 1px var(--tp-accent-light);
+}
+
+@media (min-width: 768px) {
+  .tools-prose ul > li,
+  .tools-prose ol > li {
+    font-size: 1rem;
+  }
+}
+
+/* 중첩 리스트 */
+.tools-prose li > ul,
+.tools-prose li > ol {
+  margin-top: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+/* ---------- 콜아웃 / 인용 ---------- */
+.tools-prose blockquote {
+  position: relative;
+  border: 1px solid var(--tp-border);
+  border-left: 4px solid var(--tp-accent);
+  background: linear-gradient(135deg, var(--tp-accent-lighter) 0%, #ffffff 60%);
+  padding: 1rem 1.25rem;
+  border-radius: 0.75rem;
+  color: #1f2937;
+  font-size: 0.9375rem;
+  line-height: 1.8;
+  margin: 1.5rem 0;
+  font-style: normal;
+}
+
+.tools-prose blockquote > p {
+  margin: 0;
+}
+
+.tools-prose blockquote > p + p {
+  margin-top: 0.5rem;
+}
+
+/* 콜아웃 박스(수동 추가용) — <div className="tp-callout"> */
+.tools-prose .tp-callout {
+  display: block;
+  background: var(--tp-accent-lighter);
+  border: 1px solid var(--tp-accent-light);
+  border-radius: 0.75rem;
+  padding: 1rem 1.25rem;
+  margin: 1.5rem 0;
+  color: var(--tp-heading);
+  font-size: 0.9375rem;
+  line-height: 1.7;
+}
+
+/* ---------- 코드 ---------- */
+.tools-prose code {
+  background: #f1f5f9; /* slate-100 */
+  color: var(--tp-accent-dark);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.85em;
+  padding: 0.15em 0.4em;
+  border-radius: 0.25rem;
+  font-weight: 500;
+}
+
+.tools-prose pre {
+  background: #0f172a; /* slate-900 */
+  color: #e2e8f0; /* slate-200 */
+  padding: 1rem 1.25rem;
+  border-radius: 0.75rem;
+  overflow-x: auto;
+  font-size: 0.875rem;
+  line-height: 1.7;
+  margin: 1.25rem 0;
+}
+
+.tools-prose pre code {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  font-weight: 400;
+}
+
+/* ---------- 구분선 ---------- */
+.tools-prose hr {
+  border: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--tp-border), transparent);
+  margin: 2.5rem 0;
+}
+
+/* ---------- 이미지 ---------- */
+.tools-prose img {
+  border-radius: 0.75rem;
+  border: 1px solid var(--tp-border);
+  margin: 1.5rem 0;
+  max-width: 100%;
+  height: auto;
+}
+
+/* ---------- 표 ---------- */
+.tools-prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 0.9375rem;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  border: 1px solid var(--tp-border);
+}
+
+.tools-prose thead {
+  background: #f8fafc; /* slate-50 */
+}
+
+.tools-prose th,
+.tools-prose td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--tp-border);
+}
+
+.tools-prose th {
+  font-weight: 700;
+  color: var(--tp-heading);
+  font-size: 0.875rem;
+}
+
+.tools-prose tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.tools-prose tbody tr:hover {
+  background: #f8fafc;
+}

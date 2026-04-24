@@ -217,7 +217,7 @@ export default function SnippetOptimizerPage() {
         <SnippetForm />
 
         {/* 가이드 article */}
-        <article className="mt-16 border-t pt-12 space-y-10 max-w-none">
+        <article className="tools-prose mt-16 border-t pt-12 space-y-10 max-w-none">
           <section>
             <h2 className="text-xl font-bold mb-3">구글 스니펫이 트래픽을 결정짓는 이유</h2>
             <p className="text-sm text-muted-foreground leading-relaxed">

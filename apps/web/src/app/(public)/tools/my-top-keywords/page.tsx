@@ -211,7 +211,7 @@ export default function MyTopKeywordsPage() {
         <MyTopKeywordsForm />
 
         {/* 가이드 article */}
-        <article className="mt-16 border-t pt-12 space-y-10 text-sm leading-relaxed text-muted-foreground">
+        <article className="tools-prose mt-16 border-t pt-12 space-y-10 text-sm leading-relaxed text-muted-foreground">
 
           <section>
             <h2 className="text-xl font-bold text-foreground mb-3">

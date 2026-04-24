@@ -218,7 +218,7 @@ export default function DomainAuthorityPage() {
         </Suspense>
 
         {/* 가이드 article */}
-        <article className="mt-16 border-t pt-12 space-y-10 text-sm leading-relaxed text-muted-foreground">
+        <article className="tools-prose mt-16 border-t pt-12 space-y-10 text-sm leading-relaxed text-muted-foreground">
           <section>
             <h2 className="mb-3 text-lg font-bold text-foreground">도메인 권위 지표별 의미</h2>
             <p>

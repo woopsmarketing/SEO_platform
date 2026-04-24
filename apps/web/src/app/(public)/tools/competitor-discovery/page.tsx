@@ -234,7 +234,7 @@ export default function CompetitorDiscoveryPage() {
       <CompetitorDiscoveryForm />
 
       {/* 가이드 article */}
-      <article className="mt-16 space-y-10 border-t pt-12 text-sm leading-relaxed text-muted-foreground">
+      <article className="tools-prose mt-16 space-y-10 border-t pt-12 text-sm leading-relaxed text-muted-foreground">
         <section>
           <h2 className="mb-3 text-xl font-bold text-foreground">
             &ldquo;브랜드 경쟁사&rdquo;와 &ldquo;검색 경쟁사&rdquo;가 다른 이유

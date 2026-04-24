@@ -216,7 +216,7 @@ export default function OnpageAuditPage() {
         </Suspense>
 
         {/* 가이드 article */}
-        <article className="mt-16 border-t pt-12 space-y-12 text-sm leading-relaxed text-foreground/90">
+        <article className="tools-prose mt-16 border-t pt-12 space-y-12 text-sm leading-relaxed text-foreground/90">
 
           {/* h2-1 */}
           <section>

@@ -213,7 +213,7 @@ export default function KeywordGapPage() {
       <KeywordGapForm />
 
       {/* Guide Article */}
-      <article className="mt-16 border-t pt-12">
+      <article className="tools-prose mt-16 border-t pt-12">
         <h2 className="text-xl font-bold mb-3">키워드 갭 분석의 전략적 가치</h2>
         <p className="text-sm text-muted-foreground leading-relaxed mb-6">
           키워드 갭 분석은 콘텐츠 기획에서 가장 효율적인 시작점 중 하나입니다.

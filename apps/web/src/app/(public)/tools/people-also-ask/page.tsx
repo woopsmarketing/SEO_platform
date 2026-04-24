@@ -268,7 +268,7 @@ export default function PeopleAlsoAskPage() {
       <PaaForm />
 
       {/* Guide Article */}
-      <article className="mt-16 border-t pt-12 max-w-none">
+      <article className="tools-prose mt-16 border-t pt-12 max-w-none">
         <h2 className="mb-3 text-xl font-bold">
           People Also Ask 박스가 SEO에 중요한 이유
         </h2>

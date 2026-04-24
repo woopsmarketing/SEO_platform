@@ -264,7 +264,7 @@ export default function CommonBacklinksPage() {
         <CommonBacklinksForm />
 
         {/* Guide Article */}
-        <article className="mt-16 space-y-10 border-t pt-12 text-sm leading-relaxed text-muted-foreground">
+        <article className="tools-prose mt-16 space-y-10 border-t pt-12 text-sm leading-relaxed text-muted-foreground">
           <section>
             <h2 className="mb-3 text-lg font-bold text-foreground">
               공통 백링크가 &ldquo;산업 필수 백링크&rdquo;인 이유

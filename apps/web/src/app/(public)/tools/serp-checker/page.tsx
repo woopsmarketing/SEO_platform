@@ -241,7 +241,7 @@ export default function SerpCheckerPage() {
       <SerpCheckerForm />
 
       {/* 5. 상세 가이드 */}
-      <article className="mt-16 border-t pt-12">
+      <article className="tools-prose mt-16 border-t pt-12">
         <h2 className="mb-3 text-xl font-bold">
           구글 SERP 순위가 트래픽에 미치는 영향
         </h2>

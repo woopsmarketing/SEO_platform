@@ -222,7 +222,7 @@ export default function ContentGapPage() {
         <ContentGapForm />
 
         {/* Guide Article */}
-        <article className="mt-16 border-t pt-12 prose-sm max-w-none space-y-10">
+        <article className="tools-prose mt-16 border-t pt-12 prose-sm max-w-none space-y-10">
           <section>
             <h2 className="text-xl font-bold mb-3">콘텐츠 갭이란 무엇이고 왜 SEO에 중요한가</h2>
             <p className="text-sm text-muted-foreground leading-relaxed">

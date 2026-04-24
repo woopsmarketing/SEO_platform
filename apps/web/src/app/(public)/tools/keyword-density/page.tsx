@@ -217,7 +217,7 @@ export default function KeywordDensityPage() {
         <KeywordDensityForm />
 
         {/* 가이드 article */}
-        <article className="mt-16 border-t pt-12 space-y-10">
+        <article className="tools-prose mt-16 border-t pt-12 space-y-10">
           <section>
             <h2 className="text-xl font-bold mb-3">
               키워드 밀도란 무엇이고 왜 논쟁적인가

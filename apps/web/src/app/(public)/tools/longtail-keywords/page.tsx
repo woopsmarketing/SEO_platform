@@ -194,7 +194,7 @@ export default function LongtailKeywordsPage() {
         <LongtailForm />
 
         {/* 가이드 Article */}
-        <article className="mt-16 border-t pt-12 space-y-10 text-sm leading-relaxed text-muted-foreground">
+        <article className="tools-prose mt-16 border-t pt-12 space-y-10 text-sm leading-relaxed text-muted-foreground">
           <div>
             <h2 className="text-xl font-bold text-foreground mb-3">
               롱테일 키워드가 전환율에서 압도적인 이유

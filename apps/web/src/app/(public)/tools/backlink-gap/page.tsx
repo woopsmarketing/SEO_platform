@@ -236,7 +236,7 @@ export default function BacklinkGapPage() {
       <BacklinkGapForm />
 
       {/* 가이드 article */}
-      <article className="mt-16 space-y-10 border-t pt-12 text-sm leading-relaxed text-muted-foreground">
+      <article className="tools-prose mt-16 space-y-10 border-t pt-12 text-sm leading-relaxed text-muted-foreground">
         <section>
           <h2 className="mb-3 text-lg font-bold text-foreground">
             백링크 갭이 왜 가장 빠른 링크 빌딩 전략인가

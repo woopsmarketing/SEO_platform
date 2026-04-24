@@ -239,7 +239,7 @@ export default function BrokenBacklinkRecoveryPage() {
         <BrokenBacklinkRecoveryForm />
 
         {/* Guide article */}
-        <article className="mt-16 space-y-10 border-t pt-12">
+        <article className="tools-prose mt-16 space-y-10 border-t pt-12">
           <section>
             <h2 className="mb-3 text-xl font-bold">
               깨진 백링크가 SEO에 미치는 3가지 손실

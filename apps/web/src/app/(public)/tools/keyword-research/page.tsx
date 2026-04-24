@@ -226,7 +226,7 @@ export default function KeywordResearchPage() {
         <KeywordForm />
 
         {/* 가이드 article */}
-        <article className="mt-16 border-t pt-12 space-y-12">
+        <article className="tools-prose mt-16 border-t pt-12 space-y-12">
           {/* h2-1 */}
           <section>
             <h2 className="text-xl font-bold mb-3">

@@ -233,7 +233,7 @@ export default function BacklinkCheckerPage() {
         <BacklinkForm />
 
         {/* 가이드 article */}
-        <article className="mt-16 border-t pt-12 prose-sm max-w-none">
+        <article className="tools-prose mt-16 border-t pt-12 prose-sm max-w-none">
           <h2 className="text-xl font-bold mb-3">백링크 분석의 네 가지 핵심 지표</h2>
           <p className="text-muted-foreground leading-relaxed mb-4">
             백링크 분석기를 사용할 때 단순히 백링크 수만 볼 것이 아니라 네 가지

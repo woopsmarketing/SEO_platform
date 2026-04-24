@@ -239,7 +239,7 @@ export default function LocalSerpPage() {
         <LocalSerpForm />
 
         {/* Guide Article */}
-        <article className="mt-16 border-t pt-12 prose-sm max-w-none">
+        <article className="tools-prose mt-16 border-t pt-12 prose-sm max-w-none">
           <h2 className="text-xl font-bold mb-3">
             왜 국가·언어별 SERP 결과가 다를까
           </h2>

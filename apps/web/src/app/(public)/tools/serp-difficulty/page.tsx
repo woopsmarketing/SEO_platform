@@ -230,7 +230,7 @@ export default function SerpDifficultyPage() {
         <SerpDifficultyForm />
 
         {/* Guide Article */}
-        <div className="mt-16 border-t pt-12 space-y-12">
+        <div className="tools-prose mt-16 border-t pt-12 space-y-12">
 
           {/* H2-1 */}
           <div>

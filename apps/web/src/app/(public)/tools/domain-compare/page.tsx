@@ -228,7 +228,7 @@ export default function DomainComparePage() {
       <DomainCompareForm />
 
       {/* 가이드 article */}
-      <article className="mt-16 border-t pt-12 space-y-8">
+      <article className="tools-prose mt-16 border-t pt-12 space-y-8">
         <section>
           <h2 className="text-xl font-bold mb-3">경쟁사 비교에서 레이더 차트가 유용한 이유</h2>
           <p className="text-sm text-muted-foreground leading-relaxed">
