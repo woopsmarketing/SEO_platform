@@ -226,6 +226,23 @@ export default function SerpDifficultyPage() {
           </div>
         </div>
 
+        {/* 사용 제한 안내 */}
+        <div className="mb-6 rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm">
+          <p className="font-semibold text-amber-900">로그인 회원 전용 · 하루 1회</p>
+          <p className="mt-1 text-xs leading-relaxed text-amber-800/90">
+            상위 10개 도메인의 권위 지표(DA/DR/TF)를 외부 API로 조회하는 비용이 큰 도구입니다.
+            무료 회원은 하루 1회만 사용할 수 있고, 비로그인 상태에서는 이용이 제한됩니다.{" "}
+            <Link href="/login" className="font-medium text-amber-900 underline hover:no-underline">
+              로그인
+            </Link>{" "}
+            또는{" "}
+            <Link href="/signup" className="font-medium text-amber-900 underline hover:no-underline">
+              무료 회원가입
+            </Link>{" "}
+            후 이용해 주세요.
+          </p>
+        </div>
+
         {/* Tool Form */}
         <SerpDifficultyForm />
 

@@ -75,11 +75,24 @@ export async function POST(request: Request) {
   try {
     const ip = getClientIp(request);
     const loggedIn = await isAuthenticated(request);
-    const limit = loggedIn ? 10 : 2;
-    const rateLimit = await checkRateLimit(ip, "serp-difficulty", limit, 1440);
+    if (!loggedIn) {
+      return NextResponse.json(
+        {
+          error: "SERP 난이도 분석은 로그인 회원 전용입니다.",
+          requireLogin: true,
+        },
+        { status: 401 },
+      );
+    }
+    // 로그인 회원도 하루 1회로 제한 (도메인 권위 지표 호출 비용이 큼)
+    const rateLimit = await checkRateLimit(ip, "serp-difficulty", 1, 1440);
     if (!rateLimit.allowed) {
       return NextResponse.json(
-        { error: `일일 분석 횟수(${limit}회)를 초과했습니다.`, upgrade: true, remaining: 0 },
+        {
+          error: "이 도구는 하루 1회만 사용 가능합니다.",
+          upgrade: false,
+          remaining: 0,
+        },
         { status: 429 },
       );
     }

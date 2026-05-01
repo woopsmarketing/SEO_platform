@@ -28,7 +28,6 @@ interface LongtailItem {
   wordCount: number;
   type: KeywordType;
   searchVolume?: number;
-  avgDA?: number;
 }
 
 interface LongtailResult {
@@ -118,7 +117,7 @@ export function LongtailForm() {
           {error && <p className="mt-3 text-sm text-destructive">{error}</p>}
           {loading && (
             <p className="mt-3 text-sm text-muted-foreground">
-              관련 키워드 수집 및 상위 SERP 도메인 권위 분석 중... (최대 25초)
+              관련 키워드를 수집하고 있습니다... (최대 15초)
             </p>
           )}
           <SignupModal
@@ -162,7 +161,7 @@ export function LongtailForm() {
                 관련 키워드 ({filtered.length}개)
               </CardTitle>
               <CardDescription>
-                상위 10개는 SERP 도메인 권위(DA) 평균을 함께 제공합니다.
+                시드 키워드를 기준으로 발굴한 롱테일/질문형 키워드입니다.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -174,8 +173,7 @@ export function LongtailForm() {
                         <th className="pb-2 pr-3 font-medium">키워드</th>
                         <th className="pb-2 pr-3 font-medium text-right">단어수</th>
                         <th className="pb-2 pr-3 font-medium">유형</th>
-                        <th className="pb-2 pr-3 font-medium text-right">월간 검색량</th>
-                        <th className="pb-2 font-medium text-right">평균 DA</th>
+                        <th className="pb-2 font-medium text-right">월간 검색량</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -192,11 +190,8 @@ export function LongtailForm() {
                               {r.type}
                             </span>
                           </td>
-                          <td className="py-2.5 pr-3 text-right tabular-nums">
-                            {r.searchVolume != null ? r.searchVolume.toLocaleString() : "-"}
-                          </td>
                           <td className="py-2.5 text-right tabular-nums">
-                            {r.avgDA != null ? r.avgDA : "-"}
+                            {r.searchVolume != null ? r.searchVolume.toLocaleString() : "-"}
                           </td>
                         </tr>
                       ))}

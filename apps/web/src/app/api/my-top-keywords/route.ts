@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { checkRateLimit, getClientIp, isAuthenticated } from "@/lib/rate-limit";
-import { fetchWithCache, saveToCache, type DomainMetrics } from "@/lib/cache-api";
+import { fetchWithCache, saveToCache } from "@/lib/cache-api";
 
 export const maxDuration = 60;
 
@@ -8,8 +8,6 @@ export const maxDuration = 60;
 const MAX_KEYWORDS = 50;
 // SERP 조회 시 확보할 최상위 결과 수
 const SERP_LIMIT = 100;
-// avgTopDA 계산에 사용하는 상위 N 도메인
-const AVG_DA_DOMAINS = 10;
 // 동시성 제한 (배치 크기)
 const CONCURRENCY = 10;
 // TOP 노출 키워드 반환 수
@@ -35,7 +33,6 @@ interface SerpOrganicItem {
 interface RankedKeyword {
   keyword: string;
   myRank: number;
-  avgTopDA: number | null;
   searchVolume?: number;
 }
 
@@ -56,12 +53,6 @@ function normalizeDomain(input: string): string | null {
   } catch {
     return null;
   }
-}
-
-function toNumber(v: unknown): number | null {
-  if (v == null) return null;
-  const n = typeof v === "number" ? v : parseFloat(String(v));
-  return Number.isFinite(n) ? n : null;
 }
 
 /**
@@ -145,35 +136,6 @@ function findRank(results: SerpCachedItem[], targetDomain: string): number | nul
     }
   }
   return null;
-}
-
-/**
- * SERP 상위 N 도메인의 Moz DA 평균 계산 (캐시 경유)
- */
-async function computeAvgTopDA(results: SerpCachedItem[]): Promise<number | null> {
-  const domains: string[] = [];
-  const seen = new Set<string>();
-  for (const r of results) {
-    const d = extractDomain(r.url);
-    if (!d || seen.has(d)) continue;
-    seen.add(d);
-    domains.push(d);
-    if (domains.length >= AVG_DA_DOMAINS) break;
-  }
-  if (domains.length === 0) return null;
-
-  const settled = await Promise.allSettled(
-    domains.map((d) => fetchWithCache<DomainMetrics>("metrics", { domain: d })),
-  );
-  const values: number[] = [];
-  for (const r of settled) {
-    if (r.status === "fulfilled" && r.value) {
-      const v = toNumber(r.value.mozDA);
-      if (v != null) values.push(v);
-    }
-  }
-  if (values.length === 0) return null;
-  return Math.round(values.reduce((s, v) => s + v, 0) / values.length);
 }
 
 /**
@@ -280,7 +242,6 @@ export async function POST(request: Request) {
       keyword: string;
       myRank: number;
       searchVolume?: number;
-      serp: SerpCachedItem[];
     }
 
     const hits: KeywordHit[] = [];
@@ -291,30 +252,18 @@ export async function POST(request: Request) {
       if (serp.length === 0) return;
       const rank = findRank(serp, domain);
       if (rank == null) return;
-      hits.push({ keyword: k.text, myRank: rank, searchVolume: k.vol, serp });
+      hits.push({ keyword: k.text, myRank: rank, searchVolume: k.vol });
     });
 
-    // 3) 순위 오름차순 정렬 후 TOP 20 + avgTopDA 계산
+    // 3) 순위 오름차순 정렬 후 TOP 20
     hits.sort((a, b) => a.myRank - b.myRank);
     const top = hits.slice(0, TOP_RANKED_KEYWORDS);
 
-    const avgDASettled = await processBatches(
-      top,
-      (h) => computeAvgTopDA(h.serp),
-      CONCURRENCY,
-    );
-
-    const rankedKeywords: RankedKeyword[] = top.map((h, i) => {
-      const r = avgDASettled[i];
-      const avgTopDA =
-        r && r.status === "fulfilled" && typeof r.value === "number" ? r.value : null;
-      return {
-        keyword: h.keyword,
-        myRank: h.myRank,
-        avgTopDA,
-        searchVolume: h.searchVolume,
-      };
-    });
+    const rankedKeywords: RankedKeyword[] = top.map((h) => ({
+      keyword: h.keyword,
+      myRank: h.myRank,
+      searchVolume: h.searchVolume,
+    }));
 
     // tool_usage_logs
     try {

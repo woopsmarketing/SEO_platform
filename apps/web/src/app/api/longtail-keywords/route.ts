@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import { checkRateLimit, getClientIp, isAuthenticated } from "@/lib/rate-limit";
-import { fetchWithCache, saveToCache, type DomainMetrics } from "@/lib/cache-api";
 
 export const maxDuration = 30;
 
@@ -11,17 +10,11 @@ interface LongtailItem {
   wordCount: number;
   type: KeywordType;
   searchVolume?: number;
-  avgDA?: number;
 }
 
 interface VebApiItem {
   text?: string;
   vol?: number;
-}
-
-interface SerpEntry {
-  url: string;
-  title: string;
 }
 
 const QUESTION_WORDS = [
@@ -50,20 +43,6 @@ function classify(keyword: string): { wordCount: number; type: KeywordType } {
   if (isQuestion) return { wordCount, type: "질문형" };
   if (wordCount >= 3) return { wordCount, type: "롱테일" };
   return { wordCount, type: "미디엄" };
-}
-
-function extractDomain(url: string): string {
-  try {
-    return new URL(url).hostname.replace(/^www\./, "");
-  } catch {
-    return "";
-  }
-}
-
-function toNumber(v: unknown): number | null {
-  if (v == null) return null;
-  const n = typeof v === "number" ? v : parseFloat(String(v));
-  return Number.isFinite(n) ? n : null;
 }
 
 /** VebAPI에서 seed 관련 키워드 수집. 실패 시 빈 배열 반환. */
@@ -114,64 +93,6 @@ async function fetchAutocompleteKeywords(seed: string): Promise<string[]> {
     if (r.status === "fulfilled") keywords.push(...r.value);
   }
   return keywords;
-}
-
-/** 상위 10개 항목에 SERP→metrics 캐시로 avgDA 채움 */
-async function fillAvgDa(items: LongtailItem[]): Promise<void> {
-  const top = items.slice(0, 10);
-  await Promise.all(
-    top.map(async (item) => {
-      // SERP 캐시/직접 호출
-      let serpEntries: SerpEntry[] | null = await fetchWithCache<SerpEntry[]>(
-        "serp",
-        { keyword: item.keyword },
-      );
-      if (!serpEntries || serpEntries.length === 0) {
-        const serperKey = process.env.SERPER_API_KEY;
-        if (!serperKey) return;
-        try {
-          const sRes = await fetch("https://google.serper.dev/search", {
-            method: "POST",
-            headers: {
-              "X-API-KEY": serperKey,
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ q: item.keyword, gl: "kr", hl: "ko", num: 10 }),
-            signal: AbortSignal.timeout(10000),
-          });
-          if (!sRes.ok) return;
-          const sData = await sRes.json();
-          const organic = (sData.organic || []) as Array<{ title: string; link: string }>;
-          serpEntries = organic.slice(0, 10).map((o) => ({ url: o.link, title: o.title }));
-          if (serpEntries.length > 0) {
-            await saveToCache("serp", { keyword: item.keyword, results: serpEntries });
-          }
-        } catch {
-          return;
-        }
-      }
-      if (!serpEntries || serpEntries.length === 0) return;
-
-      // 상위 도메인 metrics 병렬 조회 (캐시만, MISS는 스킵)
-      const domains = Array.from(
-        new Set(
-          serpEntries
-            .slice(0, 5)
-            .map((e) => extractDomain(e.url))
-            .filter(Boolean),
-        ),
-      );
-      const metricsList = await Promise.all(
-        domains.map((d) => fetchWithCache<DomainMetrics>("metrics", { domain: d })),
-      );
-      const das = metricsList
-        .map((m) => (m ? toNumber(m.mozDA) : null))
-        .filter((n): n is number => n !== null);
-      if (das.length > 0) {
-        item.avgDA = Math.round(das.reduce((a, b) => a + b, 0) / das.length);
-      }
-    }),
-  );
 }
 
 export async function POST(request: Request) {
@@ -237,9 +158,6 @@ export async function POST(request: Request) {
 
     // 검색량 내림차순 정렬 (없으면 뒤로)
     items.sort((a, b) => (b.searchVolume ?? -1) - (a.searchVolume ?? -1));
-
-    // 4. 상위 10개에 avgDA 채움
-    await fillAvgDa(items);
 
     // 로그
     try {

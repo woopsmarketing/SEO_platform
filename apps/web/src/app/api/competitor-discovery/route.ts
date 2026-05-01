@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { checkRateLimit, getClientIp, isAuthenticated } from "@/lib/rate-limit";
-import { fetchWithCache, saveToCache, type DomainMetrics } from "@/lib/cache-api";
+import { fetchWithCache, saveToCache } from "@/lib/cache-api";
 
-export const maxDuration = 45;
+export const maxDuration = 30;
 
 const SERP_FETCH_NUM = 20;
 const MAX_UNIQUE_DOMAINS = 15;
@@ -20,11 +20,7 @@ interface SerpCachedItem {
 
 interface DiscoveryRow {
   domain: string;
-  da: number | null;
-  dr: number | null;
-  tf: number | null;
-  refDomains: number | null;
-  traffic: number | null;
+  rank: number;
 }
 
 function extractDomain(url: string): string | null {
@@ -33,12 +29,6 @@ function extractDomain(url: string): string | null {
   } catch {
     return null;
   }
-}
-
-function toNumber(v: number | string | undefined | null): number | null {
-  if (v == null) return null;
-  const n = typeof v === "string" ? parseFloat(v) : v;
-  return Number.isFinite(n) ? n : null;
 }
 
 async function fetchSerpDomains(keyword: string): Promise<string[]> {
@@ -102,11 +92,24 @@ export async function POST(request: Request) {
   try {
     const ip = getClientIp(request);
     const loggedIn = await isAuthenticated(request);
-    const limit = loggedIn ? 10 : 2;
-    const rl = await checkRateLimit(ip, "competitor-discovery", limit, 1440);
+    if (!loggedIn) {
+      return NextResponse.json(
+        {
+          error: "경쟁 도메인 발굴은 로그인 회원 전용입니다.",
+          requireLogin: true,
+        },
+        { status: 401 },
+      );
+    }
+    // 로그인 회원도 하루 1회로 제한 (외부 API 비용 통제)
+    const rl = await checkRateLimit(ip, "competitor-discovery", 1, 1440);
     if (!rl.allowed) {
       return NextResponse.json(
-        { error: `일일 분석 횟수(${limit}회)를 초과했습니다.`, upgrade: true, remaining: 0 },
+        {
+          error: "이 도구는 하루 1회만 사용 가능합니다.",
+          upgrade: false,
+          remaining: 0,
+        },
         { status: 429, headers: { "Retry-After": String(rl.resetIn) } },
       );
     }
@@ -127,48 +130,22 @@ export async function POST(request: Request) {
     // 1) SERP(상위 20 organic) 조회 — 공용 캐시 경유
     const domains = await fetchSerpDomains(seedKeyword);
 
-    // 2) 고유 도메인 추출 (최대 MAX_UNIQUE_DOMAINS개)
+    // 2) 고유 도메인 추출 (최대 MAX_UNIQUE_DOMAINS개) — SERP 등장 순서 유지
     const seen = new Set<string>();
-    const uniqueDomains: string[] = [];
-    for (const d of domains) {
-      if (!seen.has(d)) {
-        seen.add(d);
-        uniqueDomains.push(d);
-        if (uniqueDomains.length >= MAX_UNIQUE_DOMAINS) break;
-      }
-    }
+    const rows: DiscoveryRow[] = [];
+    domains.forEach((d, i) => {
+      if (seen.has(d)) return;
+      seen.add(d);
+      rows.push({ domain: d, rank: i + 1 });
+    });
+    const truncated = rows.slice(0, MAX_UNIQUE_DOMAINS);
 
-    if (uniqueDomains.length === 0) {
+    if (truncated.length === 0) {
       return NextResponse.json(
         { error: "SERP에서 경쟁 도메인을 찾지 못했습니다." },
         { status: 502 },
       );
     }
-
-    // 3) 각 도메인 metrics 병렬 조회 (Promise.allSettled)
-    const metricsSettled = await Promise.allSettled(
-      uniqueDomains.map((d) => fetchWithCache<DomainMetrics>("metrics", { domain: d })),
-    );
-
-    const rows: DiscoveryRow[] = uniqueDomains.map((domain, i) => {
-      const r = metricsSettled[i];
-      const m = r && r.status === "fulfilled" ? r.value : null;
-      return {
-        domain,
-        da: toNumber(m?.mozDA),
-        dr: toNumber(m?.ahrefsDR),
-        tf: toNumber(m?.majesticTF),
-        refDomains: toNumber(m?.ahrefsRefDomains),
-        traffic: toNumber(m?.ahrefsTraffic),
-      };
-    });
-
-    // 4) DA 내림차순 정렬 (null은 뒤)
-    rows.sort((a, b) => {
-      const av = a.da ?? -1;
-      const bv = b.da ?? -1;
-      return bv - av;
-    });
 
     // 로깅
     try {
@@ -185,8 +162,8 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       seedKeyword,
-      totalUniqueDomains: uniqueDomains.length,
-      rows,
+      totalUniqueDomains: truncated.length,
+      rows: truncated,
     });
   } catch {
     return NextResponse.json(

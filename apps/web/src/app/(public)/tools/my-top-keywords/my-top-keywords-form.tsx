@@ -23,7 +23,6 @@ import { SignupBanner } from "@/components/signup-banner";
 interface RankedKeyword {
   keyword: string;
   myRank: number;
-  avgTopDA: number | null;
   searchVolume?: number;
 }
 
@@ -57,14 +56,6 @@ function rankBadge(rank: number): { label: string; className: string } {
     label: `${rank}위`,
     className: "bg-blue-50 text-blue-700 border-blue-100",
   };
-}
-
-function difficultyColor(da: number | null): string {
-  if (da == null) return "text-muted-foreground";
-  if (da >= 70) return "text-red-600";
-  if (da >= 50) return "text-orange-600";
-  if (da >= 30) return "text-amber-600";
-  return "text-emerald-600";
 }
 
 export function MyTopKeywordsForm() {
@@ -168,7 +159,7 @@ export function MyTopKeywordsForm() {
           {error && <p className="text-sm text-destructive">{error}</p>}
           {loading && (
             <p className="text-sm text-muted-foreground">
-              키워드별 SERP와 경쟁도를 조회하고 있습니다... (최대 60초)
+              키워드별 구글 순위를 조회하고 있습니다... (최대 60초)
             </p>
           )}
           <SignupModal
@@ -244,9 +235,6 @@ export function MyTopKeywordsForm() {
                         <th className="pb-2 pr-3 font-medium">키워드</th>
                         <th className="pb-2 pr-3 font-medium">내 순위</th>
                         <th className="pb-2 pr-3 font-medium text-right">월 검색량</th>
-                        <th className="pb-2 pr-3 font-medium text-right">
-                          경쟁도 (avg DA)
-                        </th>
                         <th className="pb-2 font-medium">액션</th>
                       </tr>
                     </thead>
@@ -271,11 +259,6 @@ export function MyTopKeywordsForm() {
                               {k.searchVolume != null
                                 ? k.searchVolume.toLocaleString()
                                 : "-"}
-                            </td>
-                            <td
-                              className={`py-2.5 pr-3 text-right tabular-nums font-semibold ${difficultyColor(k.avgTopDA)}`}
-                            >
-                              {k.avgTopDA ?? "-"}
                             </td>
                             <td className="py-2.5">
                               <a

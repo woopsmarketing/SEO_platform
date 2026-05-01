@@ -11,7 +11,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { formatCount } from "@/components/domain-metrics-card";
 import {
   trackToolAttempt,
   trackToolError,
@@ -23,11 +22,7 @@ import { BacklinkCta } from "@/components/backlink-cta";
 
 interface DiscoveryRow {
   domain: string;
-  da: number | null;
-  dr: number | null;
-  tf: number | null;
-  refDomains: number | null;
-  traffic: number | null;
+  rank: number;
 }
 
 interface ApiResponse {
@@ -36,12 +31,6 @@ interface ApiResponse {
   rows: DiscoveryRow[];
   error?: string;
   upgrade?: boolean;
-}
-
-function avg(values: Array<number | null>): number | null {
-  const nums = values.filter((v): v is number => v != null);
-  if (nums.length === 0) return null;
-  return Math.round(nums.reduce((s, v) => s + v, 0) / nums.length);
 }
 
 export function CompetitorDiscoveryForm() {
@@ -66,9 +55,13 @@ export function CompetitorDiscoveryForm() {
         body: JSON.stringify({ seedKeyword: seedKeyword.trim() }),
       });
       const data = (await res.json()) as ApiResponse;
-      if (res.status === 429) {
+      if (res.status === 401) {
         setShowUpgrade(true);
-        setError(data.error || "일일 무료 사용량을 초과했습니다.");
+        setError(data.error || "로그인이 필요한 도구입니다.");
+        trackToolError("competitor-discovery", "require_login");
+      } else if (res.status === 429) {
+        setShowUpgrade(true);
+        setError(data.error || "하루 1회만 사용 가능합니다.");
         trackRateLimit("competitor-discovery", "guest");
       } else if (!res.ok) {
         setError(data.error || "분석에 실패했습니다.");
@@ -83,10 +76,6 @@ export function CompetitorDiscoveryForm() {
     }
     setLoading(false);
   }
-
-  const avgDa = result ? avg(result.rows.map((r) => r.da)) : null;
-  const avgDr = result ? avg(result.rows.map((r) => r.dr)) : null;
-  const avgTraffic = result ? avg(result.rows.map((r) => r.traffic)) : null;
 
   return (
     <div className="space-y-8">
@@ -107,7 +96,7 @@ export function CompetitorDiscoveryForm() {
           {error && <p className="mt-3 text-sm text-destructive">{error}</p>}
           {loading && (
             <p className="mt-3 text-sm text-muted-foreground">
-              구글 SERP 상위 20개에서 고유 도메인을 추출하고 지표를 조회하고 있습니다...
+              구글 SERP 상위 20개에서 고유 경쟁 도메인을 추출하고 있습니다...
             </p>
           )}
           <SignupModal
@@ -120,11 +109,9 @@ export function CompetitorDiscoveryForm() {
 
       {result && (
         <>
-          <div className="grid gap-3 sm:grid-cols-4">
+          <div className="grid gap-3 sm:grid-cols-2">
             <SummaryTile label="고유 도메인" value={result.totalUniqueDomains} />
-            <SummaryTile label="평균 DA" value={avgDa} />
-            <SummaryTile label="평균 DR" value={avgDr} />
-            <SummaryTile label="평균 트래픽" value={avgTraffic} formatter={formatCount} />
+            <SummaryTile label="시드 키워드" text={result.seedKeyword} />
           </div>
 
           <Card>
@@ -133,7 +120,7 @@ export function CompetitorDiscoveryForm() {
                 &ldquo;{result.seedKeyword}&rdquo; 경쟁 도메인 리스트
               </CardTitle>
               <CardDescription>
-                SERP 상위 organic에서 추출한 고유 도메인을 Moz DA 내림차순으로 정렬했습니다.
+                SERP 상위 organic에서 추출한 고유 도메인 (등장 순). 각 도메인의 권위 지표는 &ldquo;심층 분석&rdquo;에서 확인할 수 있습니다.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -143,11 +130,7 @@ export function CompetitorDiscoveryForm() {
                     <tr className="border-b text-left text-xs text-muted-foreground">
                       <th className="py-2 pr-3 font-medium">#</th>
                       <th className="py-2 pr-3 font-medium">도메인</th>
-                      <th className="py-2 pr-3 font-medium">Moz DA</th>
-                      <th className="py-2 pr-3 font-medium">Ahrefs DR</th>
-                      <th className="py-2 pr-3 font-medium">Majestic TF</th>
-                      <th className="py-2 pr-3 font-medium">참조도메인</th>
-                      <th className="py-2 pr-3 font-medium">트래픽</th>
+                      <th className="py-2 pr-3 font-medium text-right">SERP 등장 순위</th>
                       <th className="py-2 pr-3 font-medium">심층 분석</th>
                     </tr>
                   </thead>
@@ -167,20 +150,8 @@ export function CompetitorDiscoveryForm() {
                             {row.domain}
                           </a>
                         </td>
-                        <td className="py-2.5 pr-3 tabular-nums">
-                          {row.da != null ? Math.round(row.da) : "-"}
-                        </td>
-                        <td className="py-2.5 pr-3 tabular-nums">
-                          {row.dr != null ? Math.round(row.dr) : "-"}
-                        </td>
-                        <td className="py-2.5 pr-3 tabular-nums">
-                          {row.tf != null ? Math.round(row.tf) : "-"}
-                        </td>
-                        <td className="py-2.5 pr-3 tabular-nums">
-                          {formatCount(row.refDomains)}
-                        </td>
-                        <td className="py-2.5 pr-3 tabular-nums">
-                          {formatCount(row.traffic)}
+                        <td className="py-2.5 pr-3 tabular-nums text-right">
+                          #{row.rank}
                         </td>
                         <td className="py-2.5 pr-3">
                           <Link
@@ -208,17 +179,17 @@ export function CompetitorDiscoveryForm() {
 function SummaryTile({
   label,
   value,
-  formatter,
+  text,
 }: {
   label: string;
-  value: number | null;
-  formatter?: (v: number | null) => string;
+  value?: number;
+  text?: string;
 }) {
   const display =
-    value == null
-      ? "-"
-      : formatter
-        ? formatter(value)
+    text != null
+      ? text
+      : value == null
+        ? "-"
         : value.toLocaleString("ko-KR");
   return (
     <div className="rounded-lg border bg-muted/30 p-4">

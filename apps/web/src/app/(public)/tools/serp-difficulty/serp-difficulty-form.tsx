@@ -80,9 +80,13 @@ export function SerpDifficultyForm() {
         body: JSON.stringify({ keyword: keyword.trim() }),
       });
       const data = await res.json();
-      if (res.status === 429) {
+      if (res.status === 401) {
         setShowUpgrade(true);
-        setError(data.error || "일일 무료 사용량을 초과했습니다.");
+        setError(data.error || "로그인이 필요한 도구입니다.");
+        trackToolError("serp-difficulty", "require_login");
+      } else if (res.status === 429) {
+        setShowUpgrade(true);
+        setError(data.error || "하루 1회만 사용 가능합니다.");
         trackRateLimit("serp-difficulty", "guest");
       } else if (!res.ok) {
         setError(data.error || "분석에 실패했습니다.");
