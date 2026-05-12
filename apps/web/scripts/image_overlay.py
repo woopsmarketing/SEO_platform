@@ -26,9 +26,16 @@ from PIL import Image, ImageDraw, ImageFont, ImageEnhance, ImageFilter
 
 # 폰트 경로 (맑은 고딕 Bold)
 FONT_PATHS = [
-    "C:/Windows/Fonts/malgunbd.ttf",   # 맑은 고딕 Bold
-    "C:/Windows/Fonts/malgun.ttf",     # 맑은 고딕
-    "C:/Windows/Fonts/GOTHICB.TTF",    # Gothic Bold
+    "/home/sh/.fonts/malgunbd.ttf",                            # WSL 1순위 (Linux 직접 설치)
+    "/home/sh/.fonts/malgun.ttf",
+    "/mnt/c/Windows/Fonts/malgunbd.ttf",                       # WSL → Windows 마운트
+    "/mnt/c/Windows/Fonts/malgun.ttf",
+    "/usr/share/fonts/truetype/noto/NotoSansKR-Bold.ttf",      # 표준 Linux
+    "/usr/share/fonts/truetype/nanum/NanumGothicBold.ttf",
+    "/System/Library/Fonts/AppleSDGothicNeo.ttc",              # macOS
+    "C:/Windows/Fonts/malgunbd.ttf",                           # Windows 직접 실행
+    "C:/Windows/Fonts/malgun.ttf",
+    "C:/Windows/Fonts/GOTHICB.TTF",
     "C:/Windows/Fonts/GOTHIC.TTF",
 ]
 
