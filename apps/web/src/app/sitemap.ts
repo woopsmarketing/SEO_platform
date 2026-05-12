@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { getPublishedPosts } from "@/lib/db/posts";
 import { SITE_URL } from "@/lib/constants";
+import { AUTHOR } from "@/lib/blog/author";
 
 export const dynamic = "force-dynamic";
 
@@ -46,5 +47,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // 블로그 (자동)
     { url: `${SITE_URL}/blog`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.8 },
     ...blogEntries,
+
+    // 저자 프로필
+    { url: `${SITE_URL}/author/${AUTHOR.slug}`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.5 },
   ];
 }

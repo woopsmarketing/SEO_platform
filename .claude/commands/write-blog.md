@@ -5,14 +5,28 @@
 ## 사용법
 
 ```
-/write-blog 백링크 확인하는 방법
+/write-blog                                    # 인자 없음 → BLOG_KEYWORDS.md에서 자동 선택
+/write-blog 백링크 확인하는 방법                  # 인자 명시
 /write-blog SEO란 무엇인가
-/write-blog 구글 상위노출 방법
 ```
 
 ## 실행 흐름
 
-아래 8단계를 순서대로 실행한다. 각 단계의 출력은 다음 단계의 입력으로 전달된다.
+아래 단계를 순서대로 실행한다. 각 단계의 출력은 다음 단계의 입력으로 전달된다.
+
+### 0단계: 키워드 자동 선택 (인자 없을 때만)
+
+**ARGUMENTS가 비어있으면** `/mnt/d/Documents/SEO_platform/BLOG_KEYWORDS.md`를 읽고 다음 순서로 키워드를 자동 선택한다:
+
+1. 먼저 "▶️ 다음 작성 우선순위" 표에서 ⬜ 또는 📝 상태인 첫 항목의 키워드 선택
+2. 우선순위 표에 ⬜/📝 없으면 → "Level 4 — 도구 직결" 표 위에서부터 ⬜인 첫 항목
+3. 그것도 없으면 → "Level 4 — 업종 특화" → "Level 3 — 초보자 유입" → "Level 3 — 중간 난이도" 순서로 ⬜인 첫 항목
+4. ⚠️ 표시는 건너뜀 (기존 글과 중복 가능 — 사용자 명시적 지시 필요)
+5. 모두 ✅이면 → "💡 추가 검토" 섹션의 신규 트렌드 키워드 중 첫 항목 제안 후 사용자 확인
+
+선택된 키워드를 출력 후 1단계로 진행한다.
+
+**ARGUMENTS가 있으면** 0단계 건너뛰고 그 키워드를 사용한다.
 
 ### 1단계: 키워드 분석 (blog-keyword-analyst)
 
@@ -91,8 +105,14 @@ H1, H2(5~8개) + h2Id, H3, FAQ 질문(4~6개), 시각 요소 배치 계획(visua
 1. 커버 이미지 1장 (1024x1024, GPT Image 1.5 Medium)
 2. 섹션 일러스트 (imageNeeded=true인 섹션당 1장)
 3. optimize-image.js로 압축 (PNG→WebP, 커버 1200px/q80, 섹션 800px/q75)
-4. 압축된 WebP를 Supabase Storage에 업로드
-5. JSON으로 URL 반환
+4. **image_overlay.py로 한글 텍스트 오버레이 (필수 — 건너뛰면 안 됨)**
+   - 스크립트: `python3 /mnt/d/Documents/SEO_platform/apps/web/scripts/image_overlay.py <입력.webp> <출력.webp> "<텍스트>" --font-size=64 --brightness=0.85 --color=random`
+   - 커버: 글 제목(`outline.h1`)을 텍스트로 사용
+   - 섹션: 해당 섹션의 H2 텍스트를 사용
+5. **오버레이된 WebP**를 Supabase Storage에 업로드 (오버레이 누락된 원본 업로드 금지)
+6. JSON으로 URL 반환
+
+⚠️ **4단계(텍스트 오버레이)는 절대 생략 금지.** 누락 시 한글 제목 없는 이미지가 발행되어 콘텐츠 품질이 저하된다. 실패 시 오버레이 없이 업로드하지 말고 에러 보고 후 사용자에게 알릴 것.
 
 프로젝트 경로: /mnt/d/Documents/SEO_platform/apps/web
 .env.local에서 OPENAI_API_KEY와 Supabase 키를 읽으세요.
@@ -219,7 +239,26 @@ FAQs:
 4. 결과 보고
 ```
 
-### 9단계: 완료 보고
+### 9단계: BLOG_KEYWORDS.md 상태 업데이트 (자동)
+
+발행/저장 완료 후 즉시 `/mnt/d/Documents/SEO_platform/BLOG_KEYWORDS.md` 파일을 업데이트한다.
+
+수정 방법:
+1. 메인 키워드(`keywordAnalysis.mainKeyword`)와 가장 가까운 표 행을 찾는다 (부분 매칭 허용)
+   - 예: "robots.txt 작성법" → "#2 robots.txt 작성 방법 예시 포함" 행 매칭
+2. 그 행의 **상태 컬럼을 ✅로 변경**한다 (초안이어도 ✅ 처리 — 사용자 정책)
+3. **슬러그/비고 컬럼에 새로 발행된 slug**를 추가한다
+   - 예: `\`how-to-write-robots-txt\``
+
+매칭 행이 없으면:
+- BLOG_KEYWORDS.md 하단 "📦 리스트 외 발행된 글" 표에 새 행으로 추가
+- 형식: `| \`{slug}\` | {title} | ✅ |`
+
+진행 현황 표(상단)의 숫자도 +1 갱신:
+- ✅ 발행됨 카운트 +1
+- ⬜ 미작성 카운트 -1 (또는 📝 → ✅이면 📝 카운트 -1)
+
+### 10단계: 완료 보고
 
 아래 형식으로 최종 요약을 출력한다:
 
@@ -265,4 +304,8 @@ FAQs:
 1. /admin/posts에서 글 확인 → 미리보기 → 발행
 2. Google Search Console → URL 검사 → 인덱싱 요청
 3. 소셜 미디어 공유
+
+### BLOG_KEYWORDS.md 업데이트
+- ✅ {매칭된 항목 번호 + 키워드}로 마크 완료
+- 다음 추천 키워드: {다음 ⬜ 항목}
 ```

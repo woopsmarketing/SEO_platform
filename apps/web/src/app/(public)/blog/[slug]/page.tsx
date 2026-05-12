@@ -25,6 +25,10 @@ export async function generateMetadata({
   const post = await getPostBySlug(slug);
   if (!post) return {};
 
+  const ogImages = post.cover_image_url
+    ? [{ url: post.cover_image_url, width: 1200, height: 630, alt: post.title }]
+    : undefined;
+
   return {
     title: `${post.title} | ${SITE_NAME}`,
     description: post.excerpt,
@@ -35,14 +39,18 @@ export async function generateMetadata({
       description: post.excerpt,
       type: "article",
       siteName: SITE_NAME,
+      url: `${SITE_URL}/blog/${slug}`,
       publishedTime: post.published_at,
       modifiedTime: post.updated_at || post.published_at,
       tags: post.tags,
+      locale: "ko_KR",
+      ...(ogImages && { images: ogImages }),
     },
     twitter: {
       card: "summary_large_image",
       title: post.title,
       description: post.excerpt,
+      ...(post.cover_image_url && { images: [post.cover_image_url] }),
     },
   };
 }

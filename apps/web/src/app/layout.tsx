@@ -47,6 +47,10 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: SITE_URL,
+    types: {
+      "application/rss+xml": `${SITE_URL}/feed.xml`,
+      "application/json": `${SITE_URL}/posts.json`,
+    },
   },
   verification: {
     google: process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION || undefined,
@@ -54,6 +58,27 @@ export const metadata: Metadata = {
       ...(process.env.NEXT_PUBLIC_NAVER_VERIFICATION
         ? { "naver-site-verification": process.env.NEXT_PUBLIC_NAVER_VERIFICATION }
         : {}),
+    },
+  },
+};
+
+const websiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "@id": `${SITE_URL}#website`,
+  name: SITE_NAME,
+  alternateName: "SEOWORLD",
+  url: SITE_URL,
+  description: SITE_DESCRIPTION,
+  inLanguage: "ko-KR",
+  publisher: {
+    "@type": "Organization",
+    "@id": `${SITE_URL}#organization`,
+    name: SITE_NAME,
+    url: SITE_URL,
+    logo: {
+      "@type": "ImageObject",
+      url: `${SITE_URL}/icon.svg`,
     },
   },
 };
@@ -66,6 +91,10 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body className={notoSansKR.className}>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+        />
         <GoogleAnalytics />
         {children}
       </body>

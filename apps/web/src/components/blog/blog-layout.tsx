@@ -1,18 +1,27 @@
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, ChevronRight, Home } from "lucide-react";
 import type { Post } from "@/lib/db/posts";
-import { SITE_URL } from "@/lib/constants";
+import Image from "next/image";
+import { SITE_URL, SITE_NAME } from "@/lib/constants";
 import { ReadingProgress } from "./reading-progress";
+import { extractHowToSteps } from "@/lib/blog/extract-howto-steps";
+import { AUTHOR, AUTHOR_URL, getAuthorPersonSchema } from "@/lib/blog/author";
 
-/** 본문 HTML의 <img> 태그에 loading, decoding, width, height 속성을 자동 주입 */
-function optimizeContentImages(html: string): string {
+/** 본문 HTML의 <img> 태그에 loading, decoding, width, height, alt 속성을 자동 주입 */
+function optimizeContentImages(html: string, fallbackAlt: string): string {
+  const escapedAlt = fallbackAlt.replace(/"/g, "&quot;");
   return html.replace(
     /<img\b([^>]*)>/gi,
     (match, attrs: string) => {
-      // 이미 loading 속성이 있으면 건너뜀
-      if (/loading\s*=/i.test(attrs)) return match;
-
       let optimized = attrs;
+
+      // alt 누락 시 글 제목으로 fallback (SEO 필수)
+      if (!/\salt\s*=/i.test(optimized)) {
+        optimized += ` alt="${escapedAlt}"`;
+      }
+
+      // 이미 loading 속성이 있으면 나머지는 건너뜀
+      if (/loading\s*=/i.test(attrs)) return `<img${optimized}>`;
 
       // loading="lazy" + decoding="async" 추가
       optimized += ' loading="lazy" decoding="async"';
@@ -30,6 +39,11 @@ function optimizeContentImages(html: string): string {
       return `<img${optimized}>`;
     }
   );
+}
+
+/** 본문에서 한글 글자수 계산 (HTML/공백 제외) */
+function calcWordCount(html: string): number {
+  return html.replace(/<[^>]+>/g, "").replace(/\s+/g, "").length;
 }
 
 const CATEGORY_COLORS: Record<string, string> = {
@@ -104,36 +118,82 @@ export function BlogLayout({
     tocItems.push({ id: "faq", title: "자주 묻는 질문" });
   }
 
+  /* HowTo schema 자동 감지 — 본문에서 단계형 H2/H3 추출 (3개 이상일 때만) */
+  const howToSteps = extractHowToSteps(post.content);
+  const hasHowTo = howToSteps.length >= 3;
+
   /* JSON-LD */
-  const jsonLd = [
-    {
-      "@context": "https://schema.org",
-      "@type": "Article",
-      headline: post.title,
-      description: post.excerpt,
-      author: { "@type": "Organization", name: "SEO월드" },
-      publisher: {
-        "@type": "Organization",
-        name: "SEO월드",
-        logo: {
-          "@type": "ImageObject",
-          url: `${SITE_URL}/icon.svg`,
-        },
+  const articleSchema: Record<string, unknown> = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: post.title,
+    description: post.excerpt,
+    inLanguage: "ko-KR",
+    isAccessibleForFree: true,
+    wordCount: calcWordCount(post.content),
+    author: getAuthorPersonSchema(),
+    publisher: {
+      "@type": "Organization",
+      name: SITE_NAME,
+      url: SITE_URL,
+      logo: {
+        "@type": "ImageObject",
+        url: `${SITE_URL}/icon.svg`,
       },
-      mainEntityOfPage: canonicalUrl,
-      datePublished: post.published_at,
-      dateModified: post.updated_at || post.published_at,
-      ...(post.tags.length > 0 && { keywords: post.tags.join(", ") }),
     },
+    mainEntityOfPage: { "@type": "WebPage", "@id": canonicalUrl },
+    datePublished: post.published_at,
+    dateModified: post.updated_at || post.published_at,
+  };
+  if (post.cover_image_url) {
+    articleSchema.image = {
+      "@type": "ImageObject",
+      url: post.cover_image_url,
+      width: 1200,
+      height: 630,
+    };
+  }
+  if (post.category) articleSchema.articleSection = post.category;
+  if (post.tags.length > 0) articleSchema.keywords = post.tags.join(", ");
+
+  const jsonLd: Record<string, unknown>[] = [
+    articleSchema,
     ...(faqs.length > 0
       ? [
           {
             "@context": "https://schema.org",
             "@type": "FAQPage",
+            inLanguage: "ko-KR",
+            speakable: {
+              "@type": "SpeakableSpecification",
+              cssSelector: ["[data-speakable]", ".blog-faq-answer"],
+            },
             mainEntity: faqs.map((f) => ({
               "@type": "Question",
               name: f.q,
               acceptedAnswer: { "@type": "Answer", text: f.a },
+            })),
+          },
+        ]
+      : []),
+    ...(hasHowTo
+      ? [
+          {
+            "@context": "https://schema.org",
+            "@type": "HowTo",
+            name: post.title,
+            description: post.excerpt,
+            inLanguage: "ko-KR",
+            datePublished: post.published_at,
+            dateModified: post.updated_at || post.published_at,
+            ...(post.cover_image_url && {
+              image: { "@type": "ImageObject", url: post.cover_image_url },
+            }),
+            step: howToSteps.map((s, i) => ({
+              "@type": "HowToStep",
+              position: i + 1,
+              name: s.name,
+              text: s.text,
             })),
           },
         ]
@@ -264,7 +324,7 @@ export function BlogLayout({
 
             {/* 본문 */}
             <div className="blog-prose mt-10">
-              <div dangerouslySetInnerHTML={{ __html: optimizeContentImages(post.content) }} />
+              <div dangerouslySetInnerHTML={{ __html: optimizeContentImages(post.content, post.title) }} />
 
               {/* FAQ */}
               {faqs.length > 0 && (
@@ -276,7 +336,7 @@ export function BlogLayout({
                         <summary className="flex cursor-pointer items-center justify-between px-5 py-4 text-sm font-medium hover:bg-muted/50">
                           {item.q}
                         </summary>
-                        <div className="px-5 pb-4 text-sm text-muted-foreground">
+                        <div className="blog-faq-answer px-5 pb-4 text-sm text-muted-foreground">
                           {item.a}
                         </div>
                       </details>
@@ -304,18 +364,27 @@ export function BlogLayout({
             </div>
 
             {/* 저자 */}
-            <div className="mt-12 flex items-center gap-4 rounded-xl border border-border/60 bg-card p-5">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary text-lg font-bold text-primary-foreground">
-                SW
-              </div>
+            <Link
+              href={`/author/${AUTHOR.slug}`}
+              className="mt-12 flex items-center gap-4 rounded-xl border border-border/60 bg-card p-5 transition-colors hover:border-primary/40 hover:bg-card/80"
+            >
+              <Image
+                src={AUTHOR.image}
+                alt={AUTHOR.name}
+                width={48}
+                height={48}
+                className="h-12 w-12 shrink-0 rounded-full"
+                unoptimized
+              />
               <div>
-                <p className="font-semibold text-sm">SEO월드 팀</p>
-                <p className="text-xs text-muted-foreground mt-0.5">
-                  검색엔진최적화(SEO) 전문 플랫폼. 무료 분석 도구와 실전
-                  가이드를 제공합니다.
+                <p className="font-semibold text-sm">
+                  {AUTHOR.name} · {AUTHOR.jobTitle}
+                </p>
+                <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2">
+                  {AUTHOR.bio}
                 </p>
               </div>
-            </div>
+            </Link>
 
             {/* 관련 글 */}
             {relatedPosts.length > 0 && (

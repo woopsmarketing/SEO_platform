@@ -22,6 +22,14 @@ export const metadata: Metadata = {
   openGraph: {
     title: "SEO 블로그 — 구글 상위노출 전략 | SEO월드",
     description: "SEO 실무 팁, 백링크 전략, 검색엔진 최적화 인사이트",
+    type: "website",
+    url: `${SITE_URL}/blog`,
+    locale: "ko_KR",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "SEO 블로그 — 구글 상위노출 전략 | SEO월드",
+    description: "SEO 실무 팁, 백링크 전략, 검색엔진 최적화 인사이트",
   },
   alternates: { canonical: `${SITE_URL}/blog` },
 };
