@@ -1,5 +1,7 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 
+export type CtaStrength = "weak" | "medium" | "medium-strong" | "strong";
+
 export interface Post {
   id: string;
   title: string;
@@ -16,6 +18,8 @@ export interface Post {
   author: string;
   faqs: { q: string; a: string }[] | null;
   cover_image_url: string | null;
+  /** customerPsychology.ctaStrength — NULL이면 'weak' fallback (blog-layout에서 처리) */
+  cta_strength: CtaStrength | null;
 }
 
 /** 공개된 글 목록 (최신순) */

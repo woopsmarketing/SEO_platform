@@ -14,6 +14,7 @@ type: general-purpose
 - content-writer의 출력 HTML (본문) + faqs JSON
 - image-generator의 출력 JSON (coverImage, sectionImages)
 - quality-reviewer의 approved 결과
+- **keyword-analyst의 customerPsychology.ctaStrength** (필수 — posts.cta_strength 컬럼에 저장)
 
 ## 실행 단계
 
@@ -51,7 +52,8 @@ const { data, error } = await client
     published_at: null,
     read_time: "{readTime}",
     author: "SEO월드",
-    faqs: [{q, a}, ...]
+    faqs: [{q, a}, ...],
+    cta_strength: "{customerPsychology.ctaStrength}" // 'weak'|'medium'|'medium-strong'|'strong' — 페이지 하단 CTA 4종 분기
   }, { onConflict: 'slug' })
   .select()
   .single();
@@ -91,4 +93,5 @@ await fetch('https://www.google.com/ping?sitemap=https://seoworld.co.kr/sitemap.
 - slug 중복 시 upsert (기존 글 업데이트)
 - cover_image_url은 null 허용
 - faqs는 JSONB 배열
+- `cta_strength`는 keyword-analyst의 customerPsychology.ctaStrength 값을 그대로 사용 — NULL이면 페이지에서 'weak' fallback
 - .env.local에서 Supabase URL/KEY 읽기

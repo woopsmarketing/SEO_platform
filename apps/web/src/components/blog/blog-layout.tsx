@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, ChevronRight, Home } from "lucide-react";
-import type { Post } from "@/lib/db/posts";
+import type { Post, CtaStrength } from "@/lib/db/posts";
 import Image from "next/image";
 import { SITE_URL, SITE_NAME } from "@/lib/constants";
 import { ReadingProgress } from "./reading-progress";
@@ -54,13 +54,62 @@ const CATEGORY_COLORS: Record<string, string> = {
   "테크니컬 SEO": "bg-rose-500/10 text-rose-600 dark:text-rose-400",
 };
 
-const DEFAULT_CTA = {
-  title: "지금 이 순간에도 경쟁사는 상위노출되고 있습니다",
-  description:
-    "검색 1페이지에 없으면 고객은 경쟁사를 선택합니다. 더 늦기 전에 전문가의 무료 진단을 받아보세요.",
-  buttonText: "무료 SEO 진단 받기",
-  href: "/contact",
+/* CTA 4종 — customerPsychology.ctaStrength 기반 분기
+ * - weak           (informational): 도구 안내, 광고감 0
+ * - medium         (problem-solving / troubleshooting / validation): 함께 진행 톤
+ * - medium-strong  (comparison): 비교 후 추천
+ * - strong         (purchase-intent): 직접 시작 안내
+ */
+const CTA_BY_STRENGTH: Record<
+  CtaStrength,
+  { title: string; description: string; buttonText: string; href: string; box: string; button: string }
+> = {
+  weak: {
+    title: "지금 시작하기 막막하다면, 무료 SEO 도구로 가볍게 진단부터",
+    description:
+      "회원가입 없이 바로 쓰는 무료 도구들 — 키워드·백링크·온페이지 진단까지 한 번에 점검해볼 수 있습니다.",
+    buttonText: "무료 도구 둘러보기",
+    href: "/tools",
+    box: "bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-800/40 dark:to-slate-900/40 border border-slate-200/70 dark:border-slate-700/50",
+    button:
+      "bg-slate-900 text-white hover:bg-slate-800 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100",
+  },
+  medium: {
+    title: "이 과정을 직접 정리하기 어렵다면, 함께 진행하는 방식도 있습니다",
+    description:
+      "사이트 상황에 맞춰 진단부터 단계별 해결까지, 전문가가 함께 정리해드립니다.",
+    buttonText: "무료 상담 받아보기",
+    href: "/contact",
+    box: "bg-gradient-to-br from-blue-600 to-indigo-700 text-white",
+    button:
+      "bg-white text-blue-700 hover:bg-blue-50 shadow-md hover:shadow-lg hover:-translate-y-0.5",
+  },
+  "medium-strong": {
+    title: "여러 방법을 비교해봤다면, 다음 단계가 무엇인지 함께 점검해드립니다",
+    description:
+      "직접 비교한 옵션을 바탕으로 사이트에 가장 적합한 전략을 함께 설계합니다.",
+    buttonText: "맞춤 전략 받기",
+    href: "/contact",
+    box: "bg-gradient-to-br from-indigo-700 to-purple-700 text-white",
+    button:
+      "bg-white text-indigo-700 hover:bg-indigo-50 shadow-md hover:shadow-lg hover:-translate-y-0.5",
+  },
+  strong: {
+    title: "지금 결정만 남았다면, 컨설팅으로 바로 시작할 수 있습니다",
+    description:
+      "SEO 전략 수립부터 실행, 측정까지 처음부터 끝까지 함께 진행합니다.",
+    buttonText: "전문 상담 시작하기",
+    href: "/services",
+    box: "bg-gradient-to-br from-slate-900 to-slate-800 text-white ring-1 ring-amber-500/30",
+    button:
+      "bg-amber-400 text-slate-900 hover:bg-amber-300 shadow-md hover:shadow-lg hover:-translate-y-0.5",
+  },
 };
+
+function pickCta(strength: CtaStrength | null | undefined) {
+  // NULL/undefined fallback = 'weak' (가장 안전, 광고감 0)
+  return CTA_BY_STRENGTH[strength ?? "weak"] ?? CTA_BY_STRENGTH.weak;
+}
 
 interface FaqItem {
   q: string;
@@ -84,7 +133,7 @@ export function BlogLayout({
   prevPost,
   nextPost,
 }: BlogLayoutProps) {
-  const finalCta = DEFAULT_CTA;
+  const finalCta = pickCta(post.cta_strength);
   const d = new Date(post.published_at);
   const dateKR = `${d.getFullYear()}년 ${d.getMonth() + 1}월 ${d.getDate()}일`;
   const canonicalUrl = `${SITE_URL}/blog/${post.slug}`;
@@ -347,17 +396,17 @@ export function BlogLayout({
 
             </div>
 
-            {/* CTA — FAQ 바로 아래, blog-prose 밖 */}
-            <div className="mt-12 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 p-10 text-center shadow-lg">
-              <p className="text-2xl sm:text-3xl font-bold text-white leading-tight">
+            {/* CTA — FAQ 바로 아래, blog-prose 밖 (customerPsychology.ctaStrength 기반 4종 분기) */}
+            <div className={`mt-12 rounded-2xl p-10 text-center shadow-lg ${finalCta.box}`}>
+              <p className="text-2xl sm:text-3xl font-bold leading-tight">
                 {finalCta.title}
               </p>
-              <p className="mt-3 text-base text-blue-100 max-w-lg mx-auto leading-relaxed">
+              <p className="mt-3 text-base max-w-lg mx-auto leading-relaxed opacity-90">
                 {finalCta.description}
               </p>
               <Link
                 href={finalCta.href}
-                className="mt-6 inline-flex items-center justify-center rounded-xl bg-white px-8 py-4 text-base font-bold text-blue-700 shadow-md transition-all hover:bg-blue-50 hover:shadow-lg hover:-translate-y-0.5 no-underline"
+                className={`mt-6 inline-flex items-center justify-center rounded-xl px-8 py-4 text-base font-bold no-underline transition-all ${finalCta.button}`}
               >
                 {finalCta.buttonText}
               </Link>

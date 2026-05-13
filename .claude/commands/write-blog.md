@@ -238,6 +238,7 @@ FAQs:
 {imageResult JSON}
 
 품질 점수: {qualityResult.score}/100
+ctaStrength: {keywordAnalysis.customerPsychology.ctaStrength}  # 'weak'|'medium'|'medium-strong'|'strong'
 
 프로젝트 경로: /mnt/d/Documents/SEO_platform/apps/web
 .env.local에서 Supabase URL/KEY를 읽으세요.
@@ -245,8 +246,9 @@ FAQs:
 .claude/agents/blog-publisher.md의 규칙에 따라:
 1. posts 테이블에 draft로 INSERT (upsert by slug)
 2. coverImage URL을 cover_image_url에 저장
-3. sitemap ping 실행
-4. 결과 보고
+3. **cta_strength 컬럼에 위 ctaStrength 값 저장** (페이지 하단 CTA 4종 분기 키)
+4. sitemap ping 실행
+5. 결과 보고
 ```
 
 ### 9단계: BLOG_KEYWORDS.md 상태 업데이트 (자동)
