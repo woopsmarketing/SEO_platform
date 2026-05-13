@@ -4,6 +4,8 @@ import type { Post, CtaStrength } from "@/lib/db/posts";
 import Image from "next/image";
 import { SITE_URL, SITE_NAME } from "@/lib/constants";
 import { ReadingProgress } from "./reading-progress";
+import { TocList } from "./toc-list";
+import { ShareButtons } from "./share-buttons";
 import { extractHowToSteps } from "@/lib/blog/extract-howto-steps";
 import { AUTHOR, AUTHOR_URL, getAuthorPersonSchema } from "@/lib/blog/author";
 
@@ -205,6 +207,18 @@ export function BlogLayout({
   if (post.category) articleSchema.articleSection = post.category;
   if (post.tags.length > 0) articleSchema.keywords = post.tags.join(", ");
 
+  // about — 글의 주된 주제 (Knowledge Graph 연결 시그널)
+  if (post.category) {
+    articleSchema.about = [{ "@type": "Thing", name: post.category }];
+  }
+  // mentions — 글이 언급하는 부수적 엔티티 (AEO + 검색엔진 엔티티 추출)
+  if (post.tags.length > 0) {
+    articleSchema.mentions = post.tags.map((tag) => ({
+      "@type": "Thing",
+      name: tag,
+    }));
+  }
+
   const jsonLd: Record<string, unknown>[] = [
     articleSchema,
     ...(faqs.length > 0
@@ -352,11 +366,31 @@ export function BlogLayout({
               </div>
             )}
 
-            {/* 모바일 목차 (lg 이하에서만 표시) */}
+            {/* 모바일 목차 (lg 이하에서만 표시) — 접힌 상태로 시작 */}
             {tocItems.length > 0 && (
-              <nav className="blog-toc lg:hidden">
-                <p className="blog-toc-title">목차</p>
-                <ol className="space-y-1.5">
+              <details className="blog-toc-mobile lg:hidden">
+                <summary className="blog-toc-mobile-summary">
+                  <span className="blog-toc-mobile-title">
+                    목차 <span className="blog-toc-mobile-count">{tocItems.length}</span>
+                  </span>
+                  <svg
+                    className="blog-toc-mobile-chevron"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M4 6L8 10L12 6"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </summary>
+                <ol className="blog-toc-mobile-list">
                   {tocItems.map((item, i) => (
                     <li key={item.id}>
                       <a href={`#${item.id}`}>
@@ -368,7 +402,7 @@ export function BlogLayout({
                     </li>
                   ))}
                 </ol>
-              </nav>
+              </details>
             )}
 
             {/* 본문 */}
@@ -411,6 +445,9 @@ export function BlogLayout({
                 {finalCta.buttonText}
               </Link>
             </div>
+
+            {/* 공유 버튼 */}
+            <ShareButtons url={canonicalUrl} title={post.title} />
 
             {/* 저자 */}
             <Link
@@ -492,26 +529,14 @@ export function BlogLayout({
 
           </article>
 
-          {/* 사이드바 TOC — 데스크탑에서만 표시 */}
+          {/* 사이드바 TOC — 데스크탑에서만 표시 (active highlight) */}
           {tocItems.length > 0 && (
             <aside className="hidden lg:block w-64 shrink-0">
               <div className="sticky top-20 rounded-xl border border-border/60 bg-card p-5">
-                <p className="mb-4 text-sm font-bold text-foreground">목차</p>
-                <ol className="space-y-3 border-l-2 border-primary/20 pl-4">
-                  {tocItems.map((item, i) => (
-                    <li key={item.id}>
-                      <a
-                        href={`#${item.id}`}
-                        className="block text-sm text-muted-foreground transition-colors hover:text-primary leading-relaxed"
-                      >
-                        <span className="mr-2 text-primary font-semibold">
-                          {i + 1}.
-                        </span>
-                        {item.title}
-                      </a>
-                    </li>
-                  ))}
-                </ol>
+                <p className="mb-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">
+                  목차
+                </p>
+                <TocList items={tocItems} />
                 <ReadingProgress />
               </div>
             </aside>
