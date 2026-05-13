@@ -1,11 +1,58 @@
 "use client";
 
 import { useState } from "react";
-import { Check, Copy, Share2 } from "lucide-react";
+import { Check, Copy, Link2, Share2 } from "lucide-react";
 
 interface ShareButtonsProps {
   url: string;
   title: string;
+}
+
+interface CopyUrlButtonProps {
+  url: string;
+  className?: string;
+}
+
+/**
+ * 컴팩트 URL 복사 버튼 — 글 상단 메타 영역에 인라인 배치용.
+ * 글을 읽다 말고 즉시 공유 가능 → 끝까지 안 읽어도 distribution 가능.
+ */
+export function CopyUrlButton({ url, className = "" }: CopyUrlButtonProps) {
+  const [copied, setCopied] = useState(false);
+
+  async function handleCopy() {
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      window.prompt("이 URL을 복사하세요:", url);
+    }
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={handleCopy}
+      className={
+        "inline-flex items-center gap-1.5 rounded-md border border-border/60 bg-background px-2.5 py-1 text-xs font-medium text-muted-foreground transition-colors hover:border-primary/50 hover:text-primary " +
+        className
+      }
+      aria-label={copied ? "복사 완료" : "이 글의 URL 복사"}
+    >
+      {copied ? (
+        <>
+          <Check className="h-3.5 w-3.5 text-emerald-600" />
+          <span className="text-emerald-600">복사됨</span>
+        </>
+      ) : (
+        <>
+          <Link2 className="h-3.5 w-3.5" />
+          URL 복사
+        </>
+      )}
+    </button>
+  );
 }
 
 /**

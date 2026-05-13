@@ -5,7 +5,7 @@ import Image from "next/image";
 import { SITE_URL, SITE_NAME } from "@/lib/constants";
 import { ReadingProgress } from "./reading-progress";
 import { TocList } from "./toc-list";
-import { ShareButtons } from "./share-buttons";
+import { ShareButtons, CopyUrlButton } from "./share-buttons";
 import { extractHowToSteps } from "@/lib/blog/extract-howto-steps";
 import { AUTHOR, AUTHOR_URL, getAuthorPersonSchema } from "@/lib/blog/author";
 
@@ -329,27 +329,30 @@ export function BlogLayout({
               {post.title}
             </h1>
 
-            {/* 메타 */}
-            <div className="blog-meta mt-3">
-              <time dateTime={post.published_at}>{dateKR}</time>
-              {updatedKR && (
-                <>
-                  <span aria-hidden="true">&middot;</span>
-                  <span className="text-xs">수정: {updatedKR}</span>
-                </>
-              )}
-              <span aria-hidden="true">&middot;</span>
-              <span>{post.read_time} 읽기</span>
-              {post.category && (
-                <>
-                  <span aria-hidden="true">&middot;</span>
-                  <span
-                    className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${CATEGORY_COLORS[post.category] || ""}`}
-                  >
-                    {post.category}
-                  </span>
-                </>
-              )}
+            {/* 메타 — 좌측: 날짜/시간/카테고리, 우측: URL 복사 (모바일 wrap) */}
+            <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
+              <div className="blog-meta">
+                <time dateTime={post.published_at}>{dateKR}</time>
+                {updatedKR && (
+                  <>
+                    <span aria-hidden="true">&middot;</span>
+                    <span className="text-xs">수정: {updatedKR}</span>
+                  </>
+                )}
+                <span aria-hidden="true">&middot;</span>
+                <span>{post.read_time} 읽기</span>
+                {post.category && (
+                  <>
+                    <span aria-hidden="true">&middot;</span>
+                    <span
+                      className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${CATEGORY_COLORS[post.category] || ""}`}
+                    >
+                      {post.category}
+                    </span>
+                  </>
+                )}
+              </div>
+              <CopyUrlButton url={canonicalUrl} />
             </div>
 
             {/* 태그 */}
