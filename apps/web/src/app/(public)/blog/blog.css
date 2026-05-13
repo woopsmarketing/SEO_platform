@@ -56,62 +56,116 @@
 
 /* ── 블로그 본문 (article prose) ── */
 .blog-prose {
-  font-size: 1rem;
+  font-size: 1.0625rem;
   line-height: 1.85;
-  color: var(--color-muted-foreground);
+  color: color-mix(in srgb, var(--color-foreground) 82%, transparent);
+  word-break: keep-all;
+  overflow-wrap: break-word;
 }
 
+/* ── H2 ── 좌측 액센트 바 + 부드러운 하단 그라데이션 */
 .blog-prose h2 {
-  margin-top: 3rem;
-  margin-bottom: 1rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 2px solid color-mix(in srgb, var(--color-primary) 15%, transparent);
-  font-size: 1.5rem;
+  position: relative;
+  margin-top: 4rem;
+  margin-bottom: 1.25rem;
+  padding: 0.25rem 0 0.65rem 1rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-border) 80%, transparent);
+  font-size: 1.625rem;
   font-weight: 800;
+  line-height: 1.35;
   letter-spacing: -0.025em;
   color: var(--color-foreground);
+  scroll-margin-top: 5rem;
 }
 
+.blog-prose h2::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55rem;
+  bottom: 0.85rem;
+  width: 4px;
+  border-radius: 9999px;
+  background: linear-gradient(180deg, var(--color-primary), color-mix(in srgb, var(--color-primary) 50%, transparent));
+}
+
+.blog-prose h2:first-of-type {
+  margin-top: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .blog-prose h2 {
+    font-size: 1.75rem;
+    margin-top: 4.5rem;
+  }
+}
+
+/* ── H3 ── 좀더 두꺼운 액센트 + 좌측 padding */
 .blog-prose h3 {
-  margin-top: 2rem;
-  margin-bottom: 0.75rem;
+  position: relative;
+  margin-top: 2.5rem;
+  margin-bottom: 0.875rem;
+  padding-left: 0.875rem;
   font-size: 1.25rem;
   font-weight: 700;
+  line-height: 1.45;
+  letter-spacing: -0.015em;
   color: var(--color-foreground);
+  scroll-margin-top: 5rem;
 }
 
 .blog-prose h3::before {
   content: "";
-  display: inline-block;
-  width: 3px;
-  height: 1.1em;
-  margin-right: 0.5rem;
-  background: var(--color-primary);
+  position: absolute;
+  left: 0;
+  top: 0.35em;
+  width: 4px;
+  height: 1.05em;
+  background: linear-gradient(180deg, var(--color-primary), color-mix(in srgb, var(--color-primary) 40%, transparent));
   border-radius: 2px;
-  vertical-align: text-bottom;
 }
 
+@media (min-width: 768px) {
+  .blog-prose h3 {
+    font-size: 1.3125rem;
+  }
+}
+
+/* ── 단락 ── */
 .blog-prose p {
-  margin-top: 0.75rem;
-  margin-bottom: 0.75rem;
+  margin-top: 0.875rem;
+  margin-bottom: 0.875rem;
+  letter-spacing: -0.005em;
+}
+
+.blog-prose h2 + p,
+.blog-prose h3 + p {
+  margin-top: 0.5rem;
 }
 
 .blog-prose strong {
   font-weight: 700;
   color: var(--color-foreground);
+  background: linear-gradient(180deg, transparent 62%, color-mix(in srgb, var(--color-primary) 12%, transparent) 62%);
+  padding: 0 2px;
 }
 
+/* ── 링크 — 부드러운 underline + hover 강조 ── */
 .blog-prose a {
-  color: #2563eb;
+  color: #1d4ed8;
   text-decoration: none;
   font-weight: 600;
-  border-bottom: 1px dashed #93c5fd;
-  transition: all 0.15s ease;
+  background-image: linear-gradient(transparent 92%, #93c5fd 92%);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  transition: all 0.2s ease;
+  padding-bottom: 1px;
 }
 
 .blog-prose a:hover {
-  color: #1d4ed8;
-  border-bottom: 2px solid #2563eb;
+  color: #1e3a8a;
+  background-image: linear-gradient(transparent 0%, color-mix(in srgb, #2563eb 12%, transparent) 0%);
+  background-size: 100% 100%;
 }
 
 .blog-prose ul:not(.blog-checklist):not(.blog-summary-card ul):not(.blog-box ul),
