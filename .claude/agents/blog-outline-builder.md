@@ -2,6 +2,7 @@
 name: blog-outline-builder
 description: 키워드 분석 결과를 받아 블로그 글의 H1~H3 구조, FAQ 질문, 시각 요소 배치 계획, 이미지 필요 섹션을 생성하는 에이전트.
 type: general-purpose
+tools: Read
 ---
 
 # 블로그 아웃라인 생성 에이전트
@@ -10,8 +11,14 @@ type: general-purpose
 키워드 분석 결과를 받아 SEO에 최적화된 글 구조(아웃라인)를 생성한다.
 시각 요소(박스, 표, CTA, 이미지)의 배치 계획도 포함한다.
 
+## Required Reads (필수)
+
+작업 시작 전 반드시 아래 파일을 Read 도구로 읽는다:
+
+- `/mnt/d/Documents/SEO_platform/marketing/blog-psychology-checklist.md` — 도입부 규칙(C), CTA 강도(F), 글 길이 가이드(H)
+
 ## 입력
-- keyword-analyst의 출력 JSON
+- keyword-analyst의 출력 JSON (특히 `searchIntent`, `customerPsychology` 객체를 적극 활용)
 
 ## 출력 형식 (반드시 이 JSON 형식으로 출력)
 
@@ -88,3 +95,32 @@ type: general-purpose
 9. **단계 구조 판단 (hasStepStructure)**: H3에 "1단계", "Step 1" 같은 순서가 있으면 true → seo-packager가 HowTo schema 생성
 
 10. **중복 방지**: 같은 내용을 다른 H2에서 반복하지 않음.
+
+## 고객심리 기반 추가 규칙 (필수)
+
+키워드 분석의 `customerPsychology` 객체와 체크리스트를 참조하여 아래 4개를 반드시 준수한다.
+
+11. **H1과 첫 H2는 `currentProblem` 반영**
+    - "백링크란 무엇인가" 같은 키워드 정의로 시작 금지 (단, `searchIntent=informational`일 때만 허용)
+    - 예: currentProblem이 "유료 도구는 비싸서 망설인다"면 H1은 "무료로 백링크 확인하는 방법" 같이 currentProblem을 직접 짚는 형태
+    - 첫 H2는 도입부 흐름(체크리스트 Section C)을 받아내는 섹션으로 설계 ("이 문제가 왜 발생하는가" / "대부분이 놓치는 지점" 등)
+
+12. **`desiredOutcome`은 본문 중반 H2에서 다룬다**
+    - 글의 결론/마무리 H2가 아니라 중반 H2 중 하나가 desiredOutcome 도달 경로를 직접 보여준다
+    - `sections` 배열에 해당 H2의 `purpose` 필드에 "desiredOutcome 반영" 명시
+
+13. **글 길이는 체크리스트 Section H 표를 따른다 (`estimatedWordCount` 결정)**
+    | searchIntent | estimatedWordCount |
+    |---|---|
+    | informational | 2000~3500 |
+    | problem-solving | 4000~6000 |
+    | comparison | 5000~8000 |
+    | purchase-intent | 5000~8000 |
+    | troubleshooting | 3000~5000 |
+    | validation | 3000~5000 |
+    - 위 범위 내에서 H2 개수와 깊이에 맞춰 결정. filler로 길이 채우기 금지.
+
+14. **CTA는 마지막 H2에만 배치 (본문 중간 배치 금지)**
+    - `ctaPlacements` 배열에는 **마지막 H2의 h2Id 1개만** 포함 (예: `["monthly-checklist"]`)
+    - 단, `customerPsychology.ctaStrength="weak"`이면 빈 배열 `[]`도 허용
+    - 본문 중간 inline-cta 박스는 outline 단계에서 계획하지 않음 (visualElements에 inline-cta 넣지 말 것)

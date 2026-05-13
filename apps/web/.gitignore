@@ -2,3 +2,12 @@ node_modules/
 .next/
 .env.local
 .env*.local
+
+# Google Indexing API 서비스 계정 키 (절대 커밋 금지)
+google-indexing-key.json
+*-service-account.json
+*-indexing-key.json
+# GCP 서비스 계정 키 일반 패턴 (project-id 형식 보호)
+seoworld-*.json
+gcp-*.json
+*-adminsdk-*.json
